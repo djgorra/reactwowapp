@@ -1,0 +1,1 @@
+export const BASE_URL = 'https://wow-app-rails-5c78013cc11c.herokuapp.com'
