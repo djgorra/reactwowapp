@@ -1,16 +1,18 @@
 import React, {useContext, useState} from "react"; 
 import { Button, Text, TextInput, TouchableOpacity, View, StyleSheet, useColorScheme, } from "react-native";
 import { AuthContext } from "../context/AuthContext";
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const LoginScreen = ({navigation}) => {
     const [email, setEmail] = useState(null);
     const [password, setPassword] = useState(null);
-    const val = useContext(AuthContext);
+    const {isLoading, login} = useContext(AuthContext);
 
     return (
         <View style={styles.container}>
+            <Spinner visible={isLoading} />
             <View style={styles.wrapper}>
-                <Text>{val}</Text>
+                <Text>Log In</Text>
                 <TextInput 
                     style={styles.input} 
                     value={email} 
@@ -21,10 +23,10 @@ const LoginScreen = ({navigation}) => {
                     style={styles.input} 
                     value={password} 
                     placeholder="Enter Password" 
-                    onChangeText={text => setEmail(text)}
+                    onChangeText={text => setPassword(text)}
                     secureTextEntry />
 
-                <Button title="Login" />
+                <Button title="Login" onPress={() => {login(email, password)}}/>
 
                 <View style={{flexDirection: 'row', marginTop: 20}}>
                     <Text>Don't have any account? </Text>

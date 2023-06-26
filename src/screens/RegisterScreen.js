@@ -1,20 +1,22 @@
 import React, {useContext, useState} from "react"; 
 import { Button, Text, TextInput, TouchableOpacity, View, StyleSheet, useColorScheme, } from "react-native";
 import { AuthContext } from "../context/AuthContext";
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const RegisterScreen = ({navigation}) => {
     const [name, setName] = useState(null);
     const [email, setEmail] = useState(null);
     const [password, setPassword] = useState(null);
-    const {register} = useContext(AuthContext);
+    const {isLoading, register} = useContext(AuthContext);
 
     return (
         <View style={styles.container}>
+            <Spinner visible={isLoading} />
             <View style={styles.wrapper}>
                 <Text>Hello</Text>
                 <TextInput 
                     style={styles.input} 
-                    value={email} 
+                    value={name} 
                     placeholder="Enter Name" 
                     onChangeText={text => setName(text)}/>
                 <TextInput 
@@ -30,7 +32,12 @@ const RegisterScreen = ({navigation}) => {
                     onChangeText={text => setPassword(text)}
                     secureTextEntry />
 
-                <Button title="Register"/>
+                <Button 
+                    title="Register" 
+                    onPress={() => {
+                        register(name, email, password);
+                    }}
+                />
 
                 <View style={{flexDirection: 'row', marginTop: 20}}>
                     <Text>Already have an account? </Text>
