@@ -1,14 +1,14 @@
 import React, {useContext, useState} from "react"; 
 import {Button, StyleSheet, Text, View } from "react-native";
-import Spinner from 'react-native-loading-spinner-overlay';
+import LoadingSpinner from '../components/LoadingSpinner';
 import { AuthContext } from "../context/AuthContext";
 
 
-const UserScreen = () => {
+const ProfileScreen = () => {
     const {userInfo, isLoading, logout} = useContext(AuthContext);
     return (
         <View style={styles.container}>
-            <Spinner visible={isLoading} />
+            <LoadingSpinner visible={isLoading} />
             <Text>Profile Page</Text>
             <Text style={styles.welcome}>{userInfo.user.name}</Text>
         </View>
@@ -29,4 +29,4 @@ const styles = StyleSheet.create(
     }
 );
 
-export default UserScreen;
+export default ProfileScreen;

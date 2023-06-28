@@ -1,8 +1,17 @@
 export default [
     {
-        name: 'Profile'
+        name: 'Profile',
+        iconType:'MaterialCommunityIcons',
+        iconName:'face-man-profile'
     },
     {
-        name: 'Logout'
+        name:'Settings',
+        iconType:'Feather',
+        iconName:'settings'
+    },
+    {
+        name: 'Logout',
+        iconType:'FontAwesome5',
+        iconName:'user-friends'
     },
 ]
