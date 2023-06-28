@@ -4,13 +4,13 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import { AuthContext } from "../context/AuthContext";
 
 
-const HomeScreen = ({navigation}) => {
+const UserScreen = () => {
     const {userInfo, isLoading, logout} = useContext(AuthContext);
     return (
         <View style={styles.container}>
             <Spinner visible={isLoading} />
-            <Text style={styles.welcome}>Welcome {userInfo.user.name}</Text>
-            <Button title="Profile" color="blue" onPress={() => navigation.navigate('Profile')}/>
+            <Text>Profile Page</Text>
+            <Text style={styles.welcome}>{userInfo.user.name}</Text>
         </View>
     );
 };
@@ -29,4 +29,4 @@ const styles = StyleSheet.create(
     }
 );
 
-export default HomeScreen;
+export default UserScreen;
