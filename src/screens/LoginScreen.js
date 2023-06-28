@@ -1,7 +1,7 @@
 import React, {useContext, useState} from "react"; 
 import { Button, Text, TextInput, TouchableOpacity, View, StyleSheet, useColorScheme, } from "react-native";
 import { AuthContext } from "../context/AuthContext";
-import Spinner from 'react-native-loading-spinner-overlay';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const LoginScreen = ({navigation}) => {
     const [email, setEmail] = useState(null);
@@ -10,7 +10,7 @@ const LoginScreen = ({navigation}) => {
 
     return (
         <View style={styles.container}>
-            <Spinner visible={isLoading} />
+            <LoadingSpinner visible={isLoading} />
             <View style={styles.wrapper}>
                 <Text>Log In</Text>
                 <TextInput 
