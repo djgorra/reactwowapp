@@ -2,18 +2,13 @@ import axios from "axios";
 import React, {createContext, useState} from "react";
 import { BASE_URL } from "../config";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Alert} from 'react-native';
+import alertBox from "../components/AlertBox.js"
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({children}) => {
     const [userInfo, setUserInfo] = useState({});
     const [isLoading, setIsLoading] = useState(false)
-
-    const createButtonAlert = (e) =>
-    Alert.alert('Alert', `${e}`, [
-      {text: 'OK', onPress: () => console.log('OK Pressed')},
-    ]);
 
     const register = (name, email, password) => {
         setIsLoading(true);
@@ -32,7 +27,7 @@ export const AuthProvider = ({children}) => {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
                 console.log(error.response.data);
-                createButtonAlert(error.response.data.message)
+                alertBox(error.response.data.message)
                 // console.log(error.response.status);
                 // console.log(error.response.headers);
             } else if (error.request) {
@@ -40,11 +35,11 @@ export const AuthProvider = ({children}) => {
                 // `error.request` is an instance of XMLHttpRequest in the 
                 // browser and an instance of
                 // http.ClientRequest in node.js
-                createButtonAlert("Network Error")
+                alertBox("Network Error")
                 console.log(error.request);
             } else {
                 // Something happened in setting up the request that triggered an Error
-                createButtonAlert("An error has occurred :(")
+                alertBox("An error has occurred :(")
                 console.log('Error', error.message);
             }
             setIsLoading(false)
@@ -67,7 +62,7 @@ export const AuthProvider = ({children}) => {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
                 console.log(error.response.data);
-                createButtonAlert("Invalid Email or Password")
+                alertBox("Invalid Email or Password")
                 // console.log(error.response.status);
                 // console.log(error.response.headers);
             } else if (error.request) {
@@ -75,11 +70,11 @@ export const AuthProvider = ({children}) => {
                 // `error.request` is an instance of XMLHttpRequest in the 
                 // browser and an instance of
                 // http.ClientRequest in node.js
-                createButtonAlert("Network Error")
+                alertBox("Network Error")
                 console.log(error.request);
             } else {
                 // Something happened in setting up the request that triggered an Error
-                createButtonAlert("An error has occurred :(")
+                alertBox("An error has occurred :(")
                 console.log('Error', error.message);
             }
             setIsLoading(false)
