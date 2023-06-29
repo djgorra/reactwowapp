@@ -1,4 +1,4 @@
-import DrawerItems from '../constants/DrawerItems';
+import MainMenuItems from '../constants/MainMenuItems';
 import SettingsScreen from '../screens/SettingsScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import HomeScreen from "../screens/HomeScreen";
@@ -20,7 +20,7 @@ const MainMenu = () => {
     }}
     >
     {
-        DrawerItems.map(drawer=><Drawer.Screen
+        MainMenuItems.map(drawer=><Drawer.Screen
             key={drawer.name}
             name={drawer.name}
             options={{
