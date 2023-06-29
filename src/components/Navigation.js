@@ -20,6 +20,7 @@ const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
 
 function Root() {
+
     return (
         <Drawer.Navigator
         drawerType="front"
@@ -55,9 +56,10 @@ function Root() {
                     color={focused ? "#e91e63" : "black"}
                   />}}
                 component={
-                  drawer.name==='Profile' ? ProfileScreen
-                    : drawer.name==='Settings' ? SettingsScreen
-                    : SettingsScreen
+                  drawer.name==='Home' ? HomeScreen 
+                    : drawer.name==='Profile' ? ProfileScreen
+                        : drawer.name==='Settings' ? SettingsScreen
+                            : SettingsScreen
                 }
               />)
         }
