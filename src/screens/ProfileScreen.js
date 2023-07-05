@@ -7,11 +7,12 @@ import { AuthContext } from "../context/AuthContext";
 const ProfileScreen = () => {
     const [name, setName] = useState(null);
     const {userInfo, isLoading, updateUser, logout} = useContext(AuthContext);
+    //console.log(JSON.stringify(userInfo)); //tip: this is shown on every keypress
     return (
         <View style={styles.container}>
             <LoadingSpinner visible={isLoading} />
             <Text>Profile Page</Text>
-            <Text style={styles.welcome}>{userInfo.user.name}</Text>
+            <Text style={styles.welcome}>Welcome {userInfo["user"]["username"]}!</Text>
             <TextInput 
                     style={styles.input} 
                     value={name} 

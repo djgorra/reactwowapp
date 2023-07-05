@@ -19,6 +19,7 @@ export const AuthProvider = ({children}) => {
             setUserInfo(userInfo);
             AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
             setIsLoading(false);
+            axios.defaults.headers.common = {'Authorization': `Bearer ${userInfo.access_token}`};
             console.log(userInfo);
         })
         .catch((error) => {
@@ -48,17 +49,20 @@ export const AuthProvider = ({children}) => {
     };
 
     const updateUser = (name) => {
-        const headers = {Authorization: `Bearer ${userInfo.access_token}` }
+        
+        const bodyParameters = {
+           key: "value"
+        };
         setIsLoading(true);
-        console.log(userInfo.access_token)
+        //console.log("token: "+userInfo.access_token);
         axios
-        .put(`${BASE_URL}/users/?user[username]=${name}`, {}, {headers: headers})
+        .put(`${BASE_URL}/users?user[username]=${name}`)
         .then (res => {
             let userInfo = res.data;
             setUserInfo(userInfo);
             AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
             setIsLoading(false);
-            console.log(userInfo);
+            console.log("Success!");
         })
         .catch((error) => {
             console.log(error)
@@ -83,7 +87,7 @@ export const AuthProvider = ({children}) => {
                 console.log('Error', error.message);
             }
             setIsLoading(false)
-            console.log(error.config);
+           // console.log(error.config);
         })
     };
 
@@ -96,6 +100,7 @@ export const AuthProvider = ({children}) => {
             AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
             setIsLoading(false);
             console.log(userInfo);
+            axios.defaults.headers.common = {'Authorization': `Bearer ${userInfo.access_token}`};
         }).catch((error) => {
             // Error
             if (error.response) {
