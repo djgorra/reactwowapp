@@ -137,6 +137,7 @@ export const AuthProvider = ({children}) => {
             AsyncStorage.removeItem('userInfo');
             setUserInfo({})
             setIsLoading(false)
+            delete axios.defaults.headers.common["Authorization"];
         // }).catch(e=> {
         //     console.log(`logout error ${e}`);
         //     setIsLoading(false);

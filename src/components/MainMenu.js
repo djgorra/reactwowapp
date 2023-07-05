@@ -1,3 +1,4 @@
+import React, {useContext} from "react"; 
 import MainMenuItems from '../constants/MainMenuItems';
 import SettingsScreen from '../screens/SettingsScreen';
 import ProfileScreen from '../screens/ProfileScreen';
@@ -5,8 +6,18 @@ import HomeScreen from "../screens/HomeScreen";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
+import { AuthContext } from "../context/AuthContext";
 
+function LogoutLink(props) {
+  const {logout} = useContext(AuthContext);
+  return (
+    <DrawerContentScrollView {...props}>
+      <DrawerItemList {...props} />
+      <DrawerItem label="Logout" onPress={() => logout()} />
+    </DrawerContentScrollView>
+  );
+}
 
 const Drawer = createDrawerNavigator();
 const MainMenu = () => {
@@ -18,6 +29,7 @@ const MainMenu = () => {
         activeTintColor: '#e91e63',
         itemStyle: { marginVertical: 10 },
     }}
+    drawerContent={props => <LogoutLink {...props} />}
     >
     {
         MainMenuItems.map(drawer=><Drawer.Screen

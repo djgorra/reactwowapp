@@ -14,9 +14,4 @@ export default [
         iconType:'Feather',
         iconName:'settings'
     },
-    {
-        name: 'Logout',
-        iconType:'FontAwesome5',
-        iconName:'user-friends'
-    },
 ]
