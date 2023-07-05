@@ -47,6 +47,46 @@ export const AuthProvider = ({children}) => {
         })
     };
 
+    const updateUser = (name) => {
+        const headers = {Authorization: `Bearer ${userInfo.access_token}` }
+        setIsLoading(true);
+        console.log(userInfo.access_token)
+        axios
+        .put(`${BASE_URL}/users/?user[username]=${name}`, {}, {headers: headers})
+        .then (res => {
+            let userInfo = res.data;
+            setUserInfo(userInfo);
+            AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
+            setIsLoading(false);
+            console.log(userInfo);
+        })
+        .catch((error) => {
+            console.log(error)
+            // Error
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.log(error.response.data);
+                alertBox(error.response.data.message)
+                // console.log(error.response.status);
+                // console.log(error.response.headers);
+            } else if (error.request) {
+                // The request was made but no response was received
+                // `error.request` is an instance of XMLHttpRequest in the 
+                // browser and an instance of
+                // http.ClientRequest in node.js
+                alertBox("Network Error")
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                alertBox("An error has occurred :(")
+                console.log('Error', error.message);
+            }
+            setIsLoading(false)
+            console.log(error.config);
+        })
+    };
+
     const login = (email, password) => {
         setIsLoading(true);
         axios.post(`${BASE_URL}/api/users/sign_in?user[email]=${email}&user[password]=${password}`)
@@ -105,6 +145,7 @@ export const AuthProvider = ({children}) => {
             userInfo,
             register,
             login,
+            updateUser,
             logout,
         }}>
             {children}
