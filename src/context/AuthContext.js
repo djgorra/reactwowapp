@@ -48,6 +48,8 @@ export const AuthProvider = ({children}) => {
         })
     };
 
+    
+
     const updateUser = (name) => {
         
         const bodyParameters = {
@@ -88,6 +90,51 @@ export const AuthProvider = ({children}) => {
             }
             setIsLoading(false)
            // console.log(error.config);
+        })
+    };
+
+
+    const uploadAvatar = (file, filename, type) => {
+        //file = file.replace(":///","://")
+        setIsLoading(true);
+        //console.log("token: "+userInfo.access_token);
+        let formData = new FormData();
+        formData.append('user[avatar]', { uri: file, name: filename, type });
+        axios
+        .patch(`${BASE_URL}/users`, formData, {
+
+            headers: { 'Content-Type': 'multipart/form-data',
+                        'Authorization': `Bearer ${userInfo.access_token}`,
+            }
+        })
+        .then (res => {
+            setIsLoading(false);
+            console.log("Success!");
+        })
+        .catch((error) => {
+            console.log(error)
+            // Error
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.log(error.response.data);
+                alertBox(error.response.data.message)
+                // console.log(error.response.status);
+                // console.log(error.response.headers);
+            } else if (error.request) {
+                // The request was made but no response was received
+                // `error.request` is an instance of XMLHttpRequest in the 
+                // browser and an instance of
+                // http.ClientRequest in node.js
+                alertBox("Network Error")
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                alertBox("An error has occurred :(")
+                console.log('Error', error.message);
+            }
+            setIsLoading(false)
+        // console.log(error.config);
         })
     };
 
@@ -153,6 +200,7 @@ export const AuthProvider = ({children}) => {
             login,
             updateUser,
             logout,
+            uploadAvatar,
         }}>
             {children}
         </AuthContext.Provider>
