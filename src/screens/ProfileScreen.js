@@ -5,9 +5,10 @@ import { AuthContext } from "../context/AuthContext";
 import UploadImage from '../components/UploadImage';
 
 const ProfileScreen = () => {
-    const [name, setName] = useState(null);
     const {userInfo, isLoading, logout, updateUser} = useContext(AuthContext);
     //console.log(JSON.stringify(userInfo)); //tip: this is shown on every keypress
+    const currentName = userInfo["user"]["username"] ? userInfo["user"]["username"] : null;
+    const [name, setName] = useState(currentName);
     return (
         <View style={styles.container}>
             <LoadingSpinner visible={isLoading} />

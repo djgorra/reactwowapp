@@ -109,6 +109,7 @@ export const AuthProvider = ({children}) => {
         })
         .then (res => {
             setIsLoading(false);
+            setUserInfo(userInfo);
             console.log("Success!");
         })
         .catch((error) => {
