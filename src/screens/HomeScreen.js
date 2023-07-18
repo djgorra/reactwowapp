@@ -22,12 +22,12 @@ const HomeScreen = ({navigation}) => {
         {
             clientId: '6e5be73d7bb84defbfe49d9fb5eb4581',
             // There are no scopes so just pass an empty array
-            scopes: 'wow.profile',
+            scopes: ['wow.profile'],
             // Dropbox doesn't support PKCE
             // usePKCE: false,
             // For usage in managed apps using the proxy
             redirectUri: makeRedirectUri({
-                scheme: 'https',
+                scheme: 'myapp',
               })
         },
         discovery
