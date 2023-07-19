@@ -5,6 +5,7 @@ import { useAuthRequest } from 'expo-auth-session';
 import {Button, StyleSheet, Text, View, Platform } from "react-native";
 import LoadingSpinner from '../components/LoadingSpinner';
 import { AuthContext } from "../context/AuthContext";
+import * as env from '../constants/env';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -18,14 +19,14 @@ const HomeScreen = ({navigation}) => {
     const {userInfo, isLoading, getUser} = useContext(AuthContext);
     const [request, response, promptAsync] = useAuthRequest(
         {
-            clientId: '6e5be73d7bb84defbfe49d9fb5eb4581',
+            clientId: env.CLIENT_ID,
             // There are no scopes so just pass an empty array
             scopes: ['wow.profile'],
             state: userInfo["user"]["email"],
             // Dropbox doesn't support PKCE
             // usePKCE: false,
             // For usage in managed apps using the proxy
-            redirectUri: 'https://wow-app-rails-5c78013cc11c.herokuapp.com/oauth2/callback'
+            redirectUri: env.REDIRECT_URI
         },
         discovery
     );
