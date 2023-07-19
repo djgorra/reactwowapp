@@ -2,7 +2,6 @@ import {useContext, useState} from "react";
 import * as React from 'react';
 import * as WebBrowser from 'expo-web-browser';
 import { useAuthRequest } from 'expo-auth-session';
-import {CLIENT_ID, REDIRECT_URI} from "@env"
 import {Button, StyleSheet, Text, View, Platform } from "react-native";
 import LoadingSpinner from '../components/LoadingSpinner';
 import { AuthContext } from "../context/AuthContext";
@@ -16,31 +15,34 @@ const HomeScreen = ({navigation}) => {
       authorizationEndpoint: 'https://oauth.battle.net/authorize',
       tokenEndpoint: 'https://oauth.battle.net/token',
     };
-    const {userInfo, isLoading, logout} = useContext(AuthContext);
-    const useProxy = Platform.select({ web: false, default: true });
+    const {userInfo, isLoading, getUser} = useContext(AuthContext);
     const [request, response, promptAsync] = useAuthRequest(
         {
-            clientId: CLIENT_ID,
+            clientId: '6e5be73d7bb84defbfe49d9fb5eb4581',
             // There are no scopes so just pass an empty array
             scopes: ['wow.profile'],
+            state: userInfo["user"]["email"],
             // Dropbox doesn't support PKCE
             // usePKCE: false,
             // For usage in managed apps using the proxy
-            redirectUri: REDIRECT_URI
+            redirectUri: 'https://wow-app-rails-5c78013cc11c.herokuapp.com/oauth2/callback'
         },
         discovery
     );
 
     React.useEffect(() => {
         if (response?.type === 'success') {
-            const { code } = response.params;
+            console.log("Success");
+            console.log(response.params);
+        } else if (response?.type === 'cancel'){
+            getUser();
         }
     }, [response]);
 
     return (
         <View style={styles.container}>
             <LoadingSpinner visible={isLoading} />
-            <Text style={styles.welcome}>Welcome {userInfo.user.name}</Text>
+            <Text style={styles.welcome}>Welcome {userInfo["user"]["name"]}</Text>
             <Button title="Profile" color="blue" onPress={() => navigation.navigate('Profile')}/>
             <Button
                 disabled={!request}
