@@ -1,8 +1,8 @@
 import {useContext, useState} from "react"; 
 import * as React from 'react';
 import * as WebBrowser from 'expo-web-browser';
-import { makeRedirectUri, useAuthRequest } from 'expo-auth-session';
-
+import { useAuthRequest } from 'expo-auth-session';
+import {CLIENT_ID, REDIRECT_URI} from "@env"
 import {Button, StyleSheet, Text, View, Platform } from "react-native";
 import LoadingSpinner from '../components/LoadingSpinner';
 import { AuthContext } from "../context/AuthContext";
@@ -20,15 +20,13 @@ const HomeScreen = ({navigation}) => {
     const useProxy = Platform.select({ web: false, default: true });
     const [request, response, promptAsync] = useAuthRequest(
         {
-            clientId: '6e5be73d7bb84defbfe49d9fb5eb4581',
+            clientId: CLIENT_ID,
             // There are no scopes so just pass an empty array
             scopes: ['wow.profile'],
             // Dropbox doesn't support PKCE
             // usePKCE: false,
             // For usage in managed apps using the proxy
-            redirectUri: makeRedirectUri({
-                scheme: 'myapp',
-              })
+            redirectUri: REDIRECT_URI
         },
         discovery
     );
