@@ -10,10 +10,10 @@ export const AuthProvider = ({children}) => {
     const [userInfo, setUserInfo] = useState({});
     const [isLoading, setIsLoading] = useState(false)
 
-    const register = (name, email, password) => {
+    const register = (email, password) => {
         setIsLoading(true);
         axios
-        .post(`${BASE_URL}/api/users?user[email]=${email}&user[username]=${name}&user[password]=${password}`)
+        .post(`${BASE_URL}/api/users?user[email]=${email}&user[password]=${password}`)
         .then (res => {
             let userInfo = res.data;
             setUserInfo(userInfo);

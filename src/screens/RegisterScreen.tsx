@@ -1,47 +1,51 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {Linking, Platform} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
-
-import {useData, useTheme, useTranslation} from '../hooks/index';
+import { AuthContext } from '../context/AuthContext';
+import {useData, useTheme, useTranslation} from '../hooks/';
 import * as regex from '../constants/regex';
 import {Block, Button, Input, Image, Text, Checkbox} from '../components/';
 
 const isAndroid = Platform.OS === 'android';
 
 interface IRegistration {
-  name: string;
   email: string;
   password: string;
   agreed: boolean;
 }
 interface IRegistrationValidation {
-  name: boolean;
   email: boolean;
   password: boolean;
   agreed: boolean;
 }
 
 const RegisterScreen = () => {
+  const [email, setEmail] = useState(null);
+  const [password, setPassword] = useState(null);
   const {isDark} = useData();
   const {t} = useTranslation();
   const navigation = useNavigation();
-  const [isValid, setIsValid] = useState({
-    name: false,
+  const {register} = useContext(AuthContext);
+  const [isValid, setIsValid] = useState<IRegistrationValidation>({
     email: false,
     password: false,
-    agreed: false,
+    agreed: true,
   });
-  const [registration, setRegistration] = useState({
-    name: '',
+  const [registration, setRegistration] =  useState<IRegistration>({
     email: '',
     password: '',
-    agreed: false,
+    agreed: true,
   });
   const {assets, colors, gradients, sizes} = useTheme();
 
   const handleChange = useCallback(
     (value) => {
       setRegistration((state) => ({...state, ...value}));
+      if(value.email){
+        setEmail(value.email);
+      }else if (value.password){
+        setPassword(value.password);
+      }
     },
     [setRegistration],
   );
@@ -93,7 +97,7 @@ const RegisterScreen = () => {
             </Button>
 
             <Text h4 center white marginBottom={sizes.md}>
-                Welcome
+            {t('register.title')}
             </Text>
           </Image>
         </Block>
@@ -117,35 +121,9 @@ const RegisterScreen = () => {
               justify="space-evenly"
               tint={colors.blurTint}
               paddingVertical={sizes.sm}>
-              <Text p semibold center>
-                Register with
-              </Text>
+
               {/* social buttons */}
               <Block row center justify="space-evenly" marginVertical={sizes.m}>
-                <Button outlined gray shadow={!isAndroid}>
-                  <Image
-                    source={assets.facebook}
-                    height={sizes.m}
-                    width={sizes.m}
-                    color={isDark ? colors.icon : undefined}
-                  />
-                </Button>
-                <Button outlined gray shadow={!isAndroid}>
-                  <Image
-                    source={assets.apple}
-                    height={sizes.m}
-                    width={sizes.m}
-                    color={isDark ? colors.icon : undefined}
-                  />
-                </Button>
-                <Button outlined gray shadow={!isAndroid}>
-                  <Image
-                    source={assets.google}
-                    height={sizes.m}
-                    width={sizes.m}
-                    color={isDark ? colors.icon : undefined}
-                  />
-                </Button>
               </Block>
               <Block
                 row
@@ -154,37 +132,9 @@ const RegisterScreen = () => {
                 justify="center"
                 marginBottom={sizes.sm}
                 paddingHorizontal={sizes.xxl}>
-                <Block
-                  flex={0}
-                  height={1}
-                  width="50%"
-                  end={[1, 0]}
-                  start={[0, 1]}
-                  gradient={gradients.divider}
-                />
-                <Text center marginHorizontal={sizes.s}>
-                  or
-                </Text>
-                <Block
-                  flex={0}
-                  height={1}
-                  width="50%"
-                  end={[0, 1]}
-                  start={[1, 0]}
-                  gradient={gradients.divider}
-                />
               </Block>
               {/* form inputs */}
               <Block paddingHorizontal={sizes.sm}>
-                <Input
-                  autoCapitalize="none"
-                  marginBottom={sizes.m}
-                  label="Name"
-                  placeholder="Name"
-                  success={Boolean(registration.name && isValid.name)}
-                  danger={Boolean(registration.name && !isValid.name)}
-                  onChangeText={(value) => handleChange({name: value})}
-                />
                 <Input
                   autoCapitalize="none"
                   marginBottom={sizes.m}
@@ -206,43 +156,17 @@ const RegisterScreen = () => {
                   danger={Boolean(registration.password && !isValid.password)}
                 />
               </Block>
-              {/* checkbox terms */}
-              <Block row flex={0} align="center" paddingHorizontal={sizes.sm}>
-                <Checkbox
-                  marginRight={sizes.sm}
-                  checked={registration?.agreed}
-                  onPress={(value) => handleChange({agreed: value})}
-                />
-                <Text paddingRight={sizes.s}>
-                  "I agree with the"
-                  <Text
-                    semibold
-                    onPress={() => {
-                      Linking.openURL('https://www.creative-tim.com/terms');
-                    }}>
-                    "Terms & Conditions"
-                  </Text>
-                </Text>
-              </Block>
+
               <Button
-                onPress={handleSignUp}
+                onPress={() => {
+                    register(email, password);
+                }}
                 marginVertical={sizes.s}
                 marginHorizontal={sizes.sm}
                 gradient={gradients.primary}
                 disabled={Object.values(isValid).includes(false)}>
                 <Text bold white transform="uppercase">
-                  "Sign Up"
-                </Text>
-              </Button>
-              <Button
-                primary
-                outlined
-                shadow={!isAndroid}
-                marginVertical={sizes.s}
-                marginHorizontal={sizes.sm}
-                onPress={() => navigation.navigate('Pro')}>
-                <Text bold primary transform="uppercase">
-                  "Sign Up"
+                  Sign Up
                 </Text>
               </Button>
             </Block>
