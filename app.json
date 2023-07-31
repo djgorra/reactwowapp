@@ -9,7 +9,7 @@
     "scheme": "myapp",
     "splash": {
       "image": "./assets/splash.jpg",
-      "resizeMode": "contain",
+      "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": [
