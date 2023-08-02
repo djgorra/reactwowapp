@@ -1,10 +1,10 @@
 import React, {useCallback, useContext, useEffect, useState} from 'react';
-import {Linking, Platform} from 'react-native';
+import {Platform} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 import { AuthContext } from '../context/AuthContext';
 import {useData, useTheme, useTranslation} from '../hooks/';
 import * as regex from '../constants/regex';
-import {Block, Button, Input, Image, Text, Checkbox} from '../components/';
+import {Block, Button, Input, Image, Text} from '../components/';
 
 const isAndroid = Platform.OS === 'android';
 
@@ -97,7 +97,7 @@ const RegisterScreen = () => {
             </Button>
 
             <Text h4 center white marginBottom={sizes.md}>
-            {t('register.title')}
+                {t('app.name')}
             </Text>
           </Image>
         </Block>
@@ -132,6 +132,9 @@ const RegisterScreen = () => {
                 justify="center"
                 marginBottom={sizes.sm}
                 paddingHorizontal={sizes.xxl}>
+                <Text h5 center>
+                    {t('common.signup')}
+                </Text>
               </Block>
               {/* form inputs */}
               <Block paddingHorizontal={sizes.sm}>

@@ -34,7 +34,7 @@
     "agree": "I agree with the ",
     "terms": "Terms and Conditions",
     "signup": "Sign Up",
-    "signin": "Sign In",
+    "signin": "Log In",
     "goBack": "Go back",
     "inStock": "In stock",
     "outStock": "Out of stock",
@@ -49,7 +49,7 @@
     }
   },
   "app": {
-    "name": "Soft UI",
+    "name": "App Name",
     "fullname": "Soft UI Kit",
     "native": "React Native",
     "link": "creative-tim.com"
