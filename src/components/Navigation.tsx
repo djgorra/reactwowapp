@@ -5,6 +5,7 @@ import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "../screens/HomeScreen";
 import LoginScreen from "../screens/LoginScreen";
+import ProfileScreen from "../screens/ProfileScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import { AuthContext } from "../context/AuthContext";
 import MainMenu from "../components/MainMenu";
@@ -62,15 +63,7 @@ const Navigation = () => {
                     <Stack.Screen options={{
                         }} name="MainMenu" component={MainMenu}
                         options={{ headerShown: false }} />
-                        <Stack.Screen
-                            name="Home" 
-                            component={HomeScreen}
-                            options={{
-                                headerRight: () => (
-                                    <Button title="Logout" color="red" onPress={logout}/>
-                                ),
-                              }}
-                        />
+
                     </>
                     ) : (
                     <>

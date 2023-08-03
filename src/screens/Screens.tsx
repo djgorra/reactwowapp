@@ -2,11 +2,25 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {useScreenOptions, useTranslation} from '../hooks';
 import HomeScreen from './HomeScreen';
-
+import ProfileScreen from './ProfileScreen';
 const Stack = createStackNavigator();
 
 export default () => {
-  const {t} = useTranslation();
-  const screenOptions = useScreenOptions();
+  // const {t} = useTranslation();
+  // const screenOptions = useScreenOptions();
+  return (
+    <Stack.Navigator screenOptions={{}}>
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen 
+          name="Profile" 
+          component={ProfileScreen} 
+          options={{headerShown: false}}
+      />
+    </Stack.Navigator>
+  );
 
 };

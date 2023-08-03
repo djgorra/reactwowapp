@@ -4,8 +4,6 @@ import {Alert, Animated, Linking, StyleSheet} from 'react-native';
 import {
   useDrawerStatus,
   createDrawerNavigator,
-  DrawerContentComponentProps,
-  DrawerContentOptions,
   DrawerContentScrollView,
 } from '@react-navigation/drawer';
 
@@ -83,6 +81,7 @@ function DrawerContent(props){
   // screen list for Drawer menu
   const screens = [
     {name: t('screens.home'), to: 'Home', icon: assets.home},
+    {name: t('screens.profile'), to: 'Profile', icon: assets.profile},
     // {name: t('screens.components'), to: 'Components', icon: assets.components},
     // {name: t('screens.articles'), to: 'Articles', icon: assets.document},
     // {name: t('screens.rental'), to: 'Pro', icon: assets.rental},
@@ -211,7 +210,7 @@ function DrawerContent(props){
 /* drawer menu navigation */
 export default () => {
   const {gradients} = useTheme();
-
+  const {t} = useTranslation();
   return (
     <Block gradient={gradients.light}>
       <Drawer.Navigator
@@ -227,81 +226,8 @@ export default () => {
         }}
         drawerContent={(props) => <DrawerContent {...props} />}
         >
-        <Drawer.Screen name="Screens" component={ScreensStack} />
+        <Drawer.Screen name={t('common.appName')} component={ScreensStack} />
       </Drawer.Navigator>
     </Block>
   );
 };
-
-
-
-// import React, {useContext} from "react"; 
-// import MainMenuItems from '../constants/MainMenuItems';
-// import SettingsScreen from '../screens/SettingsScreen';
-// import ProfileScreen from '../screens/ProfileScreen';
-// import HomeScreen from "../screens/HomeScreen";
-// import { MaterialCommunityIcons } from '@expo/vector-icons';
-// import { Feather } from '@expo/vector-icons';
-// import { FontAwesome5 } from '@expo/vector-icons';
-// import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
-// import { AuthContext } from "../context/AuthContext";
-
-// function LogoutLink(props) {
-//   const {logout} = useContext(AuthContext);
-//   return (
-//     <DrawerContentScrollView {...props}>
-//       <DrawerItemList {...props} />
-//       <DrawerItem label="Logout" onPress={() => logout()} />
-//     </DrawerContentScrollView>
-//   );
-// }
-
-// const Drawer = createDrawerNavigator();
-// const MainMenu = () => {
-//   return (
-//     <Drawer.Navigator
-//     drawerType="front"
-//     initialRouteName="Home"
-//     screenOptions={{
-//         activeTintColor: '#e91e63',
-//         itemStyle: { marginVertical: 10 },
-//     }}
-//     drawerContent={props => <LogoutLink {...props} />}
-//     >
-//     {
-//         MainMenuItems.map(drawer=><Drawer.Screen
-//             key={drawer.name}
-//             name={drawer.name}
-//             options={{
-//             drawerIcon:({focused})=>
-//              drawer.iconType==='MaterialCommunityIcons' ?
-//         <MaterialCommunityIcons
-//                   name={drawer.iconName}
-//                   size={24}
-//                   color={focused ? "#e91e63" : "black"}
-//               />
-//             :
-//             drawer.iconType==='Feather' ?
-//         <Feather
-//                 name={drawer.iconName}
-//                 size={24}
-//                 color={focused ? "#e91e63" : "black"}
-//               />
-//             :
-//         <FontAwesome5
-//                 name={drawer.iconName}
-//                 size={24}
-//                 color={focused ? "#e91e63" : "black"}
-//               />}}
-//             component={
-//               drawer.name==='Home' ? HomeScreen 
-//                 : drawer.name==='Profile' ? ProfileScreen
-//                     : drawer.name==='Settings' ? SettingsScreen
-//                         : SettingsScreen
-//             }
-//           />)
-//     }
-//     </Drawer.Navigator>
-// );
-// }
-// export default MainMenu;
