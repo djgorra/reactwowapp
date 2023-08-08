@@ -143,7 +143,7 @@ const CharacterListScreen = () => {
             <SafeAreaView>
                 <Modal
                     animationType="slide"
-                    visible={visible}
+                    isVisible={visible}
                     style={styles.modal}
                     hasBackdrop={true}
                     backdropColor="black"
