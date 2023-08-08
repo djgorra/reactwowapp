@@ -3,6 +3,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {useScreenOptions, useTranslation} from '../hooks';
 import HomeScreen from './HomeScreen';
 import ProfileScreen from './ProfileScreen';
+import CharacterListScreen from './CharacterListScreen';
 const Stack = createStackNavigator();
 
 export default () => {
@@ -14,6 +15,11 @@ export default () => {
         name="Home"
         component={HomeScreen}
         options={{headerShown: false}}
+      />
+      <Stack.Screen 
+          name="Characters" 
+          component={CharacterListScreen} 
+          options={{headerShown: false}}
       />
       <Stack.Screen 
           name="Profile" 

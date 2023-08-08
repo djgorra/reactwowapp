@@ -57,6 +57,7 @@
   "darkMode": "Dark Mode",
   "screens": {
     "home": "Home",
+    "characters": "Characters",
     "components": "Components",
     "articles": "Articles",
     "rental": "Rental",
