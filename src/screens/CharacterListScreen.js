@@ -1,13 +1,12 @@
 import React, {useContext, useState, useEffect} from "react"; 
-import LoadingSpinner from '../components/LoadingSpinner';
 import { AuthContext } from "../context/AuthContext";
 import {useTheme} from '../hooks/';
-import {Block, Button, Input, Image, Switch, Text} from '../components/';
+import {Button, Text, Block} from '../components/';
 import { BASE_URL } from "../config";
 import axios from 'axios';
 import alertBox from "../components/AlertBox.js"
 import Modal from 'react-native-modal';
-import {Picker} from '@react-native-picker/picker';
+import DropDownPicker from 'react-native-dropdown-picker';
 import {
     SafeAreaView,
     View,
@@ -26,12 +25,14 @@ const CharacterListScreen = () => {
     const {assets, colors, gradients, sizes} = useTheme();
     const [list,setList] = useState([]);
     const [visible,setVisible] = useState(false);
-    const [selectedLanguage, setSelectedLanguage] = useState();
+    const [open, setOpen] = useState(false);
+    const [value, setValue] = useState(null);
+    const [items, setItems] = useState([
+      {label: 'Apple', value: 'apple'},
+      {label: 'Banana', value: 'banana'}
+    ]);
 
     const [characterName,setCharacterName] = useState("");
-    // const [characterPrice,setCharacterPrice] = useState(0);
-    // const [description,setDescription] = useState("");
-    // const [status,setStatus] = useState(1);
     const [hideId,setHideId] = useState(null);
 
     useEffect(()=>{
@@ -93,9 +94,6 @@ const CharacterListScreen = () => {
             var data = {
                 "character_id" : hideId,
                 "name": characterName,
-                // "price": Number(characterPrice) || 0,
-                // "description":description,
-                // "status": Number(status) || 0,
               }
             axios({
                 url:"https://nitc.cleverapps.io/api/characters/",
@@ -108,9 +106,6 @@ const CharacterListScreen = () => {
                 getList();
     
                 setCharacterName("")
-                // setCharacterPrice(0)
-                // setDescription("")
-                // setStatus(1)
                 setVisible(false)
             })
         }
@@ -121,9 +116,6 @@ const CharacterListScreen = () => {
         setVisible(true)
         setHideId(item.character_id)
         setCharacterName(item.name)
-        // setCharacterPrice(item.price+"")
-        // setDescription(item.description)
-        // setStatus(item.status+"")
     }
 
     const handleVisibleModal = () => {
@@ -134,21 +126,6 @@ const CharacterListScreen = () => {
     const onChangeName = (value) => {
         setCharacterName(value)
     }
-
-    // const onChangePrice = (value) => {
-    //     setCharacterPrice(value)
-    // }
-
-    // const onChangeDescription = (value) => {
-    //     setDescription(value)
-    // }
-
-    // const onChangeStatus = (value) => {
-    //     setStatus(value)
-    // }
-
-
-    //console.log(JSON.stringify(userInfo)); //tip: this is shown on every keypress
     return (
 
         <SafeAreaView>
@@ -172,11 +149,9 @@ const CharacterListScreen = () => {
                     backdropColor="black"
                 >
                         <View style={styles.form}>
-                            <Button onPress={handleVisibleModal} style={styles.btnClose}>
-                                <Text style={styles.txtClose}>
-                                    Close   
-                                </Text>
-                            </Button>
+                        <Block>
+                        <Text h1>Add a Character</Text>
+                        </Block>
                             <TextInput
                                 value={characterName}
                                 style={styles.text_input}
@@ -184,36 +159,26 @@ const CharacterListScreen = () => {
                                 onChangeText={onChangeName}
                             />
                             <Text>Choose Class</Text>
-                            <Picker selectedValue={selectedLanguage} onValueChange={(itemValue, itemIndex) => setSelectedLanguage(itemValue)  }>
-                                  <Picker.Item label="Java" value="java" /> 
-                                  <Picker.Item label="JavaScript" value="js" />
-                            </Picker>
-                            {/* <TextInput
-                                value={characterPrice}
-                                style={styles.text_input}
-                                placeholder="Character price"
-                                onChangeText={onChangePrice}
-                            />
-                            <TextInput
-                                value={description}
-                                style={styles.text_input}
-                                placeholder="Description"
-                                onChangeText={onChangeDescriptoin}
-                            />
-                            <TextInput
-                                value={status}
-                                style={styles.text_input}
-                                placeholder="Status"
-                                onChangeText={onChangeStatus}
-                            /> */}
-
+                            <DropDownPicker
+                                open={open}
+                                value={value}
+                                items={items}
+                                setOpen={setOpen}
+                                setValue={setValue}
+                                setItems={setItems}
+                                />
                             <Button
                                 onPress={handleSave}
                                 flex={1}
-                                gradient={gradients.secondary}
+                                gradient={gradients.primary}
                                 style={styles.btn_save}>
                                 <Text white bold transform="uppercase">
                                     {hideId == null ? "Save" : "Update"}
+                                </Text>
+                            </Button>
+                            <Button flex={1} gradient={gradients.secondary} marginHorizontal={sizes.s} onPress={handleVisibleModal}>
+                                <Text white bold transform="uppercase" marginHorizontal={sizes.s}>
+                                Close
                                 </Text>
                             </Button>
                         </View>
@@ -243,24 +208,6 @@ const CharacterListScreen = () => {
                 })}
             </ScrollView>
         </SafeAreaView>
-        // <View style={styles.container}>
-        //     <LoadingSpinner visible={isLoading} />
-        //     <Text>Character Page</Text>
-
-        //     <FlatList
-        //         data={listItems}
-        //         //data defined in constructor
-        //         ItemSeparatorComponent={ItemSeparatorView}
-        //         //Item Separator View
-        //         renderItem={ItemView}
-        //         keyExtractor={(item, index) => index.toString()}
-        //     />
-        //     <Button gradient={gradients.primary} marginBottom={sizes.base}>
-        //         <Text white bold transform="uppercase">
-        //             Primary
-        //         </Text>
-        //     </Button>
-        // </View>
     );
 };
 
