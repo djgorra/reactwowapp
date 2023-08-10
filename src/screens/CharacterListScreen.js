@@ -21,18 +21,23 @@ import { set } from "react-native-reanimated";
 
 
 const CharacterListScreen = () => {
-    const {userInfo, setIsLoading, logout, updateUser} = useContext(AuthContext);
+    const {userInfo, setIsLoading, logout, updateUser, classes, specs, races, genders} = useContext(AuthContext);
     const {assets, colors, gradients, sizes} = useTheme();
-    const [list,setList] = useState([]);
-    const [visible,setVisible] = useState(false);
-    const [open, setOpen] = useState(false);
-    const [value, setValue] = useState(null);
-    const [items, setItems] = useState([
-      {label: 'Apple', value: 'apple'},
-      {label: 'Banana', value: 'banana'}
-    ]);
+    const [list,setList] = useState([]);//list of characters
+    const [visible,setVisible] = useState(false); //modal popup
+    const [openClass, setOpenClass] = useState(false); //dropdown
+    const [openSpec1, setOpenSpec1] = useState(false); //dropdown
+    const [openSpec2, setOpenSpec2] = useState(false); //dropdown
+    const [openRace, setOpenRace] = useState(false); //dropdown
+    const [openGender, setOpenGender] = useState(false); //dropdown
 
     const [characterName,setCharacterName] = useState("");
+    const [characterClass,setCharacterClass] = useState(null);
+    const [characterSpec1,setCharacterSpec1] = useState(null);
+    const [characterSpec2,setCharacterSpec2] = useState(null);
+    const [characterRace,setCharacterRace] = useState(null);
+    const [characterGender,setCharacterGender] = useState(null);
+    const [classSpecs,setClassSpecs] = useState([]);
     const [hideId,setHideId] = useState(null);
 
     useEffect(()=>{
@@ -49,6 +54,27 @@ const CharacterListScreen = () => {
             method : "DELETE",
         }).then((res)=>{
             getList();
+        }).catch((error) => {
+                // Error
+                if (error.response) {
+                    // The request was made and the server responded with a status code
+                    // that falls out of the range of 2xx
+                    console.log(error.response.data);
+                    alertBox(error.response.data.message)
+                    // console.log(error.response.status);
+                    // console.log(error.response.headers);
+                } else if (error.request) {
+                    // The request was made but no response was received
+                    // `error.request` is an instance of XMLHttpRequest in the 
+                    // browser and an instance of
+                    // http.ClientRequest in node.js
+                    alertBox("Network Error")
+                    console.log(error.request);
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    alertBox("An error has occurred :(")
+                    console.log('Error', error.message);
+                }
         })
     }
 
@@ -56,12 +82,13 @@ const CharacterListScreen = () => {
         setIsLoading(true)
         if(hideId == null){
             axios({
-                url:`${BASE_URL}/api/characters.json?character[name]=${characterName}&character[user_id]=${userInfo["user"]["id"]}`,
+                url:`${BASE_URL}/api/characters.json?character[name]=${characterName}&character[user_id]=${userInfo["user"]["id"]}&character[class_id]=${characterClass}&character[race]=${characterRace}&character[gender]=${characterGender}&character[spec1]=${characterSpec1}&character[spec2]=${characterSpec2}`,
                 method : "POST",
             }).then((res)=>{
                 getList();
                 setIsLoading(false)
                 setCharacterName("")
+                setCharacterClass(null)
                 // setCharacterPrice(0)
                 // setDescription("")
                 // setStatus(1)
@@ -126,6 +153,7 @@ const CharacterListScreen = () => {
     const onChangeName = (value) => {
         setCharacterName(value)
     }
+
     return (
 
         <SafeAreaView>
@@ -160,13 +188,66 @@ const CharacterListScreen = () => {
                             />
                             <Text>Choose Class</Text>
                             <DropDownPicker
-                                open={open}
-                                value={value}
-                                items={items}
-                                setOpen={setOpen}
-                                setValue={setValue}
-                                setItems={setItems}
+                                zIndex={10}
+                                onOpen
+                                open={openClass}
+                                value={characterClass}
+                                items={classes}
+                                setOpen={setOpenClass}
+                                setValue={setCharacterClass}
+                                onChangeValue={(value) => {
+                                    console.log(characterClass);
+                                    // const classSpecs = specs.filter(function(x){ return x["character_class_id"] == characterClass["value"]})
+                                    // setSpecs(classSpecs)
+                                  }}
                                 />
+                            <Text>Choose Primary Spec</Text>
+                            <DropDownPicker
+                                zIndex={9}
+                                open={openSpec1}
+                                value={characterSpec1}
+                                items={classSpecs}
+                                setOpen={setOpenSpec1}
+                                setValue={setCharacterSpec1}
+                                onChangeValue={(value) => {
+                                    console.log(value);
+                                    
+                                  }}
+                                />
+                            <DropDownPicker
+                                zIndex={8}
+                                open={openSpec2}
+                                value={characterSpec2}
+                                items={classSpecs}
+                                setOpen={setOpenSpec2}
+                                setValue={setCharacterSpec2}
+                                onChangeValue={(value) => {
+                                    console.log(value);
+                                    
+                                    }}
+                            />
+                            <DropDownPicker
+                                zIndex={7}
+                                open={openRace}
+                                value={characterRace}
+                                items={races}
+                                setOpen={setOpenRace}
+                                setValue={setCharacterRace}
+                                onChangeValue={(value) => {
+                                    console.log(value);
+                                }}
+                            />
+                             <DropDownPicker
+                                zIndex={6}
+                                open={openGender}
+                                value={characterGender}
+                                items={genders}
+                                setOpen={setOpenGender}
+                                setValue={setCharacterGender}
+                                onChangeValue={(value) => {
+                                    console.log(value);
+                                }}
+                            />
                             <Button
                                 onPress={handleSave}
                                 flex={1}
@@ -225,7 +306,9 @@ const styles = StyleSheet.create(
         backgroundColor : "#ffffff",
         marginBottom:20,
     },
-   
+    dropdownPicker: {
+        zIndex: 10,
+    },
     txtClose:{
         right:0,
         backgroundColor : "#eeeeee",

@@ -9,6 +9,10 @@ export const AuthContext = createContext();
 export const AuthProvider = ({children}) => {
     const [userInfo, setUserInfo] = useState({});
     const [isLoading, setIsLoading] = useState(false)
+    const [classes, setClasses] = useState([]);
+    const [specs, setSpecs] = useState([]);
+    const [races, setRaces] = useState([]);
+    const [genders, setGenders] = useState([]);
 
     const register = (email, password) => {
         setIsLoading(true);
@@ -184,9 +188,10 @@ export const AuthProvider = ({children}) => {
             let userInfo = res.data
             setUserInfo(userInfo);
             AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
-            setIsLoading(false);
             console.log(userInfo);
             axios.defaults.headers.common = {'Authorization': `Bearer ${userInfo.access_token}`};
+            getData();
+            setIsLoading(false);
         }).catch((error) => {
             // Error
             if (error.response) {
@@ -210,6 +215,40 @@ export const AuthProvider = ({children}) => {
             }
             setIsLoading(false)
             console.log(error.config);
+        })
+    }
+
+    const getData= () => {
+        axios({
+            url:`${BASE_URL}/api/datafile`,
+            method : "GET",
+        }).then((res)=>{
+            console.log(res.data["classes"])
+            setClasses(res.data["classes"])
+            setSpecs(res.data["specs"])
+            setRaces(res.data["races"])
+            setGenders(res.data["genders"])
+        }).catch((error) => {
+            // Error
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.log(error.response.data);
+                alertBox(error.response.data.message)
+                // console.log(error.response.status);
+                // console.log(error.response.headers);
+            } else if (error.request) {
+                // The request was made but no response was received
+                // `error.request` is an instance of XMLHttpRequest in the 
+                // browser and an instance of
+                // http.ClientRequest in node.js
+                alertBox("Network Error")
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                alertBox("An error has occurred :(")
+                console.log('Error', error.message);
+            }
         })
     }
 
@@ -241,7 +280,12 @@ export const AuthProvider = ({children}) => {
             updateUser,
             logout,
             uploadAvatar,
-            getUser
+            getUser,
+            getData,
+            classes,
+            specs,
+            races,
+            genders
         }}>
             {children}
         </AuthContext.Provider>
