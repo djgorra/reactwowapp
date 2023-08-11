@@ -21,7 +21,7 @@ import { set } from "react-native-reanimated";
 
 
 const CharacterListScreen = () => {
-    const {userInfo, setIsLoading, logout, updateUser, classes, specs, races, genders} = useContext(AuthContext);
+    const {userInfo, setUserInfo, setIsLoading, logout, updateUser, classes, specs, races, genders} = useContext(AuthContext);
     const {assets, colors, gradients, sizes} = useTheme();
     const [list,setList] = useState([]);//list of characters
     const [visible,setVisible] = useState(false); //modal popup
@@ -30,6 +30,7 @@ const CharacterListScreen = () => {
     const [openSpec2, setOpenSpec2] = useState(false); //dropdown
     const [openRace, setOpenRace] = useState(false); //dropdown
     const [openGender, setOpenGender] = useState(false); //dropdown
+    const [specsDisabled, setSpecsDisabled] = useState(true); //dropdown
 
     const [characterName,setCharacterName] = useState("");
     const [characterClass,setCharacterClass] = useState(null);
@@ -42,7 +43,7 @@ const CharacterListScreen = () => {
 
     useEffect(()=>{
         getList()
-    },[])
+    },[list])
 
     const getList= () => {
         setList(userInfo["characters"]);
@@ -77,22 +78,28 @@ const CharacterListScreen = () => {
                 }
         })
     }
+    const clearForm = (res) => {
+        setUserInfo(res.data);
+        getList();
+        setIsLoading(false);
+        setCharacterName("");
+        setCharacterClass(null);
+        setCharacterSpec1(null);
+        setCharacterSpec2(null);
+        setCharacterRace(null);
+        setCharacterGender(null);
+        setVisible(false);
+        setSpecsDisabled(true);
+    }
 
     const handleSave = (item) => {
         setIsLoading(true)
         if(hideId == null){
             axios({
-                url:`${BASE_URL}/api/characters.json?character[name]=${characterName}&character[user_id]=${userInfo["user"]["id"]}&character[class_id]=${characterClass}&character[race]=${characterRace}&character[gender]=${characterGender}&character[spec1]=${characterSpec1}&character[spec2]=${characterSpec2}`,
+                url:`${BASE_URL}/api/characters.json?character[name]=${characterName}&character[user_id]=${userInfo["user"]["id"]}&character[character_class_id]=${characterClass}&character[race]=${characterRace}&character[gender]=${characterGender}&character[primary_spec_id]=${characterSpec1}&character[secondary_spec_id]=${characterSpec2}`,
                 method : "POST",
             }).then((res)=>{
-                getList();
-                setIsLoading(false)
-                setCharacterName("")
-                setCharacterClass(null)
-                // setCharacterPrice(0)
-                // setDescription("")
-                // setStatus(1)
-                setVisible(false)
+                clearForm(res);
             }).catch((error) => {
                 // Error
                 if (error.response) {
@@ -118,31 +125,52 @@ const CharacterListScreen = () => {
                 console.log(error.config);
             })
         }else{
-            var data = {
-                "character_id" : hideId,
-                "name": characterName,
-              }
-            axios({
-                url:"https://nitc.cleverapps.io/api/characters/",
+              axios({
+                url:`${BASE_URL}/api/characters/${hideId}.json?character[name]=${characterName}&character[character_class_id]=${characterClass}&character[race]=${characterRace}&character[gender]=${characterGender}&character[primary_spec_id]=${characterSpec1}&character[secondary_spec_id]=${characterSpec2}`,
                 method : "PUT",
-                data : data,
-                headers : {
-                    "Content-Type" : "application/json"
-                }
             }).then((res)=>{
-                getList();
-    
-                setCharacterName("")
-                setVisible(false)
+                clearForm();
+            }).catch((error) => {
+                // Error
+                if (error.response) {
+                    // The request was made and the server responded with a status code
+                    // that falls out of the range of 2xx
+                    console.log(error.response.data);
+                    alertBox(error.response.data.message)
+                    // console.log(error.response.status);
+                    // console.log(error.response.headers);
+                } else if (error.request) {
+                    // The request was made but no response was received
+                    // `error.request` is an instance of XMLHttpRequest in the 
+                    // browser and an instance of
+                    // http.ClientRequest in node.js
+                    alertBox("Network Error")
+                    console.log(error.request);
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    alertBox("An error has occurred :(")
+                    console.log('Error', error.message);
+                }
+                setIsLoading(false)
+                console.log(error.config);
             })
         }
         
     }
 
     const handleEdit = (item) => {
-        setVisible(true)
-        setHideId(item.character_id)
+        console.log(item)
+        setHideId(item["id"])
         setCharacterName(item.name)
+        setCharacterClass(item["character_class_id"])
+        const classSpecs = specs.filter(function(x){ return x["character_class_id"] == item["character_class_id"]})
+        setClassSpecs(classSpecs)
+        setCharacterSpec1(item["primary_spec_id"])
+        setCharacterSpec2(item["secondary_spec_id"])
+        setCharacterRace(item["race"])
+        setCharacterGender(item["gender"])
+        setVisible(true)
+        
     }
 
     const handleVisibleModal = () => {
@@ -197,8 +225,9 @@ const CharacterListScreen = () => {
                                 setValue={setCharacterClass}
                                 onChangeValue={(value) => {
                                     console.log(characterClass);
-                                    // const classSpecs = specs.filter(function(x){ return x["character_class_id"] == characterClass["value"]})
-                                    // setSpecs(classSpecs)
+                                    const classSpecs = specs.filter(function(x){ return x["character_class_id"] == characterClass})
+                                    setClassSpecs(classSpecs);
+                                    setSpecsDisabled(false);
                                   }}
                                 />
                             <Text>Choose Primary Spec</Text>
@@ -207,6 +236,10 @@ const CharacterListScreen = () => {
                                 open={openSpec1}
                                 value={characterSpec1}
                                 items={classSpecs}
+                                disabled={specsDisabled}
+                                disabledStyle={{
+                                    opacity: 0.5
+                                  }}
                                 setOpen={setOpenSpec1}
                                 setValue={setCharacterSpec1}
                                 onChangeValue={(value) => {
@@ -214,11 +247,16 @@ const CharacterListScreen = () => {
                                     
                                   }}
                                 />
+                            <Text>Choose Secondary Spec</Text>
                             <DropDownPicker
                                 zIndex={8}
                                 open={openSpec2}
                                 value={characterSpec2}
                                 items={classSpecs}
+                                disabled={specsDisabled}
+                                disabledStyle={{
+                                    opacity: 0.5
+                                  }}
                                 setOpen={setOpenSpec2}
                                 setValue={setCharacterSpec2}
                                 onChangeValue={(value) => {
@@ -226,6 +264,7 @@ const CharacterListScreen = () => {
                                     
                                     }}
                             />
+                            <Text>Set Character Race</Text>
                             <DropDownPicker
                                 zIndex={7}
                                 open={openRace}
@@ -237,6 +276,7 @@ const CharacterListScreen = () => {
                                     console.log(value);
                                 }}
                             />
+                            <Text>Set Character Gender</Text>
                              <DropDownPicker
                                 zIndex={6}
                                 open={openGender}
@@ -274,7 +314,7 @@ const CharacterListScreen = () => {
                             </View>
                             <View>
                                 <TouchableOpacity
-                                    onPress={()=>handleDetete(item)}
+                                    onPress={()=>handleDelete(item)}
                                 >
                                     <Text style={styles.txt_del}>Delete</Text>
                                 </TouchableOpacity>
@@ -320,7 +360,6 @@ const styles = StyleSheet.create(
         width:50,
     },
     text_input:{
-        color:"#ffffff",
         padding :10,
         borderWidth :1,
         borderColor : "gray",
@@ -337,7 +376,7 @@ const styles = StyleSheet.create(
         fontSize : 22,
         fontWeight : "bold"
     },
-    item_course : {
+    item_character : {
         padding :15,
         borderBottomWidth: 1,
         borderBottomColor : "#e2e2e2",
