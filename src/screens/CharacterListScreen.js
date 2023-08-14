@@ -13,7 +13,9 @@ import {
     StyleSheet,
     ScrollView,
     TouchableOpacity,
-    TextInput
+    TextInput,
+    Image,
+    Alert,
 } from "react-native";
 import { set } from "react-native-reanimated";
 
@@ -49,9 +51,30 @@ const CharacterListScreen = () => {
         setList(userInfo["characters"]);
     }
 
+    const confirmDelete = () =>
+    Alert.alert(
+        'Notice:',
+        'Are you sure you want to delete this character?',
+        [
+        {
+            text: 'Yes',
+            onPress: () => handleDelete(item),
+            style: 'destructive',
+        },
+        {
+            text: 'Cancel',
+            onPress: () => Alert.alert('Cancel Pressed'),
+            style: 'cancel',
+        },
+        ],
+        {
+            cancelable: true,
+        },
+    );
+
     const handleDelete = (item) =>{
         axios({
-            url:`${BASE_URL}/api/characters/${item.id}`,
+            url:`${BASE_URL}/api/characters/${item.id}.json`,
             method : "DELETE",
         }).then((res)=>{
             getList();
@@ -302,6 +325,11 @@ const CharacterListScreen = () => {
                                 Close
                                 </Text>
                             </Button>
+                            <TouchableOpacity
+                                    onPress={()=>confirmDelete(item)}
+                                >
+                                <Text style={styles.txt_del}>Delete</Text>
+                            </TouchableOpacity>
                         </View>
                 </Modal>
             </SafeAreaView>
@@ -310,14 +338,11 @@ const CharacterListScreen = () => {
                     return(
                         <View style={styles.item_character} key={index}>
                             <View>
+                                { console.log(`${BASE_URL}${item.avatar}`) }
+                                <Image src={`${BASE_URL}${item.avatar}`} style={styles.img_avatar} />
                                 <Text style={styles.txt_name}>{index+1}. {item.name}</Text>
                             </View>
                             <View>
-                                <TouchableOpacity
-                                    onPress={()=>handleDelete(item)}
-                                >
-                                    <Text style={styles.txt_del}>Delete</Text>
-                                </TouchableOpacity>
                                 <TouchableOpacity
                                     onPress={()=>handleEdit(item)}
                                 >
@@ -436,6 +461,9 @@ const styles = StyleSheet.create(
         textAlign : "center",
         color : "#FFFFFF"
     },
+    img_avatar : {
+        height: 56,
+    }
     }
 );
 
