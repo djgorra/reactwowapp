@@ -22,7 +22,7 @@ import { set } from "react-native-reanimated";
 
 
 
-const CharacterListScreen = () => {
+const CharacterListScreen = ({navigation}) => {
     const {userInfo, setUserInfo, setIsLoading, logout, updateUser, classes, specs, races, genders} = useContext(AuthContext);
     const {assets, colors, gradients, sizes} = useTheme();
     const [list,setList] = useState([]);//list of characters
@@ -45,25 +45,24 @@ const CharacterListScreen = () => {
 
     useEffect(()=>{
         getList()
-    },[list])
+    })
 
     const getList= () => {
         setList(userInfo["characters"]);
     }
 
-    const confirmDelete = () =>
+    const confirmDelete = (hideId) =>
     Alert.alert(
         'Notice:',
         'Are you sure you want to delete this character?',
         [
         {
             text: 'Yes',
-            onPress: () => handleDelete(item),
+            onPress: () => handleDelete(hideId),
             style: 'destructive',
         },
         {
             text: 'Cancel',
-            onPress: () => Alert.alert('Cancel Pressed'),
             style: 'cancel',
         },
         ],
@@ -74,7 +73,7 @@ const CharacterListScreen = () => {
 
     const handleDelete = (item) =>{
         axios({
-            url:`${BASE_URL}/api/characters/${item.id}.json`,
+            url:`${BASE_URL}/api/characters/${item}.json`,
             method : "DELETE",
         }).then((res)=>{
             getList();
@@ -237,9 +236,9 @@ const CharacterListScreen = () => {
                                 placeholder="Character Name"
                                 onChangeText={onChangeName}
                             />
-                            <Text>Choose Class</Text>
                             <DropDownPicker
                                 zIndex={10}
+                                placeholder="Choose Class"
                                 onOpen
                                 open={openClass}
                                 value={characterClass}
@@ -253,9 +252,9 @@ const CharacterListScreen = () => {
                                     setSpecsDisabled(false);
                                   }}
                                 />
-                            <Text>Choose Primary Spec</Text>
                             <DropDownPicker
                                 zIndex={9}
+                                placeholder="Choose Primary Spec"
                                 open={openSpec1}
                                 value={characterSpec1}
                                 items={classSpecs}
@@ -270,9 +269,9 @@ const CharacterListScreen = () => {
                                     
                                   }}
                                 />
-                            <Text>Choose Secondary Spec</Text>
                             <DropDownPicker
                                 zIndex={8}
+                                placeholder="Choose Secondary Spec"
                                 open={openSpec2}
                                 value={characterSpec2}
                                 items={classSpecs}
@@ -287,9 +286,9 @@ const CharacterListScreen = () => {
                                     
                                     }}
                             />
-                            <Text>Set Character Race</Text>
                             <DropDownPicker
                                 zIndex={7}
+                                placeholder="Choose Character Race"
                                 open={openRace}
                                 value={characterRace}
                                 items={races}
@@ -299,9 +298,9 @@ const CharacterListScreen = () => {
                                     console.log(value);
                                 }}
                             />
-                            <Text>Set Character Gender</Text>
                              <DropDownPicker
                                 zIndex={6}
+                                placeholder="Choose Character Gender"
                                 open={openGender}
                                 value={characterGender}
                                 items={genders}
@@ -322,14 +321,16 @@ const CharacterListScreen = () => {
                             </Button>
                             <Button flex={1} gradient={gradients.secondary} marginHorizontal={sizes.s} onPress={handleVisibleModal}>
                                 <Text white bold transform="uppercase" marginHorizontal={sizes.s}>
-                                Close
+                                    Close
                                 </Text>
                             </Button>
-                            <TouchableOpacity
-                                    onPress={()=>confirmDelete(item)}
-                                >
-                                <Text style={styles.txt_del}>Delete</Text>
-                            </TouchableOpacity>
+                            {hideId == null ? null : 
+                                <Button flex={1} style={styles.btn_save} gradient={gradients.danger} marginHorizontal={sizes.s} onPress={()=>confirmDelete(hideId)}>
+                                    <Text white bold transform="uppercase">
+                                        Delete
+                                    </Text>
+                                </Button>
+                            }
                         </View>
                 </Modal>
             </SafeAreaView>
@@ -337,16 +338,23 @@ const CharacterListScreen = () => {
                 {list.map((item,index)=>{
                     return(
                         <View style={styles.item_character} key={index}>
-                            <View>
-                                { console.log(`${BASE_URL}${item.avatar}`) }
-                                <Image src={`${BASE_URL}${item.avatar}`} style={styles.img_avatar} />
-                                <Text style={styles.txt_name}>{index+1}. {item.name}</Text>
-                            </View>
+                            { console.log(`${BASE_URL}${item.avatar}`) }
+                            <Image flex={1} src={`${BASE_URL}${item.avatar}`} style={styles.img_avatar} />
+                            <Image flex={1} src={`${BASE_URL}${item.class_icon}`} style={styles.img_avatar} />
+                            <Text flex={1} style={styles.txt_name}>{index+1}. {item.name}</Text>
                             <View>
                                 <TouchableOpacity
                                     onPress={()=>handleEdit(item)}
                                 >
                                     <Text style={styles.txt_edit}>Edit</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={() =>
+                                        navigation.navigate('RaidListScreen', {
+                                        characterId: item.id,
+                                        })
+                                    }>
+                                    <Text style={styles.txt_edit}>Add Item</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -406,7 +414,8 @@ const styles = StyleSheet.create(
         borderBottomWidth: 1,
         borderBottomColor : "#e2e2e2",
         flexDirection : "row",
-        justifyContent:"space-between"
+        justifyContent:"space-between",
+        flexWrap : "wrap",
     },
     txt_name : {
         fontSize : 18,
@@ -463,6 +472,7 @@ const styles = StyleSheet.create(
     },
     img_avatar : {
         height: 56,
+        flexDirection : "row",
     }
     }
 );

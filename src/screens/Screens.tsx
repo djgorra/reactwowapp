@@ -4,6 +4,7 @@ import {useScreenOptions, useTranslation} from '../hooks';
 import HomeScreen from './HomeScreen';
 import ProfileScreen from './ProfileScreen';
 import CharacterListScreen from './CharacterListScreen';
+import RaidListScreen from './RaidListScreen'
 const Stack = createStackNavigator();
 
 export default () => {
@@ -24,6 +25,11 @@ export default () => {
       <Stack.Screen 
           name="Profile" 
           component={ProfileScreen} 
+          options={{headerShown: false}}
+      />
+      <Stack.Screen 
+          name="RaidListScreen" 
+          component={RaidListScreen} 
           options={{headerShown: false}}
       />
     </Stack.Navigator>
