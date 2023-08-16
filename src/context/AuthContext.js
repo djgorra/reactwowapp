@@ -143,80 +143,6 @@ export const AuthProvider = ({children}) => {
         })
     };
 
-    const getUser = () => {
-        //file = file.replace(":///","://")
-        setIsLoading(true);
-        //console.log("token: "+userInfo.access_token);
-        axios
-        .get(`${BASE_URL}/users`)
-        .then (res => {
-            setIsLoading(false);
-            setUserInfo(userInfo);
-            console.log("Success!");
-        })
-        .catch((error) => {
-            console.log(error)
-            // Error
-            if (error.response) {
-                // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx
-                console.log(error.response.data);
-                alertBox(error.response.data.message)
-                // console.log(error.response.status);
-                // console.log(error.response.headers);
-            } else if (error.request) {
-                // The request was made but no response was received
-                // `error.request` is an instance of XMLHttpRequest in the 
-                // browser and an instance of
-                // http.ClientRequest in node.js
-                alertBox("Network Error")
-                console.log(error.request);
-            } else {
-                // Something happened in setting up the request that triggered an Error
-                alertBox("An error has occurred :(")
-                console.log('Error', error.message);
-            }
-            setIsLoading(false)
-        // console.log(error.config);
-        })
-    };
-
-    const login = (email, password) => {
-        setIsLoading(true);
-        axios.post(`${BASE_URL}/api/users/sign_in?user[email]=${email}&user[password]=${password}`)
-        .then(res => {
-            let userInfo = res.data
-            setUserInfo(userInfo);
-            AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
-            console.log(userInfo);
-            axios.defaults.headers.common = {'Authorization': `Bearer ${userInfo.access_token}`};
-            getData();
-            setIsLoading(false);
-        }).catch((error) => {
-            // Error
-            if (error.response) {
-                // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx
-                console.log(error.response.data);
-                alertBox("Invalid Email or Password")
-                // console.log(error.response.status);
-                // console.log(error.response.headers);
-            } else if (error.request) {
-                // The request was made but no response was received
-                // `error.request` is an instance of XMLHttpRequest in the 
-                // browser and an instance of
-                // http.ClientRequest in node.js
-                alertBox("Network Error")
-                console.log(error.request);
-            } else {
-                // Something happened in setting up the request that triggered an Error
-                alertBox("An error has occurred :(")
-                console.log('Error', error.message);
-            }
-            setIsLoading(false)
-            console.log(error.config);
-        })
-    }
 
     const getData= () => {
         axios({
@@ -277,11 +203,9 @@ export const AuthProvider = ({children}) => {
             userInfo,
             setUserInfo,
             register,
-            login,
             updateUser,
             logout,
             uploadAvatar,
-            getUser,
             getData,
             classes,
             specs,

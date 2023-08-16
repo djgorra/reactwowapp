@@ -4,15 +4,57 @@ import { AuthContext } from "../context/AuthContext";
 import LoadingSpinner from '../components/LoadingSpinner';
 import {useData, useTheme, useTranslation} from '../hooks/';
 import {Block, Button, Input, Image, Text} from '../components/';
+import ConnectButton from '../components/ConnectButton';
+import axios from "axios";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import alertBox from "../components/AlertBox.js"
+import { BASE_URL } from "../config";
 
 const isAndroid = Platform.OS === 'android';
 
 const LoginScreen = ({navigation}) => {
     const [email, setEmail] = useState(null);
     const [password, setPassword] = useState(null);
-    const {isLoading, login} = useContext(AuthContext);
+    const {setIsLoading, getData, setUserInfo, userInfo} = useContext(AuthContext);
     const {assets, colors, gradients, sizes} = useTheme();
     const {t} = useTranslation();
+
+    const login = (email, password) => {
+      setIsLoading(true);
+      axios.post(`${BASE_URL}/api/users/sign_in?user[email]=${email}&user[password]=${password}`)
+      .then(res => {
+          let userInfo = res.data
+          setUserInfo(userInfo);
+          AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
+          console.log(userInfo);
+          axios.defaults.headers.common = {'Authorization': `Bearer ${userInfo.access_token}`};
+          getData();
+          setIsLoading(false);
+      }).catch((error) => {
+          // Error
+          if (error.response) {
+              // The request was made and the server responded with a status code
+              // that falls out of the range of 2xx
+              console.log(error.response.data);
+              alertBox("Invalid Email or Password")
+              // console.log(error.response.status);
+              // console.log(error.response.headers);
+          } else if (error.request) {
+              // The request was made but no response was received
+              // `error.request` is an instance of XMLHttpRequest in the 
+              // browser and an instance of
+              // http.ClientRequest in node.js
+              alertBox("Network Error")
+              console.log(error.request);
+          } else {
+              // Something happened in setting up the request that triggered an Error
+              alertBox("An error has occurred :(")
+              console.log('Error', error.message);
+          }
+          setIsLoading(false)
+          console.log(error.config);
+      })
+  }
 
     return (
         <Block safe marginTop={sizes.md}>
@@ -26,7 +68,7 @@ const LoginScreen = ({navigation}) => {
               source={assets.background}
               height={sizes.height * 0.3}>
 
-              <Button
+              {/* <Button
                 row
                 flex={0}
                 justify="flex-start"
@@ -38,9 +80,9 @@ const LoginScreen = ({navigation}) => {
                   color={colors.white}
                   transform={[{rotate: '180deg'}]}
                 />
-              </Button>
+              </Button> */}
   
-              <Text h4 center white marginBottom={sizes.md}>
+              <Text h4 center white marginTop={sizes.md}>
                 {t('app.name')}
               </Text>
             </Image>
@@ -65,19 +107,22 @@ const LoginScreen = ({navigation}) => {
                 justify="space-evenly"
                 tint={colors.blurTint}
                 paddingVertical={sizes.sm}>
-  
                 {/* social buttons */}
-                <Block row center justify="space-evenly" marginVertical={sizes.m}>
-                </Block>
+                <ConnectButton title="Battle.net Login"></ConnectButton>
+
+
+
+
+
+
                 <Block
                   row
                   flex={0}
                   align="center"
                   justify="center"
-                  marginBottom={sizes.sm}
                   paddingHorizontal={sizes.xxl}>
                   <Text h5 center>
-                    {t('common.signin')}
+                    or
                   </Text>
                 </Block>
                 {/* form inputs */}
@@ -120,33 +165,6 @@ const LoginScreen = ({navigation}) => {
           </Block>
         </Block>
       </Block>
-        // <View style={styles.container}>
-        //     <LoadingSpinner visible={isLoading} />
-        //     <View style={styles.wrapper}>
-        //         <Text>Log In</Text>
-        //         <TextInput 
-        //             style={styles.input} 
-        //             value={email} 
-        //             placeholder="Enter Email" 
-        //             onChangeText={text => setEmail(text)}/>
-
-        //         <TextInput 
-        //             style={styles.input} 
-        //             value={password} 
-        //             placeholder="Enter Password" 
-        //             onChangeText={text => setPassword(text)}
-        //             secureTextEntry />
-
-        //         <Button title="Login" onPress={() => {login(email, password)}}/>
-
-        //         <View style={{flexDirection: 'row', marginTop: 20}}>
-        //             <Text>Don't have any account? </Text>
-        //             <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-        //                 <Text style={styles.link}>Register</Text>
-        //             </TouchableOpacity>
-        //         </View>
-        //     </View>
-        // </View>
     );
 };
 
