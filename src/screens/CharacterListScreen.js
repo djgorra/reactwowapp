@@ -22,7 +22,7 @@ import { set } from "react-native-reanimated";
 
 
 
-const CharacterListScreen = () => {
+const CharacterListScreen = ({navigation}) => {
     const {userInfo, setUserInfo, setIsLoading, logout, updateUser, classes, specs, races, genders} = useContext(AuthContext);
     const {assets, colors, gradients, sizes} = useTheme();
     const [list,setList] = useState([]);//list of characters
@@ -338,17 +338,23 @@ const CharacterListScreen = () => {
                 {list.map((item,index)=>{
                     return(
                         <View style={styles.item_character} key={index}>
-                            <View>
-                                { console.log(`${BASE_URL}${item.avatar}`) }
-                                <Image src={`${BASE_URL}${item.avatar}`} style={styles.img_avatar} />
-                                <Image src={`${BASE_URL}${item.class_icon}`} style={styles.img_class_icon} />
-                                <Text style={styles.txt_name}>{index+1}. {item.name}</Text>
-                            </View>
+                            { console.log(`${BASE_URL}${item.avatar}`) }
+                            <Image flex={1} src={`${BASE_URL}${item.avatar}`} style={styles.img_avatar} />
+                            <Image flex={1} src={`${BASE_URL}${item.class_icon}`} style={styles.img_avatar} />
+                            <Text flex={1} style={styles.txt_name}>{index+1}. {item.name}</Text>
                             <View>
                                 <TouchableOpacity
                                     onPress={()=>handleEdit(item)}
                                 >
                                     <Text style={styles.txt_edit}>Edit</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={() =>
+                                        navigation.navigate('RaidListScreen', {
+                                        characterId: item.id,
+                                        })
+                                    }>
+                                    <Text style={styles.txt_edit}>Add Item</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -408,7 +414,8 @@ const styles = StyleSheet.create(
         borderBottomWidth: 1,
         borderBottomColor : "#e2e2e2",
         flexDirection : "row",
-        justifyContent:"space-between"
+        justifyContent:"space-between",
+        flexWrap : "wrap",
     },
     txt_name : {
         fontSize : 18,
@@ -465,6 +472,7 @@ const styles = StyleSheet.create(
     },
     img_avatar : {
         height: 56,
+        flexDirection : "row",
     }
     }
 );

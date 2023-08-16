@@ -13,6 +13,7 @@ export const AuthProvider = ({children}) => {
     const [specs, setSpecs] = useState([]);
     const [races, setRaces] = useState([]);
     const [genders, setGenders] = useState([]);
+    const [raids, setRaids] = useState([]);
 
     const register = (email, password) => {
         setIsLoading(true);
@@ -228,6 +229,7 @@ export const AuthProvider = ({children}) => {
             setSpecs(res.data["specs"])
             setRaces(res.data["races"])
             setGenders(res.data["genders"])
+            setRaids(res.data["raids"])
         }).catch((error) => {
             // Error
             if (error.response) {
@@ -286,7 +288,8 @@ export const AuthProvider = ({children}) => {
             classes,
             specs,
             races,
-            genders
+            genders,
+            raids,
         }}>
             {children}
         </AuthContext.Provider>
