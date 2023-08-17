@@ -6,6 +6,7 @@ import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 import { BASE_URL } from "../config";
 import ErrorHandler from "../components/ErrorHandler.js"
+import { useRef } from "react";
 
 
 function Item({ item }) {
@@ -25,44 +26,53 @@ function Item({ item }) {
 
 
 const ItemListScreen = ({route, navigation}) => {
-    const [raidId, setRaidId] = useState(route.params.raidId);
-    const [items, setItems] = useState([]);
+
+    const raidId = route.params.raidId;
+    const [items, setItems] = useState({"6":[]});
+    const getData = async () => {
+      axios({
+          url:`${BASE_URL}/api/raids/${raidId}/items.json`,
+          method : "GET",
+      }).then((res)=>{
+          setItems(res.data);
+          console.log(items);
+      }).catch((error) => {
+          ErrorHandler(error)
+      })
+    }
+
     useEffect(() => {
-        axios({
-            url:`${BASE_URL}/api/raids/${raidId}/items.json`,
-            method : "GET",
-        }).then((res)=>{
-            console.log(res.data)
-            setItems(res.data)
-        }).catch((error) => {
-            ErrorHandler(error)
-        })
+      getData();
     }, []);
     
-    state = {
-        data: items.map((item, index)=>{
-            return({
-                    "name": item.name,
-                    "id": item.id,
-                    "wow_id": item.wow_id,
-                    "image_url": item.image_url,
-                    "category": item.category,
-                    "item_level": item.item_level,
-                    "subcategory": item.subcategory,
-                    "boss_id": item.boss_id,
-                    "raid_id": item.raid_id,
-                    }
-                )})
-      }
+    // state = {
+    //     data: items[6].map((item, index)=>{
+    //         return({
+    //                 "name": item.name,
+    //                 "id": item.id,
+    //                 "wow_id": item.wow_id,
+    //                 "image_url": item.image_url,
+    //                 "category": item.category,
+    //                 "item_level": item.item_level,
+    //                 "subcategory": item.subcategory,
+    //                 "boss_id": item.boss_id,
+    //                 "raid_id": item.raid_id,
+    //                 }
+    //             )})
+    //   }
     
     return (
         <View style={styles.container}>
-        <FlatList
-            style={{flex:1}}
-            data={this.state.data}
-            renderItem={({ item }) => <Item item={item}/>}
-            keyExtractor={item => item.id}
-        />
+        {Object.keys(items).map((key,index)=>{
+           return(
+          <FlatList
+              style={{flex:1}}
+              data={ items[key] }
+              renderItem={({ item }) => <Item item={item}/>}
+              keyExtractor={item => item.id}
+          />
+           )
+        })}
         </View>
     );
 }
