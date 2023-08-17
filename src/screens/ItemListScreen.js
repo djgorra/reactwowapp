@@ -47,7 +47,7 @@ const ItemListScreen = ({route, navigation}) => {
     }, []);
     
     return (
-        <ScrollView>
+        <ScrollView nestedScrollEnabled={true}>
         {Object.keys(items).map((key,index)=>{
            const boss = bosses.filter((b)=>{ return b["id"]==key; } )[0];
            return(

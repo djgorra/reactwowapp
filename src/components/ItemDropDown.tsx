@@ -14,6 +14,7 @@ const ItemDropDown = ({items2}) => {
       setOpen={setOpen}
       setValue={setValue}
       multiple={true}
+      listMode="SCROLLVIEW"
     />
    </View>
   )
