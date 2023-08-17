@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from "react"; 
-import {Button, StyleSheet, Text, TextInput, View, FlatList, Image, TouchableOpacity } from "react-native";
+import {Button, StyleSheet, Text, TextInput, View, FlatList, Image, TouchableOpacity, ScrollView } from "react-native";
 import LoadingSpinner from '../components/LoadingSpinner';
 import alertBox from "../components/AlertBox.js"
 import { AuthContext } from "../context/AuthContext";
@@ -7,7 +7,8 @@ import axios from "axios";
 import { BASE_URL } from "../config";
 import ErrorHandler from "../components/ErrorHandler.js"
 import { useRef } from "react";
-
+import DropDownPicker from 'react-native-dropdown-picker';
+import ItemDropDown from "../components/ItemDropDown";
 
 function Item({ item }) {
     return (
@@ -26,7 +27,8 @@ function Item({ item }) {
 
 
 const ItemListScreen = ({route, navigation}) => {
-
+    // const [chosenItems, setChosenItems] = useState([]);
+    const {bosses} = useContext(AuthContext);
     const raidId = route.params.raidId;
     const [items, setItems] = useState({"6":[]});
     const getData = async () => {
@@ -35,7 +37,6 @@ const ItemListScreen = ({route, navigation}) => {
           method : "GET",
       }).then((res)=>{
           setItems(res.data);
-          console.log(items);
       }).catch((error) => {
           ErrorHandler(error)
       })
@@ -45,35 +46,18 @@ const ItemListScreen = ({route, navigation}) => {
       getData();
     }, []);
     
-    // state = {
-    //     data: items[6].map((item, index)=>{
-    //         return({
-    //                 "name": item.name,
-    //                 "id": item.id,
-    //                 "wow_id": item.wow_id,
-    //                 "image_url": item.image_url,
-    //                 "category": item.category,
-    //                 "item_level": item.item_level,
-    //                 "subcategory": item.subcategory,
-    //                 "boss_id": item.boss_id,
-    //                 "raid_id": item.raid_id,
-    //                 }
-    //             )})
-    //   }
-    
     return (
-        <View style={styles.container}>
+        <ScrollView>
         {Object.keys(items).map((key,index)=>{
+           const boss = bosses.filter((b)=>{ return b["id"]==key; } )[0];
            return(
-          <FlatList
-              style={{flex:1}}
-              data={ items[key] }
-              renderItem={({ item }) => <Item item={item}/>}
-              keyExtractor={item => item.id}
-          />
+            <View>
+              {(boss != null) ? <Text>{boss["name"]}</Text> : <Text></Text> }
+              <ItemDropDown items2={items[key]}></ItemDropDown>
+            </View>
            )
         })}
-        </View>
+        </ScrollView>
     );
 }
 const styles = StyleSheet.create({
