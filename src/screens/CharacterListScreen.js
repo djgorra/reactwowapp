@@ -214,7 +214,7 @@ const CharacterListScreen = ({navigation}) => {
                     gradient={gradients.secondary}
                     marginBottom={sizes.base}>
                     <Text white bold transform="uppercase">
-                        New Character
+                        Add +
                     </Text>
                 </Button>
             </View>

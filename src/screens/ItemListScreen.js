@@ -1,13 +1,9 @@
 import React, {useContext, useEffect, useState} from "react"; 
 import {Button, StyleSheet, Text, TextInput, View, FlatList, Image, TouchableOpacity, ScrollView } from "react-native";
-import LoadingSpinner from '../components/LoadingSpinner';
-import alertBox from "../components/AlertBox.js"
 import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 import { BASE_URL } from "../config";
 import ErrorHandler from "../components/ErrorHandler.js"
-import { useRef } from "react";
-import DropDownPicker from 'react-native-dropdown-picker';
 import ItemDropDown from "../components/ItemDropDown";
 
 function Item({ item }) {
@@ -27,10 +23,9 @@ function Item({ item }) {
 
 
 const ItemListScreen = ({route, navigation}) => {
-    // const [chosenItems, setChosenItems] = useState([]);
     const {bosses} = useContext(AuthContext);
     const raidId = route.params.raidId;
-    const [items, setItems] = useState({"6":[]});
+    const [items, setItems] = useState({});
     const getData = async () => {
       axios({
           url:`${BASE_URL}/api/raids/${raidId}/items.json`,
