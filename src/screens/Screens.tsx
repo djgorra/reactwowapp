@@ -5,6 +5,7 @@ import HomeScreen from './HomeScreen';
 import ProfileScreen from './ProfileScreen';
 import CharacterListScreen from './CharacterListScreen';
 import RaidListScreen from './RaidListScreen'
+import ItemListScreen from './ItemListScreen'
 const Stack = createStackNavigator();
 
 export default () => {
@@ -30,7 +31,12 @@ export default () => {
       <Stack.Screen 
           name="RaidListScreen" 
           component={RaidListScreen} 
-          options={{headerShown: false}}
+          options={{headerShown: true}}
+      />
+      <Stack.Screen 
+          name="ItemListScreen" 
+          component={ItemListScreen} 
+          options={{headerShown: true}}
       />
     </Stack.Navigator>
   );

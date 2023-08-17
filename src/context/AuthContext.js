@@ -3,6 +3,7 @@ import React, {createContext, useState} from "react";
 import { BASE_URL } from "../config";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import alertBox from "../components/AlertBox.js"
+import ErrorHandler from "../components/ErrorHandler.js"
 
 export const AuthContext = createContext();
 
@@ -14,6 +15,7 @@ export const AuthProvider = ({children}) => {
     const [races, setRaces] = useState([]);
     const [genders, setGenders] = useState([]);
     const [raids, setRaids] = useState([]);
+    const [bosses, setBosses] = useState([]);
 
     const register = (email, password) => {
         setIsLoading(true);
@@ -28,26 +30,7 @@ export const AuthProvider = ({children}) => {
             console.log(userInfo);
         })
         .catch((error) => {
-            // Error
-            if (error.response) {
-                // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx
-                console.log(error.response.data);
-                alertBox(error.response.data.message)
-                // console.log(error.response.status);
-                // console.log(error.response.headers);
-            } else if (error.request) {
-                // The request was made but no response was received
-                // `error.request` is an instance of XMLHttpRequest in the 
-                // browser and an instance of
-                // http.ClientRequest in node.js
-                alertBox("Network Error")
-                console.log(error.request);
-            } else {
-                // Something happened in setting up the request that triggered an Error
-                alertBox("An error has occurred :(")
-                console.log('Error', error.message);
-            }
+            ErrorHandler(error)
             setIsLoading(false)
             console.log(error.config);
         })
@@ -74,25 +57,7 @@ export const AuthProvider = ({children}) => {
         .catch((error) => {
             console.log(error)
             // Error
-            if (error.response) {
-                // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx
-                console.log(error.response.data);
-                alertBox(error.response.data.message)
-                // console.log(error.response.status);
-                // console.log(error.response.headers);
-            } else if (error.request) {
-                // The request was made but no response was received
-                // `error.request` is an instance of XMLHttpRequest in the 
-                // browser and an instance of
-                // http.ClientRequest in node.js
-                alertBox("Network Error")
-                console.log(error.request);
-            } else {
-                // Something happened in setting up the request that triggered an Error
-                alertBox("An error has occurred :(")
-                console.log('Error', error.message);
-            }
+            ErrorHandler(error)
             setIsLoading(false)
            // console.log(error.config);
         })
@@ -120,25 +85,7 @@ export const AuthProvider = ({children}) => {
         .catch((error) => {
             console.log(error)
             // Error
-            if (error.response) {
-                // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx
-                console.log(error.response.data);
-                alertBox(error.response.data.message)
-                // console.log(error.response.status);
-                // console.log(error.response.headers);
-            } else if (error.request) {
-                // The request was made but no response was received
-                // `error.request` is an instance of XMLHttpRequest in the 
-                // browser and an instance of
-                // http.ClientRequest in node.js
-                alertBox("Network Error")
-                console.log(error.request);
-            } else {
-                // Something happened in setting up the request that triggered an Error
-                alertBox("An error has occurred :(")
-                console.log('Error', error.message);
-            }
+            ErrorHandler(error)
             setIsLoading(false)
         // console.log(error.config);
         })
@@ -156,27 +103,10 @@ export const AuthProvider = ({children}) => {
             setRaces(res.data["races"])
             setGenders(res.data["genders"])
             setRaids(res.data["raids"])
+            setBosses(res.data["bosses"])
         }).catch((error) => {
             // Error
-            if (error.response) {
-                // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx
-                console.log(error.response.data);
-                alertBox(error.response.data.message)
-                // console.log(error.response.status);
-                // console.log(error.response.headers);
-            } else if (error.request) {
-                // The request was made but no response was received
-                // `error.request` is an instance of XMLHttpRequest in the 
-                // browser and an instance of
-                // http.ClientRequest in node.js
-                alertBox("Network Error")
-                console.log(error.request);
-            } else {
-                // Something happened in setting up the request that triggered an Error
-                alertBox("An error has occurred :(")
-                console.log('Error', error.message);
-            }
+            ErrorHandler(error)
         })
     }
 
@@ -214,6 +144,7 @@ export const AuthProvider = ({children}) => {
             races,
             genders,
             raids,
+            bosses,
         }}>
             {children}
         </AuthContext.Provider>
