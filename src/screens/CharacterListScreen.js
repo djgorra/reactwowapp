@@ -16,6 +16,7 @@ import {
     TextInput,
     Image,
     Alert,
+    ImageBackground,
 } from "react-native";
 import { set } from "react-native-reanimated";
 
@@ -338,9 +339,20 @@ const CharacterListScreen = ({navigation}) => {
                 {list.map((item,index)=>{
                     return(
                         <View style={styles.item_character} key={index}>
-                            { console.log(`${BASE_URL}${item.avatar}`) }
-                            <Image flex={1} src={`${BASE_URL}${item.avatar}`} style={styles.img_avatar} />
-                            <Image flex={1} src={`${BASE_URL}${item.class_icon}`} style={styles.img_avatar} />
+                            <ImageBackground src={`${BASE_URL}${item.class_icon}`}  style={{height: 60,width: 60,justifyContent:'center'}}>
+                                <View style={{flex: 1, flexDirection:'row', flexWrap:'wrap', justifyContent:'space-between',alignItems: 'flex-end'}}>
+                                    <Image
+                                    src={`${BASE_URL}${item.avatar}`}
+                                    style={styles.characterIcon} />
+                                    {console.log(item.primary_spec_icon)}
+                                    <Image
+                                    src={`${BASE_URL}${item.primary_spec_icon}`}
+                                    style={styles.characterIcon} />
+                                    <Image
+                                    src={`${BASE_URL}${item.secondary_spec_icon}`}
+                                    style={styles.characterIcon} />
+                                </View>
+                            </ImageBackground>
                             <Text flex={1} style={styles.txt_name}>{index+1}. {item.name}</Text>
                             <View>
                                 <TouchableOpacity
@@ -416,6 +428,15 @@ const styles = StyleSheet.create(
         flexDirection : "row",
         justifyContent:"space-between",
         flexWrap : "wrap",
+    },
+    characterIcon : {
+        width: 20 , 
+        height: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 1,
+        borderColor: '#000',
+        borderRadius: 30
     },
     txt_name : {
         fontSize : 18,
