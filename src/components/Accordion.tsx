@@ -4,9 +4,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import {BASE_URL} from "../config";
 
 
-const Accordion = ({key, sendData, title, data}) => {
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
+const Accordion = ({sendData, title, data}) => {
   const [ expanded, setExpanded ] = useState(false);
   const [ items2, setItems2 ] = useState(data);
 
