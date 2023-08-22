@@ -4,7 +4,8 @@ import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 import { BASE_URL } from "../config";
 import ErrorHandler from "../components/ErrorHandler.js"
-import ItemDropDown from "../components/ItemDropDown";
+import Accordion from "../components/Accordion";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 function Item({ item }) {
     return (
@@ -42,17 +43,23 @@ const ItemListScreen = ({route, navigation}) => {
     }, []);
     
     return (
-        <ScrollView nestedScrollEnabled={true}>
-        {Object.keys(items).map((key,index)=>{
-           const boss = bosses.filter((b)=>{ return b["id"]==key; } )[0];
-           return(
-            <View>
-              {(boss != null) ? <Text>{boss["name"]}</Text> : <Text></Text> }
-              <ItemDropDown items2={items[key]}></ItemDropDown>
+        <View style={{flex:1}}>
+            <ScrollView nestedScrollEnabled={true}>
+            {Object.keys(items).map((key,index)=>{
+                const boss = bosses.filter((b)=>{ return b["id"]==key; } )[0];
+                return(
+                    <View>
+                    {(boss != null) ? <Accordion title={boss["name"]} data ={items[key]}></Accordion> : <Accordion title={"Common Drops"} data = {items[key]}></Accordion> }
+                </View>
+            )
+            })}
+            </ScrollView>
+            <View style={{height:50}}>
+                <TouchableOpacity>
+                    <Text style={styles.txt_edit}>Add Items</Text>
+                </TouchableOpacity>
             </View>
-           )
-        })}
-        </ScrollView>
+        </View>
     );
 }
 const styles = StyleSheet.create({
