@@ -65,7 +65,7 @@ const ItemListScreen = ({route, navigation}) => {
                 const boss = bosses.filter((b)=>{ return b["id"]==key; } )[0];
                 return(
                     <View>
-                    {(boss != null) ? <Accordion key={boss["id"]} sendData={getDatafromChild} title={boss["name"]} data ={items[key]}></Accordion> : <Accordion key={key} sendData={getDatafromChild} title={"Common Drops"} data = {items[key]}></Accordion> }
+                    {(boss != null) ? <Accordion sendData={getDatafromChild} title={boss["name"]} data ={items[key]}></Accordion> : <Accordion sendData={getDatafromChild} title={"Common Drops"} data = {items[key]}></Accordion> }
                 </View>
             )
             })}
