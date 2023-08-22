@@ -4,7 +4,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import {BASE_URL} from "../config";
 
 
-const Accordion = ({title, data}) => {
+const Accordion = ({key, sendData, title, data}) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [ expanded, setExpanded ] = useState(false);
@@ -16,9 +16,14 @@ const Accordion = ({title, data}) => {
   }
 
   function onClick(index){
+    //i.e. make a copy of the item list
     const temp = data.slice()
+    //i.e. mark the item checked or unchecked
     temp[index]["checked"] = !temp[index]["checked"]
-    setItems2(temp)
+    //i.e. set items2 to the new item list
+    setItems2(temp);
+    //i.e. call parent component with the item id and checked status.
+    sendData( temp[index]["id"],  temp[index]["checked"]);
   }
 
   return (
@@ -39,7 +44,6 @@ const Accordion = ({title, data}) => {
                      <View>
                          <TouchableOpacity style={[styles.childRow, styles.button, item.value ? styles.btnActive : styles.btnInActive]} onPress={()=>onClick(index)}>
                              <Image style={{width: 50, height: 50}} source={{uri: `${BASE_URL}${item.image_path}`}} />
-                             {console.log(item)}
                              <Text style={styles.itemInActive} >{item.name}</Text>
                              <Icon name={'check-circle'} size={24} color={ item["checked"] ? 'green' :  'lightgray' } />
                          </TouchableOpacity>

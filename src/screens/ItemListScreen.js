@@ -27,6 +27,7 @@ const ItemListScreen = ({route, navigation}) => {
     const {bosses} = useContext(AuthContext);
     const raidId = route.params.raidId;
     const [items, setItems] = useState({});
+    const [checkedItems, setCheckedItems] = useState([]);
     const getData = async () => {
       axios({
           url:`${BASE_URL}/api/raids/${raidId}/items.json`,
@@ -41,6 +42,19 @@ const ItemListScreen = ({route, navigation}) => {
     useEffect(() => {
       getData();
     }, []);
+
+    function getDatafromChild(item_id, checked){
+      if(checked){
+        checkedItems.push(item_id);
+      } else {
+        // TODO: Remove item_id from checkedItems
+        // const arrayindex = checkedItems.indexOf(item_id);
+        // if(arrayindex > 0){
+        //   checkedItems.splice(arrayindex, 1);
+        // }
+      }
+      console.log(checkedItems);
+    }
     
     return (
         <View style={{flex:1}}>
@@ -49,7 +63,7 @@ const ItemListScreen = ({route, navigation}) => {
                 const boss = bosses.filter((b)=>{ return b["id"]==key; } )[0];
                 return(
                     <View>
-                    {(boss != null) ? <Accordion title={boss["name"]} data ={items[key]}></Accordion> : <Accordion title={"Common Drops"} data = {items[key]}></Accordion> }
+                    {(boss != null) ? <Accordion key={boss["id"]} sendData={getDatafromChild} title={boss["name"]} data ={items[key]}></Accordion> : <Accordion key={key} sendData={getDatafromChild} title={"Common Drops"} data = {items[key]}></Accordion> }
                 </View>
             )
             })}
