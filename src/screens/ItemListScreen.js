@@ -45,13 +45,15 @@ const ItemListScreen = ({route, navigation}) => {
 
     function getDatafromChild(item_id, checked){
       if(checked){
-        checkedItems.push(item_id);
+        if (checkedItems.indexOf(item_id) < 0){
+          checkedItems.push(item_id);
+        }
       } else {
         // TODO: Remove item_id from checkedItems
-        // const arrayindex = checkedItems.indexOf(item_id);
-        // if(arrayindex > 0){
-        //   checkedItems.splice(arrayindex, 1);
-        // }
+        var arrayindex = checkedItems.indexOf(item_id);
+        if(arrayindex >= 0){
+          checkedItems.splice(arrayindex, 1);
+        }
       }
       console.log(checkedItems);
     }
