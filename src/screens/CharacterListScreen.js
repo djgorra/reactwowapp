@@ -24,9 +24,8 @@ import { set } from "react-native-reanimated";
 
 
 const CharacterListScreen = ({navigation}) => {
-    const {userInfo, setUserInfo, setIsLoading, logout, updateUser, classes, specs, races, genders} = useContext(AuthContext);
+    const {userInfo, setUserInfo, setIsLoading, logout, updateUser, classes, specs, races, genders, characterList, setCharacterList} = useContext(AuthContext);
     const {assets, colors, gradients, sizes} = useTheme();
-    const [list,setList] = useState([]);//list of characters
     const [visible,setVisible] = useState(false); //modal popup
     const [openClass, setOpenClass] = useState(false); //dropdown
     const [openSpec1, setOpenSpec1] = useState(false); //dropdown
@@ -49,7 +48,7 @@ const CharacterListScreen = ({navigation}) => {
     })
 
     const getList= () => {
-        setList(userInfo["characters"]);
+        setCharacterList(userInfo["characters"]);
     }
 
     const confirmDelete = (hideId) =>
@@ -209,7 +208,7 @@ const CharacterListScreen = ({navigation}) => {
 
         <SafeAreaView>
             <View style={styles.header_container}>
-                <Text style={styles.txt_main}>Character {list.length}{"\n"}</Text>
+                <Text style={styles.txt_main}>Character {characterList.length}{"\n"}</Text>
                 <Button
                     onPress={handleVisibleModal}
                     gradient={gradients.secondary}
@@ -336,7 +335,7 @@ const CharacterListScreen = ({navigation}) => {
                 </Modal>
             </SafeAreaView>
             <ScrollView>
-                {list.map((item,index)=>{
+                {characterList.map((item,index)=>{
                     return(
                         <View style={styles.item_character} key={index}>
                             <ImageBackground src={`${BASE_URL}${item.class_icon}`}  style={{height: 60,width: 60,justifyContent:'center'}}>
@@ -360,14 +359,15 @@ const CharacterListScreen = ({navigation}) => {
                                 >
                                     <Text style={styles.txt_edit}>Edit</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity
+                                <Button
+                                    style={styles.btnContainer}
                                     onPress={() =>
                                         navigation.navigate('RaidListScreen', {
                                         characterId: item.id,
                                         })
                                     }>
-                                    <Text style={styles.txt_edit}>Add Item</Text>
-                                </TouchableOpacity>
+                                    <Text style={styles.txt_save}>Add Item</Text>
+                                </Button>
                             </View>
                         </View>
                     )

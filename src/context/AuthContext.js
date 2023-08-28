@@ -8,6 +8,7 @@ import ErrorHandler from "../components/ErrorHandler.js"
 export const AuthContext = createContext();
 
 export const AuthProvider = ({children}) => {
+    const [characterList,setCharacterList] = useState([]);//list of characters
     const [userInfo, setUserInfo] = useState({});
     const [isLoading, setIsLoading] = useState(false)
     const [classes, setClasses] = useState([]);
@@ -145,6 +146,8 @@ export const AuthProvider = ({children}) => {
             genders,
             raids,
             bosses,
+            characterList,
+            setCharacterList
         }}>
             {children}
         </AuthContext.Provider>

@@ -4,10 +4,18 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import {BASE_URL} from "../config";
 
 
-const Accordion = ({sendData, title, data}) => {
+const Accordion = ({sendData, title, data, character}) => {
   const [ expanded, setExpanded ] = useState(false);
   const [ items2, setItems2 ] = useState(data);
+  const temp = items2.slice()
 
+  for(var i=0; i<temp.length; i++){
+
+    temp[i]["checked"] = character["wishlist_items"].filter((j)=>{ return i["id"]==temp[i]["id"]; } )[0]
+
+    setItems2(temp);
+
+  }
   function toggleExpand(){
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setExpanded(!expanded)
@@ -27,7 +35,7 @@ const Accordion = ({sendData, title, data}) => {
   return (
     <View>
          <TouchableOpacity style={styles.row} onPress={()=>toggleExpand()}>
-             <Text style={[styles.title]}>{title}</Text>
+             <Text style={styles.title}>{title}</Text>
              <Icon name={expanded ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} color={'white'} />
          </TouchableOpacity>
          <View style={styles.parentHr}/>
@@ -90,6 +98,8 @@ const styles = StyleSheet.create({
       borderColor: 'darkgray',
   },
   row:{
+      borderBottomWidth: 1,
+      borderColor: '#000',
       flexDirection: 'row',
       justifyContent:'space-between',
       height:56,
