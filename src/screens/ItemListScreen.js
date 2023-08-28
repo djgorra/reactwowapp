@@ -24,7 +24,7 @@ function Item({ item }) {
 
 
 const ItemListScreen = ({route, navigation}) => {
-    const {bosses} = useContext(AuthContext);
+    const {bosses, characterList} = useContext(AuthContext);
     const raidId = route.params.raidId;
     const [items, setItems] = useState({});
     const [checkedItems, setCheckedItems] = useState([]);
@@ -57,22 +57,39 @@ const ItemListScreen = ({route, navigation}) => {
       }
       console.log(checkedItems);
     }
+
+    function addItems(){
+        console.log("inside add items!")
+        axios({
+            url:`${BASE_URL}/api/characters/${route.params.characterId}/items.json`,
+            method : "POST",
+            data: {
+                "items": checkedItems,
+                "raid_id": route.params.raidId,
+            }
+        }).then((res)=>{
+            navigation.navigate('CharacterListScreen');
+        }).catch((error) => {
+            ErrorHandler(error)
+        })
+    }
     
     return (
         <View style={{flex:1}}>
             <ScrollView nestedScrollEnabled={true}>
             {Object.keys(items).map((key,index)=>{
                 const boss = bosses.filter((b)=>{ return b["id"]==key; } )[0];
+                const character = characterList.filter((c)=>{ return c["id"]==route.params.characterId; } )[0];
                 return(
                     <View>
-                    {(boss != null) ? <Accordion sendData={getDatafromChild} title={boss["name"]} data ={items[key]}></Accordion> : <Accordion sendData={getDatafromChild} title={"Common Drops"} data = {items[key]}></Accordion> }
+                    {(boss != null) ? <Accordion character={character} sendData={getDatafromChild} title={boss["name"]} data ={items[key]}></Accordion> : <Accordion character={character} sendData={getDatafromChild} title={"Common Drops"} data = {items[key]}></Accordion> }
                 </View>
             )
             })}
             </ScrollView>
-            <View style={{height:50}}>
+            <View style={styles.footer}>
                 <TouchableOpacity>
-                    <Text style={styles.txt_edit}>Add Items</Text>
+                    <Text onPress={()=>addItems()} style={styles.addBtn}>Add Items</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -93,6 +110,19 @@ const styles = StyleSheet.create({
       alignSelf:"center",
       flexDirection:"row",
       borderRadius:5
-    }
+    },    
+    footer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#F7F7F7',
+        height:50,
+        zIndex: 100,
+    },
+    addBtn: {
+        borderWidth: 1,
+        borderColor: '#000',
+        borderRadius: 5,
+        padding:10,
+    },
   });
 export default ItemListScreen;
