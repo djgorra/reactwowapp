@@ -1,21 +1,17 @@
 import {Button, StyleSheet, Text, TextInput, View, FlatList, Image, TouchableOpacity, ScrollView, LayoutAnimation } from "react-native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import {BASE_URL} from "../config";
 
 
 const Accordion = ({sendData, title, data, character}) => {
   const [ expanded, setExpanded ] = useState(false);
-  const [ items2, setItems2 ] = useState(data);
-  const temp = items2.slice()
-
-  for(var i=0; i<temp.length; i++){
-
-    temp[i]["checked"] = character["wishlist_items"].filter((j)=>{ return i["id"]==temp[i]["id"]; } )[0]
-
-    setItems2(temp);
-
+  for(var i=0; i<data.length; i++){    
+    data[i]["checked"] = character["wishlist_items"].filter((j)=>{ return j["id"]==data[i]["id"]; } ).length > 0
   }
+
+  const [ items2, setItems2 ] = useState(data);
+
   function toggleExpand(){
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setExpanded(!expanded)
@@ -23,7 +19,7 @@ const Accordion = ({sendData, title, data, character}) => {
 
   function onClick(index){
     //i.e. make a copy of the item list
-    const temp = data.slice()
+    const temp = items2.map(l => Object.assign({}, l));
     //i.e. mark the item checked or unchecked
     temp[index]["checked"] = !temp[index]["checked"]
     //i.e. set items2 to the new item list
@@ -31,6 +27,11 @@ const Accordion = ({sendData, title, data, character}) => {
     //i.e. call parent component with the item id and checked status.
     sendData( temp[index]["id"],  temp[index]["checked"]);
   }
+
+  useEffect(() => {
+    // action on update of items2
+  }, [items2]);
+
 
   return (
     <View>

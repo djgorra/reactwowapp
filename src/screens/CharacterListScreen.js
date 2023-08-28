@@ -18,7 +18,7 @@ import {
     Alert,
     ImageBackground,
 } from "react-native";
-import { set } from "react-native-reanimated";
+import ErrorHandler from "../components/ErrorHandler.js"
 
 
 
@@ -78,26 +78,7 @@ const CharacterListScreen = ({navigation}) => {
         }).then((res)=>{
             getList();
         }).catch((error) => {
-                // Error
-                if (error.response) {
-                    // The request was made and the server responded with a status code
-                    // that falls out of the range of 2xx
-                    console.log(error.response.data);
-                    alertBox(error.response.data.message)
-                    // console.log(error.response.status);
-                    // console.log(error.response.headers);
-                } else if (error.request) {
-                    // The request was made but no response was received
-                    // `error.request` is an instance of XMLHttpRequest in the 
-                    // browser and an instance of
-                    // http.ClientRequest in node.js
-                    alertBox("Network Error")
-                    console.log(error.request);
-                } else {
-                    // Something happened in setting up the request that triggered an Error
-                    alertBox("An error has occurred :(")
-                    console.log('Error', error.message);
-                }
+            ErrorHandler(error);
         })
     }
     const clearForm = (res) => {
@@ -123,26 +104,7 @@ const CharacterListScreen = ({navigation}) => {
             }).then((res)=>{
                 clearForm(res);
             }).catch((error) => {
-                // Error
-                if (error.response) {
-                    // The request was made and the server responded with a status code
-                    // that falls out of the range of 2xx
-                    console.log(error.response.data);
-                    alertBox(error.response.data.message)
-                    // console.log(error.response.status);
-                    // console.log(error.response.headers);
-                } else if (error.request) {
-                    // The request was made but no response was received
-                    // `error.request` is an instance of XMLHttpRequest in the 
-                    // browser and an instance of
-                    // http.ClientRequest in node.js
-                    alertBox("Network Error")
-                    console.log(error.request);
-                } else {
-                    // Something happened in setting up the request that triggered an Error
-                    alertBox("An error has occurred :(")
-                    console.log('Error', error.message);
-                }
+                ErrorHandler(error);
                 setIsLoading(false)
                 console.log(error.config);
             })
@@ -153,26 +115,7 @@ const CharacterListScreen = ({navigation}) => {
             }).then((res)=>{
                 clearForm(res);
             }).catch((error) => {
-                // Error
-                if (error.response) {
-                    // The request was made and the server responded with a status code
-                    // that falls out of the range of 2xx
-                    console.log(error.response.data);
-                    alertBox(error.response.data.message)
-                    // console.log(error.response.status);
-                    // console.log(error.response.headers);
-                } else if (error.request) {
-                    // The request was made but no response was received
-                    // `error.request` is an instance of XMLHttpRequest in the 
-                    // browser and an instance of
-                    // http.ClientRequest in node.js
-                    alertBox("Network Error")
-                    console.log(error.request);
-                } else {
-                    // Something happened in setting up the request that triggered an Error
-                    alertBox("An error has occurred :(")
-                    console.log('Error', error.message);
-                }
+                ErrorHandler(error);
                 setIsLoading(false)
                 console.log(error.config);
             })
@@ -366,7 +309,11 @@ const CharacterListScreen = ({navigation}) => {
                                         characterId: item.id,
                                         })
                                     }>
-                                    <Text style={styles.txt_save}>Add Item</Text>
+                                    <Text style={styles.txt_save}>{
+                                        item["wishlist_items"].length > 0 
+                                        ? `${item['wishlist_items'].length} items in wishlist`
+                                        : "No Items in wishlist"
+                                    }</Text>
                                 </Button>
                             </View>
                         </View>

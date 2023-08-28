@@ -5,7 +5,6 @@ import axios from "axios";
 import { BASE_URL } from "../config";
 import ErrorHandler from "../components/ErrorHandler.js"
 import Accordion from "../components/Accordion";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 function Item({ item }) {
     return (
@@ -24,10 +23,11 @@ function Item({ item }) {
 
 
 const ItemListScreen = ({route, navigation}) => {
-    const {bosses, characterList} = useContext(AuthContext);
+    const {bosses, characterList, setUserInfo} = useContext(AuthContext);
+    const character = characterList.filter((c)=>{ return c["id"]==route.params.characterId; } )[0];
     const raidId = route.params.raidId;
     const [items, setItems] = useState({});
-    const [checkedItems, setCheckedItems] = useState([]);
+    const [checkedItems, setCheckedItems] = useState(character["wishlist_items"].map((j)=>{ return j["id"]; } ));
     const getData = async () => {
       axios({
           url:`${BASE_URL}/api/raids/${raidId}/items.json`,
@@ -41,7 +41,7 @@ const ItemListScreen = ({route, navigation}) => {
 
     useEffect(() => {
       getData();
-    }, []);
+    }, [characterList]);
 
     function getDatafromChild(item_id, checked){
       if(checked){
@@ -59,16 +59,16 @@ const ItemListScreen = ({route, navigation}) => {
     }
 
     function addItems(){
-        console.log("inside add items!")
         axios({
             url:`${BASE_URL}/api/characters/${route.params.characterId}/items.json`,
             method : "POST",
             data: {
-                "items": checkedItems,
+                "item_ids": checkedItems,
                 "raid_id": route.params.raidId,
             }
         }).then((res)=>{
-            navigation.navigate('CharacterListScreen');
+            setUserInfo(res.data);
+            navigation.navigate('Characters');
         }).catch((error) => {
             ErrorHandler(error)
         })
@@ -79,7 +79,6 @@ const ItemListScreen = ({route, navigation}) => {
             <ScrollView nestedScrollEnabled={true}>
             {Object.keys(items).map((key,index)=>{
                 const boss = bosses.filter((b)=>{ return b["id"]==key; } )[0];
-                const character = characterList.filter((c)=>{ return c["id"]==route.params.characterId; } )[0];
                 return(
                     <View>
                     {(boss != null) ? <Accordion character={character} sendData={getDatafromChild} title={boss["name"]} data ={items[key]}></Accordion> : <Accordion character={character} sendData={getDatafromChild} title={"Common Drops"} data = {items[key]}></Accordion> }
