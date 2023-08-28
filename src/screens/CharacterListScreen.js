@@ -152,7 +152,7 @@ const CharacterListScreen = ({navigation}) => {
                 url:`${BASE_URL}/api/characters/${hideId}.json?character[name]=${characterName}&character[character_class_id]=${characterClass}&character[race]=${characterRace}&character[gender]=${characterGender}&character[primary_spec_id]=${characterSpec1}&character[secondary_spec_id]=${characterSpec2}`,
                 method : "PUT",
             }).then((res)=>{
-                clearForm();
+                clearForm(res);
             }).catch((error) => {
                 // Error
                 if (error.response) {
