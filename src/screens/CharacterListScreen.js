@@ -286,7 +286,6 @@ const CharacterListScreen = ({navigation}) => {
                                     <Image
                                     src={`${BASE_URL}${item.avatar}`}
                                     style={styles.characterIcon} />
-                                    {console.log(item.primary_spec_icon)}
                                     <Image
                                     src={`${BASE_URL}${item.primary_spec_icon}`}
                                     style={styles.characterIcon} />

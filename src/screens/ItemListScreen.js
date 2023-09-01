@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from "react"; 
-import {Button, StyleSheet, Text, TextInput, View, FlatList, Image, TouchableOpacity, ScrollView } from "react-native";
+import {Button, StyleSheet, Text, TextInput, View, Image, TouchableOpacity, ScrollView } from "react-native";
 import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 import { BASE_URL } from "../config";
