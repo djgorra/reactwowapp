@@ -7,6 +7,7 @@ import axios from 'axios';
 import alertBox from "../components/AlertBox.js"
 import Modal from 'react-native-modal';
 import DropDownPicker from 'react-native-dropdown-picker';
+import ErrorHandler from "../components/ErrorHandler";
 import {
     SafeAreaView,
     View,
@@ -18,7 +19,6 @@ import {
     Alert,
     ImageBackground,
 } from "react-native";
-import ErrorHandler from "../components/ErrorHandler.js"
 
 
 
@@ -82,7 +82,9 @@ const CharacterListScreen = ({navigation}) => {
         })
     }
     const clearForm = (res) => {
-        setUserInfo(res.data);
+        if(res){
+            setUserInfo(res.data);
+        }
         getList();
         setIsLoading(false);
         setCharacterName("");
@@ -139,6 +141,7 @@ const CharacterListScreen = ({navigation}) => {
     }
 
     const handleVisibleModal = () => {
+        clearForm();
         setVisible(!visible)
         setHideId(null)
     }
@@ -149,18 +152,7 @@ const CharacterListScreen = ({navigation}) => {
 
     return (
 
-        <SafeAreaView>
-            <View style={styles.header_container}>
-                <Text style={styles.txt_main}>Character {characterList.length}{"\n"}</Text>
-                <Button
-                    onPress={handleVisibleModal}
-                    gradient={gradients.secondary}
-                    marginBottom={sizes.base}>
-                    <Text white bold transform="uppercase">
-                        Add +
-                    </Text>
-                </Button>
-            </View>
+        <SafeAreaView style={{flex:1}}>
             <SafeAreaView>
                 <Modal
                     animationType="slide"
@@ -281,26 +273,27 @@ const CharacterListScreen = ({navigation}) => {
                 {characterList.map((item,index)=>{
                     return(
                         <View style={styles.item_character} key={index}>
-                            <ImageBackground src={`${BASE_URL}${item.class_icon}`}  style={{height: 60,width: 60,justifyContent:'center'}}>
-                                <View style={{flex: 1, flexDirection:'row', flexWrap:'wrap', justifyContent:'space-between',alignItems: 'flex-end'}}>
-                                    <Image
-                                    src={`${BASE_URL}${item.avatar}`}
-                                    style={styles.characterIcon} />
-                                    <Image
-                                    src={`${BASE_URL}${item.primary_spec_icon}`}
-                                    style={styles.characterIcon} />
-                                    <Image
-                                    src={`${BASE_URL}${item.secondary_spec_icon}`}
-                                    style={styles.characterIcon} />
-                                </View>
-                            </ImageBackground>
-                            <Text flex={1} style={styles.txt_name}>{index+1}. {item.name}</Text>
+                            <ImageBackground src={`${BASE_URL}${item.class_icon}`}  style={{height: 80,width: 80,justifyContent:'center'}}/>
+                            <View style={styles.iconContainer}>
+                                <Image
+                                src={`${BASE_URL}${item.avatar}`}
+                                style={styles.characterIcon} />
+                                {console.log(item.primary_spec_icon)}
+                                <Image
+                                src={`${BASE_URL}${item.primary_spec_icon}`}
+                                style={styles.characterIcon} />
+                                <Image
+                                src={`${BASE_URL}${item.secondary_spec_icon}`}
+                                style={styles.characterIcon} />
+                            </View>
+                            <Text flex={1} style={styles.txt_name}>{item.name}</Text>
                             <View>
-                                <TouchableOpacity
+                                <Button
+                                    style={styles.btnContainer}
                                     onPress={()=>handleEdit(item)}
                                 >
-                                    <Text style={styles.txt_edit}>Edit</Text>
-                                </TouchableOpacity>
+                                    <Text style={styles.txt_edit}>Edit Character</Text>
+                                </Button>
                                 <Button
                                     style={styles.btnContainer}
                                     onPress={() =>
@@ -308,16 +301,22 @@ const CharacterListScreen = ({navigation}) => {
                                         characterId: item.id,
                                         })
                                     }>
-                                    <Text style={styles.txt_save}>{
-                                        item["wishlist_items"].length > 0 
-                                        ? `${item['wishlist_items'].length} items in wishlist`
-                                        : "No Items in wishlist"
-                                    }</Text>
+                                    <Text style={styles.txt_save}>Edit Wishlist</Text>
                                 </Button>
                             </View>
                         </View>
                     )
                 })}
+            <View style={styles.footer_container}>
+                <Button
+                    onPress={handleVisibleModal}
+                    gradient={gradients.secondary}
+                    marginBottom={sizes.base}>
+                    <Text white bold transform="uppercase">
+                        New Character
+                    </Text>
+                </Button>
+            </View>
             </ScrollView>
         </SafeAreaView>
     );
@@ -357,11 +356,11 @@ const styles = StyleSheet.create(
         borderRadius : 10,
         marginTop :10
     },
-    header_container : {
-        padding : 15,
+    footer_container : {
+        padding : 10,
         backgroundColor : "#eeeeee",
-        flexDirection:"row",
-        justifyContent : "space-between"
+        flexDirection:"center",
+        justifyContent : "space-between",
     },
     txt_main : {
         fontSize : 22,
@@ -369,24 +368,32 @@ const styles = StyleSheet.create(
     },
     item_character : {
         padding :15,
-        borderBottomWidth: 1,
-        borderBottomColor : "#e2e2e2",
+        borderBottomWidth: 3,
+        borderBottomColor : "darkgray",
         flexDirection : "row",
-        justifyContent:"space-between",
+        justifyContent:"center",
+        alignItems : "center",
         flexWrap : "wrap",
     },
     characterIcon : {
-        width: 20 , 
-        height: 20,
+        width: 30 , 
+        height: 30,
         alignItems: 'center',
         justifyContent: 'center',
         borderWidth: 1,
         borderColor: '#000',
         borderRadius: 30
     },
+    iconContainer : {
+        marginLeft : 3,
+        flex: 1,
+        flexWrap:'wrap', 
+        justifyContent:'space-between',
+        alignItems: 'flex-end',
+    },
     txt_name : {
-        fontSize : 18,
-        marginTop : 5,
+        fontSize : 26,
+        margin : 10,
         fontWeight : "bold"
     },
     txt_item : {
@@ -418,10 +425,9 @@ const styles = StyleSheet.create(
         fontWeight : "bold"
     },
     btnContainer : {
-        display : 'flex',
-        padding :15,
-        backgroundColor : "#000",
-        marginTop : 20,
+        borderWidth: 1,
+        padding: 5,
+        marginTop : 5,
         
     },
     btnNewContainer : {
