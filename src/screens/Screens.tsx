@@ -42,7 +42,7 @@ export default () => {
       <Stack.Screen
           name="FriendsListScreen"
           component={FriendsListScreen}
-          options={{headerShown: true}}
+          options={{headerShown: false}}
       />
     </Stack.Navigator>
   );

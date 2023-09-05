@@ -1,18 +1,17 @@
-import React, {useContext, useState, useEffect, componentDidMount} from "react"; 
-import {Button, StyleSheet, Text, View, FlatList } from "react-native";
+import React, {useContext, useState, useEffect} from "react"; 
+import {Button, StyleSheet, Text, View, FlatList,SafeAreaView } from "react-native";
 import { Input } from '../components';
 import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 import {BASE_URL} from "../config";
 import {ErrorHandler} from "../components/ErrorHandler.js";
-import {useData, useTheme, useTranslation} from '../hooks/';
-import { set } from "react-native-reanimated";
+import { useTheme} from '../hooks/';
+import alertBox from "../components/AlertBox.js"
 
 
 const FriendsListScreen = () => {
 
     function Item({ item }) {
-        {console.log(item)}
         return (
           <View style={styles.listItem}>
             <Text>{item.username}</Text>
@@ -30,37 +29,47 @@ const FriendsListScreen = () => {
           </View>
         );
       }
-    const {userInfo, isLoading, logout, updateUser} = useContext(AuthContext);
-    const [friends, setFriends] = useState([]);
+    const {friends, setFriends, getFriends} = useContext(AuthContext);
     const [name, setName] = useState(null);
     const {assets, colors, gradients, sizes} = useTheme();
-    const getFriends = async () => {
-        console.log("getFriends")
-        axios({
-            url:`${BASE_URL}/api/friendlist/`,
-            method : "GET",
-        }).then((res)=>{
-            console.log(res.data)
-            setFriends(res.data);
-        }).catch((error) => {
-            ErrorHandler(error)
-        })
-      };
 
     useEffect(() => {
-        getFriends();
-    }, []);
+        if(!friends){
+          getFriends();
+        }
+    }, [friends]);
 
     const addFriend = (name) => {
-        axios({
-            url:`${BASE_URL}/api/friendlist?friend[battletag]=${name}`,
-            method : "POST",
-        }).then((res)=>{
-            console.log(res.data)
-            setFriends(res.data);
-        }).catch((error) => {
-            ErrorHandler(error)
-        })
+        if(name){
+            axios({
+                url:`${BASE_URL}/api/friendlist?friend[battletag]=${name}`,
+                method : "POST",
+            }).then((res)=>{
+                setName(null);
+                setFriends(res.data)
+
+            }).catch((error) => {
+                if (error.response) {
+                    // The request was made and the server responded with a status code
+                    // that falls out of the range of 2xx
+                    console.log(error.response.data);
+                    alertBox(error.response.data.message)
+                    // console.log(error.response.status);
+                    // console.log(error.response.headers);
+                } else if (error.request) {
+                    // The request was made but no response was received
+                    // `error.request` is an instance of XMLHttpRequest in the 
+                    // browser and an instance of
+                    // http.ClientRequest in node.js
+                    alertBox("Network Error")
+                    console.log(error.request);
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    alertBox("An error has occurred :(")
+                    console.log('Error', error.message);
+                }
+            })
+        }
     }
 
     const removeFriend = (id) => {
@@ -68,7 +77,7 @@ const FriendsListScreen = () => {
             url:`${BASE_URL}/api/friendlist/${id}`,
             method : "DELETE",
         }).then((res)=>{
-            console.log(res.data)
+            console.log("Removing friend...")
             setFriends(res.data);
         }
         ).catch((error) => {
@@ -77,13 +86,14 @@ const FriendsListScreen = () => {
     }
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <Input
+            value={name}
             autoCapitalize="none"
             marginBottom={sizes.m}
             label="Add Friend"
             keyboardType="default"
-            placeholder="Add Friend"
+            placeholder="Username or Battletag"
             onChangeText={text => setName(text)}
             />
             <Button
@@ -101,16 +111,19 @@ const FriendsListScreen = () => {
                 data={friends}
                 renderItem={({ item }) => <Item item={item}/>}
                 keyExtractor={item => item.id}
+                extraData={friends}
             />
-        </View>
+        </SafeAreaView>
     );
 
 };
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#F7F7F7',
-        marginTop:60
+        // backgroundColor: '#F7F7F7',
+        marginTop:60,
+        marginLeft: 20,
+        marginRight:20
       },
       listItem:{
         margin:10,

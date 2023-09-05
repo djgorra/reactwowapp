@@ -17,6 +17,7 @@ export const AuthProvider = ({children}) => {
     const [genders, setGenders] = useState([]);
     const [raids, setRaids] = useState([]);
     const [bosses, setBosses] = useState([]);
+    const [friends, setFriends] = useState(null);
 
     const register = (email, password) => {
         setIsLoading(true);
@@ -128,6 +129,20 @@ export const AuthProvider = ({children}) => {
         // });
     }
 
+    const getFriends = async () => {
+        setIsLoading(true);
+        axios({
+            url:`${BASE_URL}/api/friendlist/`,
+            method : "GET",
+        }).then((res)=>{
+            setFriends(res.data);
+            setIsLoading(false);
+        }).catch((error) => {
+            ErrorHandler(error);
+            setIsLoading(false);
+        })
+      };
+
     return (
         <AuthContext.Provider
          value={{
@@ -147,7 +162,10 @@ export const AuthProvider = ({children}) => {
             raids,
             bosses,
             characterList,
-            setCharacterList
+            setCharacterList,
+            friends,
+            setFriends,
+            getFriends
         }}>
             {children}
         </AuthContext.Provider>
