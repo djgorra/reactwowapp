@@ -286,7 +286,7 @@ const CharacterListScreen = ({navigation}) => {
                                 src={`${BASE_URL}${item.secondary_spec_icon}`}
                                 style={styles.characterIcon} />
                             </View>
-                            <Text flex={1} style={styles.txt_name}>{item.name}</Text>
+                            <Text h5 flex={1} style={styles.txt_name}>{item.name}</Text>
                             <View>
                                 <Button
                                     style={styles.btnContainer}
@@ -393,8 +393,6 @@ const styles = StyleSheet.create(
     },
     txt_name : {
         fontSize : 26,
-        margin : 10,
-        fontWeight : "bold"
     },
     txt_item : {
         fontSize : 14,

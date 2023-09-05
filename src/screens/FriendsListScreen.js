@@ -19,7 +19,7 @@ const FriendsListScreen = () => {
             <Button
                 style={styles.removeButton}
                 title="Remove"
-                onPress={() => {removeFriend(item.username)}}
+                onPress={() => {removeFriend(item.id)}}
                 marginVertical={sizes.s}
                 marginHorizontal={sizes.sm}
                 gradient={gradients.primary}>
@@ -63,9 +63,9 @@ const FriendsListScreen = () => {
         })
     }
 
-    const removeFriend = (name) => {
+    const removeFriend = (id) => {
         axios({
-            url:`${BASE_URL}/api/friendlist/${name}`,
+            url:`${BASE_URL}/api/friendlist/${id}`,
             method : "DELETE",
         }).then((res)=>{
             console.log(res.data)

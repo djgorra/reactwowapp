@@ -81,15 +81,15 @@ const ItemListScreen = ({route, navigation}) => {
                 const boss = bosses.filter((b)=>{ return b["id"]==key; } )[0];
                 return(
                     <View>
-                    {(boss != null) ? <Accordion character={character} sendData={getDatafromChild} title={boss["name"]} data ={items[key]}></Accordion> : <Accordion character={character} sendData={getDatafromChild} title={"Common Drops"} data = {items[key]}></Accordion> }
+                    {(boss != null) ? <Accordion style={styles.listItem} character={character} sendData={getDatafromChild} title={boss["name"]} data ={items[key]}></Accordion> : <Accordion character={character} sendData={getDatafromChild} title={"Common Drops"} data = {items[key]}></Accordion> }
                 </View>
             )
             })}
             </ScrollView>
             <View style={styles.footer}>
-                <TouchableOpacity>
-                    <Text onPress={()=>addItems()} style={styles.addBtn}>Add Items</Text>
-                </TouchableOpacity>
+                <Button title="Add Items" onPress={()=>addItems()}>
+                    <Text style={styles.addBtn}>Add Items</Text>
+                </Button>
             </View>
         </View>
     );
