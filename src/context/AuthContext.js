@@ -18,6 +18,7 @@ export const AuthProvider = ({children}) => {
     const [raids, setRaids] = useState([]);
     const [bosses, setBosses] = useState([]);
     const [friends, setFriends] = useState(null);
+    const [teams, setTeams] = useState(null);
 
     const register = (email, password) => {
         setIsLoading(true);
@@ -29,12 +30,10 @@ export const AuthProvider = ({children}) => {
             AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
             setIsLoading(false);
             axios.defaults.headers.common = {'Authorization': `Bearer ${userInfo.access_token}`};
-            console.log(userInfo);
         })
         .catch((error) => {
             ErrorHandler(error)
             setIsLoading(false)
-            console.log(error.config);
         })
     };
 
@@ -143,6 +142,21 @@ export const AuthProvider = ({children}) => {
         })
       };
 
+    const getTeams = async () => {
+        setIsLoading(true);
+        axios({
+            url:`${BASE_URL}/api/teams/`,
+            method : "GET",
+        }).then((res)=>{
+            console.log(res.data);
+            setTeams(res.data);
+            setIsLoading(false);
+        }).catch((error) => {
+            ErrorHandler(error);
+            setIsLoading(false);
+        })
+      };
+
     return (
         <AuthContext.Provider
          value={{
@@ -165,7 +179,10 @@ export const AuthProvider = ({children}) => {
             setCharacterList,
             friends,
             setFriends,
-            getFriends
+            getFriends,
+            teams,
+            setTeams,
+            getTeams,
         }}>
             {children}
         </AuthContext.Provider>

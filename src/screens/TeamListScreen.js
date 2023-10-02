@@ -6,68 +6,52 @@ import axios from "axios";
 import {BASE_URL} from "../config";
 import {ErrorHandler} from "../components/ErrorHandler.js";
 import { useTheme} from '../hooks/';
-import alertBox from "../components/AlertBox.js"
 
-
-const FriendsListScreen = () => {
-
+const TeamListScreen = ({route, navigation}) => {
+    const {teams, setTeams, getTeams} = useContext(AuthContext);
+    const [name, setName] = useState(null);
+    const {assets, colors, gradients, sizes} = useTheme();
     function Item({ item }) {
         return (
           <View style={styles.listItem}>
-            <Text>{item.username}</Text>
+            <Text style={styles.itemName}>{item.name}</Text>
             <Button
-                style={styles.removeButton}
-                title="Remove"
-                onPress={() => {removeFriend(item.id)}}
+                style={styles.editButton}
+                title="Edit"
+                onPress={() =>
+                    navigation.navigate('TeamCreateScreen', {
+                    teamId: item.id,
+                    })
+                }
                 marginVertical={sizes.s}
                 marginHorizontal={sizes.sm}
                 gradient={gradients.primary}>
                 <Text bold white transform="uppercase">
-                    Remove
+                    Edit
                 </Text>
             </Button>
           </View>
         );
       }
-    const {friends, setFriends, getFriends} = useContext(AuthContext);
-    const [name, setName] = useState(null);
-    const {assets, colors, gradients, sizes} = useTheme();
 
     useEffect(() => {
-        if(!friends){
-          getFriends();
+        if(!teams){
+          getTeams();
         }
-    }, [friends]);
+    }, [teams]);
 
-    const addFriend = (name) => {
+    const createTeam = (name) => {
         if(name){
-            if (name.includes("#")){
-                name = name.replace("#", "-HASHTAG-");
-            }
             axios({
-                url:`${BASE_URL}/api/friendlist?friend[battletag]=${name}`,
+                url:`${BASE_URL}/api/teams?team[name]=${name}`,
                 method : "POST",
             }).then((res)=>{
                 setName(null);
-                setFriends(res.data)
-
+                setTeams(res.data)
             }).catch((error) => {
                 ErrorHandler(error)
             })
         }
-    }
-
-    const removeFriend = (id) => {
-        axios({
-            url:`${BASE_URL}/api/friendlist/${id}`,
-            method : "DELETE",
-        }).then((res)=>{
-            console.log("Removing friend...")
-            setFriends(res.data);
-        }
-        ).catch((error) => {
-            ErrorHandler(error)
-        })
     }
 
     return (
@@ -76,14 +60,14 @@ const FriendsListScreen = () => {
             value={name}
             autoCapitalize="none"
             marginBottom={sizes.m}
-            label="Add Friend"
+            label="Create Team"
             keyboardType="default"
-            placeholder="Username or Battletag"
+            placeholder="Team Name"
             onChangeText={text => setName(text)}
             />
             <Button
                     title="Add"
-                    onPress={() => {addFriend(name)}}
+                    onPress={() => {createTeam(name)}}
                     marginVertical={sizes.s}
                     marginHorizontal={sizes.sm}
                     gradient={gradients.primary}>
@@ -93,15 +77,15 @@ const FriendsListScreen = () => {
             </Button>
             <FlatList
                 style={{flex:1}}
-                data={friends}
+                data={teams}
                 renderItem={({ item }) => <Item item={item}/>}
                 keyExtractor={item => item.id}
-                extraData={friends}
+                extraData={teams}
             />
         </SafeAreaView>
-    );
+    )
+}
 
-};
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -109,8 +93,8 @@ const styles = StyleSheet.create({
         marginTop:60,
         marginLeft: 20,
         marginRight:20
-      },
-      listItem:{
+    },
+    listItem:{
         margin:10,
         padding:10,
         backgroundColor:"#FFF",
@@ -119,11 +103,15 @@ const styles = StyleSheet.create({
         alignSelf:"center",
         flexDirection:"row",
         borderRadius:5
-      },
-      removeButton:{
-        flex:1,
+    },
+    itemName:{
+        fontSize:20,
+        alignSelf:"center",
+    },
+    editButton:{
         alignSelf:"right",
-      }
+        marginLeft: 20,
+    }
 });
 
-export default FriendsListScreen;
+export default TeamListScreen;

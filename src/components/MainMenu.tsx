@@ -83,7 +83,8 @@ function DrawerContent(props){
     {name: t('screens.home'), to: 'Home', icon: assets.home},
     {name: t('screens.characters'), to: 'Characters', icon: assets.profile},
     {name: t('screens.profile'), to: 'Profile', icon: assets.profile},
-    {name: t('screens.friends'), to: 'FriendsListScreen', icon: assets.profile}
+    {name: t('screens.friends'), to: 'FriendsListScreen', icon: assets.profile},
+    {name: t('screens.teams'), to: 'TeamListScreen', icon: assets.profile}
     // {name: t('screens.components'), to: 'Components', icon: assets.components},
     // {name: t('screens.articles'), to: 'Articles', icon: assets.document},
     // {name: t('screens.rental'), to: 'Pro', icon: assets.rental},

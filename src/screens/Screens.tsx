@@ -7,6 +7,8 @@ import CharacterListScreen from './CharacterListScreen';
 import RaidListScreen from './RaidListScreen'
 import ItemListScreen from './ItemListScreen'
 import FriendsListScreen from './FriendsListScreen'
+import TeamListScreen from './TeamListScreen'
+import TeamCreateScreen from './TeamCreateScreen'
 const Stack = createStackNavigator();
 
 export default () => {
@@ -42,6 +44,16 @@ export default () => {
       <Stack.Screen
           name="FriendsListScreen"
           component={FriendsListScreen}
+          options={{headerShown: false}}
+      />
+      <Stack.Screen
+          name="TeamListScreen"
+          component={TeamListScreen}
+          options={{headerShown: false}}
+      />
+      <Stack.Screen
+          name="TeamCreateScreen"
+          component={TeamCreateScreen}
           options={{headerShown: false}}
       />
     </Stack.Navigator>
