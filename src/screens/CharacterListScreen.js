@@ -108,7 +108,6 @@ const CharacterListScreen = ({navigation}) => {
             }).catch((error) => {
                 ErrorHandler(error);
                 setIsLoading(false)
-                console.log(error.config);
             })
         }else{
               axios({
@@ -119,14 +118,12 @@ const CharacterListScreen = ({navigation}) => {
             }).catch((error) => {
                 ErrorHandler(error);
                 setIsLoading(false)
-                console.log(error.config);
             })
         }
         
     }
 
     const handleEdit = (item) => {
-        console.log(item)
         setHideId(item["id"])
         setCharacterName(item.name)
         setCharacterClass(item["character_class_id"])
@@ -181,7 +178,6 @@ const CharacterListScreen = ({navigation}) => {
                                 setOpen={setOpenClass}
                                 setValue={setCharacterClass}
                                 onChangeValue={(value) => {
-                                    console.log(characterClass);
                                     const classSpecs = specs.filter(function(x){ return x["character_class_id"] == characterClass})
                                     setClassSpecs(classSpecs);
                                     setSpecsDisabled(false);
@@ -199,10 +195,6 @@ const CharacterListScreen = ({navigation}) => {
                                   }}
                                 setOpen={setOpenSpec1}
                                 setValue={setCharacterSpec1}
-                                onChangeValue={(value) => {
-                                    console.log(value);
-                                    
-                                  }}
                                 />
                             <DropDownPicker
                                 zIndex={8}
@@ -216,10 +208,6 @@ const CharacterListScreen = ({navigation}) => {
                                   }}
                                 setOpen={setOpenSpec2}
                                 setValue={setCharacterSpec2}
-                                onChangeValue={(value) => {
-                                    console.log(value);
-                                    
-                                    }}
                             />
                             <DropDownPicker
                                 zIndex={7}
@@ -229,9 +217,6 @@ const CharacterListScreen = ({navigation}) => {
                                 items={races}
                                 setOpen={setOpenRace}
                                 setValue={setCharacterRace}
-                                onChangeValue={(value) => {
-                                    console.log(value);
-                                }}
                             />
                              <DropDownPicker
                                 zIndex={6}
@@ -241,9 +226,6 @@ const CharacterListScreen = ({navigation}) => {
                                 items={genders}
                                 setOpen={setOpenGender}
                                 setValue={setCharacterGender}
-                                onChangeValue={(value) => {
-                                    console.log(value);
-                                }}
                             />
                             <Button
                                 onPress={handleSave}
@@ -278,7 +260,6 @@ const CharacterListScreen = ({navigation}) => {
                                 <Image
                                 src={`${BASE_URL}${item.avatar}`}
                                 style={styles.characterIcon} />
-                                {console.log(item.primary_spec_icon)}
                                 <Image
                                 src={`${BASE_URL}${item.primary_spec_icon}`}
                                 style={styles.characterIcon} />

@@ -98,7 +98,6 @@ export const AuthProvider = ({children}) => {
             url:`${BASE_URL}/api/datafile`,
             method : "GET",
         }).then((res)=>{
-            console.log(res.data["classes"])
             setClasses(res.data["classes"])
             setSpecs(res.data["specs"])
             setRaces(res.data["races"])
@@ -148,7 +147,6 @@ export const AuthProvider = ({children}) => {
             url:`${BASE_URL}/api/teams/`,
             method : "GET",
         }).then((res)=>{
-            console.log(res.data);
             setTeams(res.data);
             setIsLoading(false);
         }).catch((error) => {

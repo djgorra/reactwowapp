@@ -11,6 +11,7 @@ const TeamListScreen = ({route, navigation}) => {
     const {teams, setTeams, getTeams} = useContext(AuthContext);
     const [name, setName] = useState(null);
     const {assets, colors, gradients, sizes} = useTheme();
+
     function Item({ item }) {
         return (
           <View style={styles.listItem}>
@@ -21,6 +22,7 @@ const TeamListScreen = ({route, navigation}) => {
                 onPress={() =>
                     navigation.navigate('TeamCreateScreen', {
                     teamId: item.id,
+                    teamName: item.name,
                     })
                 }
                 marginVertical={sizes.s}
@@ -28,6 +30,21 @@ const TeamListScreen = ({route, navigation}) => {
                 gradient={gradients.primary}>
                 <Text bold white transform="uppercase">
                     Edit
+                </Text>
+            </Button>
+            <Button
+                style={styles.editButton}
+                title="Run"
+                onPress={() =>
+                    navigation.navigate('RaidSelectScreen', {
+                    teamId: item.id,
+                    })
+                }
+                marginVertical={sizes.s}
+                marginHorizontal={sizes.sm}
+                gradient={gradients.primary}>
+                <Text bold white transform="uppercase">
+                    Run
                 </Text>
             </Button>
           </View>

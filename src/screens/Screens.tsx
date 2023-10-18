@@ -54,7 +54,7 @@ export default () => {
       <Stack.Screen
           name="TeamCreateScreen"
           component={TeamCreateScreen}
-          options={{headerShown: false}}
+          options={{headerShown: true}}
       />
     </Stack.Navigator>
   );

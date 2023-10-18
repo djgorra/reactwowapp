@@ -6,7 +6,6 @@ import UploadImage from '../components/UploadImage';
 
 const ProfileScreen = () => {
     const {userInfo, isLoading, logout, updateUser} = useContext(AuthContext);
-    //console.log(JSON.stringify(userInfo)); //tip: this is shown on every keypress
     const currentName = userInfo["user"]["username"] ? userInfo["user"]["username"] : null;
     const [name, setName] = useState(currentName);
     return (
