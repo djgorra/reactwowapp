@@ -28,7 +28,7 @@ const TeamCreateScreen = ({route, navigation}) => {
                 url:`${BASE_URL}/api/buffs/`,
                 method : "GET",
             }).then((res)=>{
-                console.log(res.data)
+               // console.log(res.data[0])
                 setBuffs(res.data)
             }).catch((error) => {
                 ErrorHandler(error)
@@ -42,7 +42,7 @@ const TeamCreateScreen = ({route, navigation}) => {
             }).then((res)=>{
                 setActiveChars(res.data["characters"])
                 setSpells(res.data["spells"])
-                console.log(spells)
+                console.log(res.data["spells"])
             }).catch((error) => {
                 ErrorHandler(error)
             })
@@ -148,6 +148,17 @@ const TeamCreateScreen = ({route, navigation}) => {
         rosterHeader = <Text>No Active Characters</Text>
       }
 
+    function spellsforBuff(buff){
+        let tempArray = [];
+        for (let i = 0; i < spells.length; i++) {
+            let spell = spells[i];
+            if (spell["buff_id"] == buff["id"]) {
+                tempArray.push(spell)
+            }
+        }
+        return tempArray;
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <Modal
@@ -160,15 +171,14 @@ const TeamCreateScreen = ({route, navigation}) => {
                 <View style={styles.modalView}>
                     <SectionList
                         sections={buffs}
+                        extraData={spells}
                         keyExtractor={(item, index) => item + index}
                         renderItem={({item}) => (
                             <View style={styles.item}>
                                 <Text style={styles.title}>{item["name"]}</Text>
-                                {spells.filter(function(spell) {spell["buff_id"] == item["id"]}).map((key,index)=>{
+                                {spellsforBuff(item).map((key,index)=>{
                                     return(
-                                        <View>
-                                            <Text>Hello!</Text>
-                                        </View>
+                                        <Text>{key["icon"]}</Text>
                                     )
                                 })}
                             </View>
