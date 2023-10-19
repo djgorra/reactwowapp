@@ -81,10 +81,10 @@ function DrawerContent(props){
   // screen list for Drawer menu
   const screens = [
     {name: t('screens.home'), to: 'Home', icon: assets.home},
-    {name: t('screens.characters'), to: 'Characters', icon: assets.profile},
-    {name: t('screens.profile'), to: 'Profile', icon: assets.profile},
     {name: t('screens.friends'), to: 'FriendsListScreen', icon: assets.profile},
-    {name: t('screens.teams'), to: 'TeamListScreen', icon: assets.profile}
+    {name: t('screens.characters'), to: 'Characters', icon: assets.users},
+    // {name: t('screens.profile'), to: 'Profile', icon: assets.profile},
+    {name: t('screens.teams'), to: 'TeamListScreen', icon: assets.components}
     // {name: t('screens.components'), to: 'Components', icon: assets.components},
     // {name: t('screens.articles'), to: 'Articles', icon: assets.document},
     // {name: t('screens.rental'), to: 'Pro', icon: assets.rental},
@@ -115,9 +115,9 @@ function DrawerContent(props){
             <Text size={12} semibold>
               {t('app.name')}
             </Text>
-            <Text size={12} semibold>
+            {/* <Text size={12} semibold>
               {t('app.native')}
-            </Text>
+            </Text> */}
           </Block>
         </Block>
 
@@ -154,49 +154,16 @@ function DrawerContent(props){
           );
         })}
 
-        <Block
+        {/* <Block
           flex={0}
           height={1}
           marginRight={sizes.md}
           marginVertical={sizes.sm}
           gradient={gradients.menu}
-        />
+        /> */}
 
-        <Text semibold transform="uppercase" opacity={0.5}>
-          {t('menu.documentation')}
-        </Text>
 
-        <Button
-          row
-          justify="flex-start"
-          marginTop={sizes.sm}
-          marginBottom={sizes.s}
-          onPress={() =>
-            handleWebLink('https://github.com/creativetimofficial')
-          }>
-          <Block
-            flex={0}
-            radius={6}
-            align="center"
-            justify="center"
-            width={sizes.md}
-            height={sizes.md}
-            marginRight={sizes.s}
-            gradient={gradients.white}>
-            <Image
-              radius={0}
-              width={14}
-              height={14}
-              color={colors.black}
-              source={assets.documentation}
-            />
-          </Block>
-          <Text p color={labelColor}>
-            {t('menu.started')}
-          </Text>
-        </Button>
-
-        <Block row justify="space-between" marginTop={sizes.sm}>
+        {/* <Block row justify="space-between" marginTop={sizes.sm}>
           <Text color={labelColor}>{t('darkMode')}</Text>
           <Switch
             checked={isDark}
@@ -204,7 +171,7 @@ function DrawerContent(props){
               handleIsDark(checked);
             }}
           />
-        </Block>
+        </Block> */}
       </Block>
     </DrawerContentScrollView>
   );

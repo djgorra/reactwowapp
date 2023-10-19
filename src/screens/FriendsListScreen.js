@@ -1,5 +1,6 @@
 import React, {useContext, useState, useEffect} from "react"; 
-import {Button, StyleSheet, Text, View, FlatList,SafeAreaView } from "react-native";
+import { StyleSheet, View, FlatList,SafeAreaView, Image } from "react-native";
+import {Button, Text, Block} from '../components/';
 import { Input } from '../components';
 import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
@@ -14,18 +15,22 @@ const FriendsListScreen = () => {
     function Item({ item }) {
         return (
           <View style={styles.listItem}>
-            <Text>{item.username}</Text>
+            <Text style={{textAlign:"center"}}>{item.username}</Text>
+            <View style={{flex:1, flexDirection:'row'}}>
+            <Image
+                src={`https://ui-avatars.com/api/?name=${item.username}`}
+                style={{ flex:1, marginTop:5}} />
             <Button
                 style={styles.removeButton}
                 title="Remove"
                 onPress={() => {removeFriend(item.id)}}
-                marginVertical={sizes.s}
-                marginHorizontal={sizes.sm}
-                gradient={gradients.primary}>
+                marginLeft={5}
+                gradient={gradients.secondary}>
                 <Text bold white transform="uppercase">
                     Remove
                 </Text>
             </Button>
+            </View>
           </View>
         );
       }
@@ -80,6 +85,7 @@ const FriendsListScreen = () => {
             keyboardType="default"
             placeholder="Username or Battletag"
             onChangeText={text => setName(text)}
+            textAlign="center"
             />
             <Button
                     title="Add"
@@ -117,13 +123,14 @@ const styles = StyleSheet.create({
         width:"80%",
         flex:1,
         alignSelf:"center",
-        flexDirection:"row",
-        borderRadius:5
+        flexDirection:"column",
+        borderRadius:5,
       },
       removeButton:{
         flex:1,
-        alignSelf:"right",
-      }
+        margin: 0,
+        padding:10
+      },
 });
 
 export default FriendsListScreen;
