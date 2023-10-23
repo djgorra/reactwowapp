@@ -148,6 +148,14 @@ const CharacterListScreen = ({navigation}) => {
         setCharacterName(value)
     }
 
+    handleRaidPress = (item, characterId) => {
+        navigation.navigate('ItemListScreen', {
+            raidId: item.id,
+            characterId: characterId
+        })
+
+    }
+
     return (
 
         <SafeAreaView style={{flex:1}}>
@@ -271,6 +279,7 @@ const CharacterListScreen = ({navigation}) => {
                                     onPress={() =>
                                         navigation.navigate('RaidListScreen', {
                                         characterId: item.id,
+                                        labelForLink: "Add Item",
                                         })
                                     }>
                                     <Text white bold style={styles.txt_save}>Edit Wishlist</Text>
