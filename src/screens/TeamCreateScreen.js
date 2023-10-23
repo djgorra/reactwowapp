@@ -1,6 +1,6 @@
 import React, {useContext, useState, useEffect} from "react"; 
 import {StyleSheet, View, FlatList, SafeAreaView, ImageBackground, Image, TouchableOpacity, SectionList } from "react-native";
-import {Button, Text, Block} from '../components/';
+import {Button, Block, Text} from '../components/';
 
 import Modal from 'react-native-modal';
 import { Input } from '../components';
@@ -10,32 +10,33 @@ import {BASE_URL} from "../config";
 import {ErrorHandler} from "../components/ErrorHandler.js";
 import { useTheme} from '../hooks/';
 import { set } from "react-native-reanimated";
+import CharacterButton from "../components/CharacterButton";
 
 const TeamCreateScreen = ({route, navigation}) => {
     const {friends, getFriends} = useContext(AuthContext);
+    const {assets, colors, gradients, sizes} = useTheme();
+    const { teamId, teamName } = route.params;
+    
+    const [buffs, setBuffs] = useState([]);
+    const [spells, setSpells] = useState([]);
     const [combinedChars, setCombinedChars] = useState([]);
     const [activeChars, setActiveChars] = useState([]);
     const [visible, setVisible] = useState(false);
-    const {assets, colors, gradients, sizes} = useTheme();
-    const { teamId, teamName } = route.params;
-    const [buffs, setBuffs] = useState([]);
-    const [spells, setSpells] = useState([]);
-
+    
 
     useEffect(() => {
-        if (buffs.length == 0){
+        if (buffs.length === 0){
             axios({
                 url:`${BASE_URL}/api/buffs/`,
                 method : "GET",
             }).then((res)=>{
-               // console.log(res.data[0])
                 setBuffs(res.data)
             }).catch((error) => {
                 ErrorHandler(error)
             })
         }
 
-        if (activeChars.length == 0){
+        if (activeChars.length === 0){
             axios({
                 url:`${BASE_URL}/api/teams/${teamId}/`,
                 method : "GET",
@@ -104,18 +105,7 @@ const TeamCreateScreen = ({route, navigation}) => {
         return (
           <View style={styles.listItem}>
             <TouchableOpacity style={styles.listItem} onPress={() => {addToTeam(item.id)}}>
-                <ImageBackground src={`${BASE_URL}${item.class_icon}`}  style={{height: 60,width: 60,justifyContent:'center'}}/>
-                <View style={styles.iconContainer}>
-                    <Image
-                    src={`${BASE_URL}${item.primary_spec_icon}`}
-                    style={styles.characterIcon} />
-                    <Image
-                    src={`${BASE_URL}${item.secondary_spec_icon}`}
-                    style={styles.characterIcon} />
-                </View>
-                <View style={styles.textContainer}>
-                    <Text h5 style={styles.txt_name}>{item.name}</Text>
-                </View>
+                <CharacterButton item={item} size={60} />
             </TouchableOpacity>
           </View>
         );
@@ -125,18 +115,7 @@ const TeamCreateScreen = ({route, navigation}) => {
         return (
           <View style={styles.listItem}>
             <TouchableOpacity style={styles.listItem} onPress={() => {removeFromTeam(item.id)}}>
-                <ImageBackground src={`${BASE_URL}${item.class_icon}`}  style={{height: 60,width: 60,justifyContent:'center'}}/>
-                <View style={styles.iconContainer}>
-                    <Image
-                    src={`${BASE_URL}${item.primary_spec_icon}`}
-                    style={styles.characterIcon} />
-                    <Image
-                    src={`${BASE_URL}${item.secondary_spec_icon}`}
-                    style={styles.characterIcon} />
-                </View>
-                <View style={styles.textContainer}>
-                    <Text h5 style={styles.txt_name}>{item.name}</Text>
-                </View>
+                <CharacterButton item={item} size={60} />
             </TouchableOpacity>
           </View>
         );
@@ -173,48 +152,62 @@ const TeamCreateScreen = ({route, navigation}) => {
                         sections={buffs}
                         extraData={spells}
                         keyExtractor={(item, index) => item + index}
+                        style={styles.spellIconList}
                         renderItem={({item}) => (
-                            <View style={styles.item}>
+                            <View style={styles.item} key={item["id"]}>
                                 <Text style={styles.title}>{item["name"]}</Text>
+                                <View style={styles.imageContainer}>
                                 {spellsforBuff(item).map((key,index)=>{
                                     return(
-                                        <Text>{key["icon"]}</Text>
+                                        <Image
+                                            src={`${BASE_URL}/spells/${key["icon"]}.jpg`}
+                                            style={styles.characterIcon} />
                                     )
                                 })}
+                                </View>
                             </View>
                         )}
                         renderSectionHeader={({section: {title}}) => (
-                            <Text style={styles.header}>{title}</Text>
+                            <Text white bold backgroundColor={colors.primary} style={styles.header}>{title}</Text>
                         )}
                     />
                 </View>
-                <Button gradient={gradients.secondary} marginHorizontal={sizes.s} onPress={handleVisibleModal}>
+                <Button style={styles.modalButton} gradient={gradients.secondary} marginHorizontal={sizes.s} onPress={handleVisibleModal}>
                     <Text white bold transform="uppercase" marginHorizontal={sizes.s}>
                         Close
                     </Text>
                 </Button>
             </Modal>
-            <Text>{teamName}</Text>
+
+
+            <Text h4 bold>{teamName}</Text>
             {rosterHeader}
-            <FlatList
-                style={styles.list}
-                data={activeChars}
-                renderItem={({ item }) => <ActiveItem item={item}/>}
-                keyExtractor={item => item.id}
-                extraData={activeChars}
-            />
+            <View style={styles.listContainer}>
+                <FlatList
+                    style={styles.list}
+                    data={activeChars}
+                    scrollEnabled={false}
+                    numColumns={5}
+                    renderItem={({ item }) => <ActiveItem item={item}/>}
+                    keyExtractor={item => item.id}
+                    extraData={activeChars}
+                />
+            </View>
             <Text>Available Characters</Text>
-            <FlatList
-                style={styles.list}
-                data={combinedChars}
-                renderItem={({ item }) => <Item item={item}/>}
-                keyExtractor={item => item.id}
-                extraData={combinedChars}
-            />
+            <View style={styles.listContainer}>
+                <FlatList
+                    style={styles.list}
+                    data={combinedChars}
+                    numColumns={5}
+                    renderItem={({ item }) => <Item item={item}/>}
+                    keyExtractor={item => item.id}
+                    extraData={combinedChars}
+                />
+            </View>
             <Button
+                style={styles.modalButton}
                 onPress={handleVisibleModal}
-                gradient={gradients.secondary}
-                marginBottom={sizes.base}>
+                gradient={gradients.secondary}>
                 <Text white bold transform="uppercase">
                     Show Buffs
                 </Text>
@@ -227,26 +220,41 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         // backgroundColor: '#F7F7F7',
-        marginTop:60,
         marginLeft: 20,
-        marginRight:20
+        marginRight:20,
+        width: '100%',
     },
     modal:{
         backgroundColor : "#ffffff",
-        marginBottom:20,
+        marginTop: 20,
+        display:"flex",
     },
-    list: {
-        height: 'auto',
+    modalView:{
+        marginTop: 20,
+        marginBottom: 20,
+    },
+    modalButton:{
+        alignSelf: "center",
+        height:20,
+        width: 100,
+        marginBottom:5,
+    },
+    spellIconList: {
+
+       
     },
     listItem:{
-        margin:10,
-        padding:10,
         backgroundColor:"#FFF",
-        width:"80%",
-        flex:1,
-        alignSelf:"center",
-        flexDirection:"row",
         borderRadius:5,
+    },
+    listContainer : {
+        flex:1,
+        flexDirection: 'row',
+    },
+    item: {
+        flex: 1,
+        flexDirection: 'row',
+        display: "flex",
     },
     item_character : {
         padding :15,
@@ -256,15 +264,11 @@ const styles = StyleSheet.create({
     characterIcon : {
         width: 30, 
         height: 30,
-        justifyContent: 'flex-end',
         borderWidth: 1,
         borderColor: '#000',
-        borderRadius: 30,
-        alignSelf:"center",
-
     },
     iconContainer : {
-        marginLeft : 3,
+      justifyContent: 'flex-start',
     },
     textContainer : {
         width: '60%',
@@ -272,15 +276,21 @@ const styles = StyleSheet.create({
     },
     txt_name : {
       width: "auto",
-      alignSelf: "center",
+      alignSelf: "flex-start",
+    },
+    imageContainer : {
+        flexDirection: 'row',
     },
       header: {
-        fontSize: 60,
+        fontSize: 32,
         fontWeight: 'bold',
-        backgroundColor: 'red',
       },
       title: {
-        fontSize: 24,
+        fontSize: 18,
+      },
+      item: {
+        padding: 5,
+        borderBottomWidth: 1,
       },
 });
 

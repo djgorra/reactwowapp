@@ -1,6 +1,6 @@
 import React, {useContext, useState, useEffect} from "react"; 
-import {Button, StyleSheet, Text, View, FlatList,SafeAreaView } from "react-native";
-import { Input } from '../components';
+import {Button, StyleSheet, View, FlatList,SafeAreaView } from "react-native";
+import { Input, Text } from '../components';
 import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 import {BASE_URL} from "../config";
@@ -15,38 +15,43 @@ const TeamListScreen = ({route, navigation}) => {
     function Item({ item }) {
         return (
           <View style={styles.listItem}>
-            <Text style={styles.itemName}>{item.name}</Text>
-            <Button
-                style={styles.editButton}
-                title="Edit"
-                onPress={() =>
-                    navigation.navigate('TeamCreateScreen', {
-                    teamId: item.id,
-                    teamName: item.name,
-                    })
-                }
-                marginVertical={sizes.s}
-                marginHorizontal={sizes.sm}
-                gradient={gradients.primary}>
-                <Text bold white transform="uppercase">
-                    Edit
-                </Text>
-            </Button>
-            <Button
-                style={styles.editButton}
-                title="Run"
-                onPress={() =>
-                    navigation.navigate('RaidSelectScreen', {
-                    teamId: item.id,
-                    })
-                }
-                marginVertical={sizes.s}
-                marginHorizontal={sizes.sm}
-                gradient={gradients.primary}>
-                <Text bold white transform="uppercase">
-                    Run
-                </Text>
-            </Button>
+            <View style={styles.nameContainer}>
+                <Text h5 style={styles.itemName}>{item.name}</Text>
+            </View>
+
+            <View style={styles.buttonContainer}>
+                <Button
+                    style={styles.button}
+                    title="Edit"
+                    onPress={() =>
+                        navigation.navigate('TeamCreateScreen', {
+                            teamId: item.id,
+                            teamName: item.name,
+                        })
+                    }
+                    marginVertical={sizes.s}
+                    marginHorizontal={sizes.sm}
+                    gradient={gradients.primary}>
+                    <Text bold white transform="uppercase">
+                        Roster
+                    </Text>
+                </Button>
+                <Button
+                    style={styles.button}
+                    title="Run"
+                    onPress={() =>
+                        navigation.navigate('RaidSelectScreen', {
+                            teamId: item.id,
+                        })
+                    }
+                    marginVertical={sizes.s}
+                    marginHorizontal={sizes.sm}
+                    gradient={gradients.primary}>
+                    <Text bold white transform="uppercase">
+                        Run
+                    </Text>
+                </Button>
+            </View>
           </View>
         );
       }
@@ -88,6 +93,7 @@ const TeamListScreen = ({route, navigation}) => {
                     marginVertical={sizes.s}
                     marginHorizontal={sizes.sm}
                     gradient={gradients.primary}>
+                    style={styles.button}
                     <Text bold white transform="uppercase">
                     Add
                     </Text>
@@ -119,16 +125,24 @@ const styles = StyleSheet.create({
         flex:1,
         alignSelf:"center",
         flexDirection:"row",
-        borderRadius:5
+        borderRadius:5,
     },
     itemName:{
-        fontSize:20,
         alignSelf:"center",
     },
-    editButton:{
+    nameContainer:{
+        flex:4,
+        alignContent:"center",
+        flexDirection:"row",
+    },
+    button:{
         alignSelf:"right",
         marginLeft: 20,
-    }
+    },
+    buttonContainer:{
+        flex:2,
+        alignSelf:"",
+    },
 });
 
 export default TeamListScreen;

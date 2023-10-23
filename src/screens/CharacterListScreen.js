@@ -19,6 +19,7 @@ import {
     Alert,
     ImageBackground,
 } from "react-native";
+import CharacterButton from "../components/CharacterButton";
 
 
 
@@ -255,34 +256,24 @@ const CharacterListScreen = ({navigation}) => {
                 {characterList.map((item,index)=>{
                     return(
                         <View style={styles.item_character} key={index}>
-                            <ImageBackground src={`${BASE_URL}${item.class_icon}`}  style={{height: 80,width: 80,justifyContent:'center'}}/>
-                            <View style={styles.iconContainer}>
-                                <Image
-                                src={`${BASE_URL}${item.avatar}`}
-                                style={styles.characterIcon} />
-                                <Image
-                                src={`${BASE_URL}${item.primary_spec_icon}`}
-                                style={styles.characterIcon} />
-                                <Image
-                                src={`${BASE_URL}${item.secondary_spec_icon}`}
-                                style={styles.characterIcon} />
-                            </View>
-                            <Text h5 flex={1} style={styles.txt_name}>{item.name}</Text>
+                            <CharacterButton item={item} size={80}/>
                             <View>
                                 <Button
                                     style={styles.btnContainer}
+                                    gradient={gradients.primary}
                                     onPress={()=>handleEdit(item)}
                                 >
-                                    <Text style={styles.txt_edit}>Edit Character</Text>
+                                    <Text white bold style={styles.txt_edit}>Edit Character</Text>
                                 </Button>
                                 <Button
                                     style={styles.btnContainer}
+                                    gradient={gradients.primary}
                                     onPress={() =>
                                         navigation.navigate('RaidListScreen', {
                                         characterId: item.id,
                                         })
                                     }>
-                                    <Text style={styles.txt_save}>Edit Wishlist</Text>
+                                    <Text white bold style={styles.txt_save}>Edit Wishlist</Text>
                                 </Button>
                             </View>
                         </View>
@@ -291,7 +282,7 @@ const CharacterListScreen = ({navigation}) => {
             <View style={styles.footer_container}>
                 <Button
                     onPress={handleVisibleModal}
-                    gradient={gradients.secondary}
+                    gradient={gradients.primary}
                     marginBottom={sizes.base}>
                     <Text white bold transform="uppercase">
                         New Character
@@ -352,9 +343,9 @@ const styles = StyleSheet.create(
         borderBottomWidth: 3,
         borderBottomColor : "darkgray",
         flexDirection : "row",
-        justifyContent:"center",
+        justifyContent:"space-between",
         alignItems : "center",
-        flexWrap : "wrap",
+
     },
     characterIcon : {
         width: 30 , 
@@ -404,10 +395,7 @@ const styles = StyleSheet.create(
         fontWeight : "bold"
     },
     btnContainer : {
-        borderWidth: 1,
-        padding: 5,
-        marginTop : 5,
-        
+        margin:5,
     },
     btnNewContainer : {
         padding :10,
