@@ -6,6 +6,21 @@ import { AuthContext } from "../context/AuthContext";
 
 
 const RaidListScreen = ({route, navigation}) => {
+
+    function handlePress(item){
+      if(route.params.characterId){
+        navigation.navigate("ItemListScreen", {
+          raidId: item.id,
+          characterId: route.params.characterId
+        })
+      } else if (route.params.teamId) {
+        //TODO: Make an axios request to assign the raidId (i.e. item.id) to the team
+        //After the request, navigate to TeamScreen 
+
+
+      }
+    }
+
     function Item({ item }) {
         return (
           <View style={styles.listItem}>
@@ -15,13 +30,8 @@ const RaidListScreen = ({route, navigation}) => {
               <Text>{item.position}</Text>
             </View>
             <TouchableOpacity
-                onPress={() =>
-                    navigation.navigate('ItemListScreen', {
-                    raidId: item.id,
-                    characterId: route.params.characterId
-                    })
-                }>
-                <Text style={styles.txt_edit}>Add Item</Text>
+                onPress={() =>handlePress(item) }>
+                <Text style={styles.txt_edit}>{route.params.labelForLink || "Select"}</Text>
             </TouchableOpacity>
           </View>
         );
