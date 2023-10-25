@@ -9,6 +9,7 @@ import ItemListScreen from './ItemListScreen'
 import FriendsListScreen from './FriendsListScreen'
 import TeamListScreen from './TeamListScreen'
 import TeamCreateScreen from './TeamCreateScreen'
+import TeamRunsScreen from './TeamRunsScreen'
 const Stack = createStackNavigator();
 
 export default () => {
@@ -56,6 +57,12 @@ export default () => {
           component={TeamCreateScreen}
           options={{headerShown: true}}
       />
+      <Stack.Screen
+          name="TeamRunsScreen"
+          component={TeamRunsScreen}
+          options={{headerShown: true}}
+      />
+
     </Stack.Navigator>
   );
 

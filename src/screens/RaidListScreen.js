@@ -1,7 +1,10 @@
 import React, {useContext, useState} from "react"; 
 import {Button, StyleSheet, Text, TextInput, View, FlatList, Image, TouchableOpacity } from "react-native";
-import LoadingSpinner from '../components/LoadingSpinner';
 import { AuthContext } from "../context/AuthContext";
+import axios from "axios";
+import {BASE_URL} from "../config";
+import {ErrorHandler} from "../components/ErrorHandler.js";
+
 
 
 
@@ -14,8 +17,14 @@ const RaidListScreen = ({route, navigation}) => {
           characterId: route.params.characterId
         })
       } else if (route.params.teamId) {
-        //TODO: Make an axios request to assign the raidId (i.e. item.id) to the team
-        //After the request, navigate to TeamScreen 
+        axios({
+          url:`${BASE_URL}/api/teams/runs?raid_id=${item.id}&team_id=${route.params.teamId}`,
+          method : "POST",
+      }).then((res)=>{
+          navigation.navigate("TeamListScreen")
+      }).catch((error) => {
+          ErrorHandler(error)
+      })
 
 
       }
