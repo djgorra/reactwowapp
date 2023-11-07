@@ -17,23 +17,28 @@ const TeamRunsScreen = ({route, navigation}) => {
         return (
           <View style={styles.listItem}>
             <View style={styles.nameContainer}>
-                <Text h5 style={styles.itemName}>{item.name}</Text>
+                <Text h6 style={styles.itemName}>{item["raid_name"]}</Text>
+                <Text h6>{item["timestamp"]}</Text>
+
             </View>
 
             <View style={styles.buttonContainer}>
                 <Button
                     style={styles.button}
-                    title="Select Raid"
+                    title={"Show Drops"}
                     onPress={() =>
-                        navigation.navigate('RaidListScreen', {
-                            teamId: item.id,
+                        navigation.navigate('RunScreen', {
+                            raidName: item["raid_name"],
+                            timestamp: item["timestamp"],
+                            teamId: route.params.teamId,
+                            runId: item.id,
                         })
                     }
                     marginVertical={sizes.s}
                     marginHorizontal={sizes.sm}
                     gradient={gradients.primary}>
                     <Text bold white transform="uppercase">
-                        Select Raid
+                        Show Drops
                     </Text>
                 </Button>
             </View>
@@ -67,9 +72,7 @@ const TeamRunsScreen = ({route, navigation}) => {
     }
     
     useEffect(() => {
-        if(!runs){
-          getRuns();
-        }
+        getRuns();
     }, []);
 
     return (

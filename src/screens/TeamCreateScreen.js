@@ -13,7 +13,7 @@ import { set } from "react-native-reanimated";
 import CharacterButton from "../components/CharacterButton";
 
 const TeamCreateScreen = ({route, navigation}) => {
-    const {friends, getFriends} = useContext(AuthContext);
+    const {friends, getFriends, userInfo} = useContext(AuthContext);
     const {assets, colors, gradients, sizes} = useTheme();
     const { teamId, teamName } = route.params;
     
@@ -51,7 +51,7 @@ const TeamCreateScreen = ({route, navigation}) => {
 
         if (friends){
             setCombinedChars([]);
-            let tempArray = [];
+            let tempArray = userInfo["characters"];
             for (let i = 0; i < friends.length; i++) {
                 let chars = friends[i].characters;
                 for (let j = 0; j < chars.length; j++) {

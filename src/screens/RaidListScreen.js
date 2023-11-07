@@ -18,7 +18,7 @@ const RaidListScreen = ({route, navigation}) => {
         })
       } else if (route.params.teamId) {
         axios({
-          url:`${BASE_URL}/api/teams/runs?raid_id=${item.id}&team_id=${route.params.teamId}`,
+          url:`${BASE_URL}/api/teams/${route.params.teamId}/runs?raid_id=${item.id}`,
           method : "POST",
       }).then((res)=>{
           navigation.navigate("TeamListScreen")

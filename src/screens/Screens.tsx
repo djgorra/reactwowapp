@@ -10,6 +10,10 @@ import FriendsListScreen from './FriendsListScreen'
 import TeamListScreen from './TeamListScreen'
 import TeamCreateScreen from './TeamCreateScreen'
 import TeamRunsScreen from './TeamRunsScreen'
+import RunScreen from './RunScreen'
+import BattleScreen from './BattleScreen'
+import DropScreen from './DropScreen'
+
 const Stack = createStackNavigator();
 
 export default () => {
@@ -62,6 +66,22 @@ export default () => {
           component={TeamRunsScreen}
           options={{headerShown: true}}
       />
+      <Stack.Screen
+          name="RunScreen"
+          component={RunScreen}
+          options={{headerShown: true}}
+      />
+      <Stack.Screen
+          name="BattleScreen"
+          component={BattleScreen}
+          options={{headerShown: true}}
+      />
+      <Stack.Screen
+          name="DropScreen"
+          component={DropScreen}
+          options={{headerShown: true}}
+      />
+
 
     </Stack.Navigator>
   );

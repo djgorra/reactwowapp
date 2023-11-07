@@ -28,21 +28,33 @@ const CharacterListScreen = ({navigation}) => {
     const {userInfo, setUserInfo, setIsLoading, logout, updateUser, classes, specs, races, genders, characterList, setCharacterList} = useContext(AuthContext);
     const {assets, colors, gradients, sizes} = useTheme();
     const [visible,setVisible] = useState(false); //modal popup
+
+    const [dropdowns, setDropdowns] = useState({
+        class: false,
+        spec1: false,
+        spec2: false,
+        race: false,
+        gender: false,
+    });
     const [openClass, setOpenClass] = useState(false); //dropdown
     const [openSpec1, setOpenSpec1] = useState(false); //dropdown
     const [openSpec2, setOpenSpec2] = useState(false); //dropdown
     const [openRace, setOpenRace] = useState(false); //dropdown
     const [openGender, setOpenGender] = useState(false); //dropdown
-    const [specsDisabled, setSpecsDisabled] = useState(true); //dropdown
-
-    const [characterName,setCharacterName] = useState("");
-    const [characterClass,setCharacterClass] = useState(null);
-    const [characterSpec1,setCharacterSpec1] = useState(null);
-    const [characterSpec2,setCharacterSpec2] = useState(null);
-    const [characterRace,setCharacterRace] = useState(null);
-    const [characterGender,setCharacterGender] = useState(null);
+    
+    
+    const [form, setForm] = useState({
+        name: "",
+        class: "",
+        spec1: "",
+        spec2: "",
+        race: "",
+        gender: "",
+    });
+    
     const [classSpecs,setClassSpecs] = useState([]);
-    const [hideId,setHideId] = useState(null);
+    const [specsDisabled, setSpecsDisabled] = useState(true); //dropdown
+    const [characterId,setCharacterId] = useState(null);
 
     useEffect(()=>{
         getList()
@@ -52,14 +64,22 @@ const CharacterListScreen = ({navigation}) => {
         setCharacterList(userInfo["characters"]);
     }
 
-    const confirmDelete = (hideId) =>
+    const handleFormChange = (e) => {
+        setForm({...form, [e.target.name]: e.target.value});
+    };
+
+    const handleDropdownChange = (e) => {
+        setDropdowns({...dropdowns, [e.target.name]: !dropdowns[e.target.name]});
+    };
+
+    const confirmDelete = (characterId) =>
     Alert.alert(
         'Notice:',
         'Are you sure you want to delete this character?',
         [
         {
             text: 'Yes',
-            onPress: () => handleDelete(hideId),
+            onPress: () => handleDelete(characterId),
             style: 'destructive',
         },
         {
@@ -72,9 +92,9 @@ const CharacterListScreen = ({navigation}) => {
         },
     );
 
-    const handleDelete = (item) =>{
+    const handleDelete = (id) =>{
         axios({
-            url:`${BASE_URL}/api/characters/${item}.json`,
+            url:`${BASE_URL}/api/characters/${id}.json`,
             method : "DELETE",
         }).then((res)=>{
             getList();
@@ -82,27 +102,31 @@ const CharacterListScreen = ({navigation}) => {
             ErrorHandler(error);
         })
     }
+
     const clearForm = (res) => {
         if(res){
             setUserInfo(res.data);
         }
         getList();
         setIsLoading(false);
-        setCharacterName("");
-        setCharacterClass(null);
-        setCharacterSpec1(null);
-        setCharacterSpec2(null);
-        setCharacterRace(null);
-        setCharacterGender(null);
+        setForm({
+            name: "",
+            class: "",
+            spec1: "",
+            spec2: "",
+            race: "",
+            gender: "",
+        });
+        
         setVisible(false);
         setSpecsDisabled(true);
     }
 
     const handleSave = (item) => {
         setIsLoading(true)
-        if(hideId == null){
+        if(characterId == null){
             axios({
-                url:`${BASE_URL}/api/characters.json?character[name]=${characterName}&character[user_id]=${userInfo["user"]["id"]}&character[character_class_id]=${characterClass}&character[race]=${characterRace}&character[gender]=${characterGender}&character[primary_spec_id]=${characterSpec1}&character[secondary_spec_id]=${characterSpec2}`,
+                url:`${BASE_URL}/api/characters.json?character[name]=${form.name}&character[user_id]=${userInfo["user"]["id"]}&character[character_class_id]=${form.class}&character[race]=${form.race}&character[gender]=${form.gender}&character[primary_spec_id]=${form.spec1}&character[secondary_spec_id]=${form.spec2}`,
                 method : "POST",
             }).then((res)=>{
                 clearForm(res);
@@ -112,7 +136,7 @@ const CharacterListScreen = ({navigation}) => {
             })
         }else{
               axios({
-                url:`${BASE_URL}/api/characters/${hideId}.json?character[name]=${characterName}&character[character_class_id]=${characterClass}&character[race]=${characterRace}&character[gender]=${characterGender}&character[primary_spec_id]=${characterSpec1}&character[secondary_spec_id]=${characterSpec2}`,
+                url:`${BASE_URL}/api/characters/${characterId}.json?character[name]=${form.name}&character[character_class_id]=${form.class}&character[race]=${form.race}&character[gender]=${form.gender}&character[primary_spec_id]=${form.spec1}&character[secondary_spec_id]=${form.spec2}`,
                 method : "PUT",
             }).then((res)=>{
                 clearForm(res);
@@ -125,27 +149,27 @@ const CharacterListScreen = ({navigation}) => {
     }
 
     const handleEdit = (item) => {
-        setHideId(item["id"])
-        setCharacterName(item.name)
-        setCharacterClass(item["character_class_id"])
+        setCharacterId(item["id"])
+        console.log(item)
         const classSpecs = specs.filter(function(x){ return x["character_class_id"] == item["character_class_id"]})
         setClassSpecs(classSpecs)
-        setCharacterSpec1(item["primary_spec_id"])
-        setCharacterSpec2(item["secondary_spec_id"])
-        setCharacterRace(item["race"])
-        setCharacterGender(item["gender"])
+        setSpecsDisabled(false)
         setVisible(true)
+        setForm({
+            name: item["name"],
+            class: item["character_class_id"],
+            spec1: item["primary_spec_id"],
+            spec2: item["secondary_spec_id"],
+            race: item["race"],
+            gender: item["gender"],
+        });
         
     }
 
     const handleVisibleModal = () => {
         clearForm();
         setVisible(!visible)
-        setHideId(null)
-    }
-
-    const onChangeName = (value) => {
-        setCharacterName(value)
+        setCharacterId(null)
     }
 
     handleRaidPress = (item, characterId) => {
@@ -172,20 +196,22 @@ const CharacterListScreen = ({navigation}) => {
                         <Text h1>Add a Character</Text>
                         </Block>
                             <TextInput
-                                value={characterName}
+                                name="name"
+                                value={form.name}
                                 style={styles.text_input}
                                 placeholder="Character Name"
-                                onChangeText={onChangeName}
+                                onChangeText={handleFormChange}
                             />
                             <DropDownPicker
                                 zIndex={10}
                                 placeholder="Choose Class"
+                                name="class"
                                 onOpen
-                                open={openClass}
-                                value={characterClass}
+                                open={dropdowns.class}
+                                value={form.class}
                                 items={classes}
-                                setOpen={setOpenClass}
-                                setValue={setCharacterClass}
+                                setOpen={handleDropdownChange}
+                                setValue={handleFormChange}
                                 onChangeValue={(value) => {
                                     const classSpecs = specs.filter(function(x){ return x["character_class_id"] == characterClass})
                                     setClassSpecs(classSpecs);
@@ -195,46 +221,50 @@ const CharacterListScreen = ({navigation}) => {
                             <DropDownPicker
                                 zIndex={9}
                                 placeholder="Choose Primary Spec"
-                                open={openSpec1}
-                                value={characterSpec1}
+                                name="spec1"
+                                open={dropdowns.spec1}
+                                value={form.spec1}
                                 items={classSpecs}
                                 disabled={specsDisabled}
                                 disabledStyle={{
                                     opacity: 0.5
                                   }}
-                                setOpen={setOpenSpec1}
-                                setValue={setCharacterSpec1}
+                                setOpen={handleDropdownChange}
+                                setValue={handleFormChange}
                                 />
                             <DropDownPicker
                                 zIndex={8}
                                 placeholder="Choose Secondary Spec"
-                                open={openSpec2}
-                                value={characterSpec2}
+                                name="spec2"
+                                open={dropdowns.spec2}
+                                value={form.spec2}
                                 items={classSpecs}
                                 disabled={specsDisabled}
                                 disabledStyle={{
                                     opacity: 0.5
                                   }}
-                                setOpen={setOpenSpec2}
-                                setValue={setCharacterSpec2}
+                                setOpen={handleDropdownChange}
+                                setValue={handleFormChange}
                             />
                             <DropDownPicker
                                 zIndex={7}
                                 placeholder="Choose Character Race"
-                                open={openRace}
-                                value={characterRace}
+                                name="race"
+                                open={dropdowns.race}
+                                value={form.race}
                                 items={races}
-                                setOpen={setOpenRace}
-                                setValue={setCharacterRace}
+                                setOpen={handleDropdownChange}
+                                setValue={handleFormChange}
                             />
                              <DropDownPicker
                                 zIndex={6}
                                 placeholder="Choose Character Gender"
-                                open={openGender}
-                                value={characterGender}
+                                name="gender"
+                                open={dropdowns.gender}
+                                value={form.gender}
                                 items={genders}
-                                setOpen={setOpenGender}
-                                setValue={setCharacterGender}
+                                setOpen={handleDropdownChange}
+                                setValue={handleFormChange}
                             />
                             <Button
                                 onPress={handleSave}
@@ -242,7 +272,7 @@ const CharacterListScreen = ({navigation}) => {
                                 gradient={gradients.primary}
                                 style={styles.btn_save}>
                                 <Text white bold transform="uppercase">
-                                    {hideId == null ? "Save" : "Update"}
+                                    {characterId == null ? "Save" : "Update"}
                                 </Text>
                             </Button>
                             <Button flex={1} gradient={gradients.secondary} marginHorizontal={sizes.s} onPress={handleVisibleModal}>
@@ -250,8 +280,8 @@ const CharacterListScreen = ({navigation}) => {
                                     Close
                                 </Text>
                             </Button>
-                            {hideId == null ? null : 
-                                <Button flex={1} style={styles.btn_save} gradient={gradients.danger} marginHorizontal={sizes.s} onPress={()=>confirmDelete(hideId)}>
+                            {characterId == null ? null : 
+                                <Button flex={1} style={styles.btn_save} gradient={gradients.danger} marginHorizontal={sizes.s} onPress={()=>confirmDelete(characterId)}>
                                     <Text white bold transform="uppercase">
                                         Delete
                                     </Text>
