@@ -16,9 +16,9 @@ const RunScreen = ({route, navigation}) => {
   const [run, setRun] = useState([]);
   const {assets, colors, gradients, sizes} = useTheme();
   const isFocused = useIsFocused();
+  const [isLoading, setIsLoading] = useState(true);
 
   function CompletedBattle({ item }) {
-    console.log(item["id"])
         return (
           <View style={styles.listItem}>
             <Text style={{textAlign:"center"}}>{item.boss.name}</Text>
@@ -82,8 +82,8 @@ const RunScreen = ({route, navigation}) => {
           url:`${BASE_URL}/api/teams/${teamId}/runs/${runId}`,
           method : "GET",
       }).then((res)=>{
-
           setRun(res.data);
+          setIsLoading(false);
       }).catch((error) => {
           ErrorHandler(error)
       })
@@ -93,31 +93,43 @@ const RunScreen = ({route, navigation}) => {
       getData();
     }, [isFocused]);
 
-    return (
-        <ScrollView style={{flex:1}}>
+
+    if (isLoading) {
+      return (
+        <View style={{flex:1}}>
             <View style={styles.nameContainer}>
-                <Text h5 style={styles.runName}>{route.params.raidName} - {route.params.timestamp}</Text>
+                <Text h5 style={styles.runName}>Loading...</Text>
             </View>
-            <View style={styles.bossList}>
-              <Text h6>Completed Bosses</Text>
-              <FlatList
-                  data={run.battles}
-                  scrollEnabled={false}
-                  renderItem={({ item }) => <CompletedBattle item={item}/>}
-                  keyExtractor={item => item.id}
-              />
-            </View>
-            <View style={styles.bossList}>
-              <Text h6>Remaining Bosses</Text>
-              <FlatList
-                  data={run.remaining_bosses}
-                  scrollEnabled={false}
-                  renderItem={({ item }) => <RemainingBattle item={item}/>}
-                  keyExtractor={item => item.id}
-              />
-            </View>
-        </ScrollView>
+        </View>
     );
+    } else {
+      return (
+        
+          <ScrollView style={{flex:1}}>
+              <View style={styles.nameContainer}>
+                  <Text h5 style={styles.runName}>{route.params.raidName} - {route.params.timestamp}</Text>
+              </View>
+              <View style={styles.bossList}>
+                <Text h6>Completed Bosses</Text>
+                <FlatList
+                    data={run.battles}
+                    scrollEnabled={false}
+                    renderItem={({ item }) => <CompletedBattle item={item}/>}
+                    keyExtractor={item => item.id}
+                />
+              </View>
+              <View style={styles.bossList}>
+                <Text h6>Remaining Bosses</Text>
+                <FlatList
+                    data={run.remaining_bosses}
+                    scrollEnabled={false}
+                    renderItem={({ item }) => <RemainingBattle item={item}/>}
+                    keyExtractor={item => item.id}
+                />
+              </View>
+          </ScrollView>
+      );
+    }
 }
 const styles = StyleSheet.create({
     container: {
@@ -138,18 +150,5 @@ const styles = StyleSheet.create({
       flexDirection:"row",
       borderRadius:5
     },    
-    footer: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F7F7F7',
-        height:50,
-        zIndex: 100,
-    },
-    addBtn: {
-        borderWidth: 1,
-        borderColor: '#000',
-        borderRadius: 5,
-        padding:10,
-    },
   });
 export default RunScreen;

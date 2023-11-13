@@ -12,6 +12,7 @@ const TeamRunsScreen = ({route, navigation}) => {
     const {teams, setTeams, getTeams} = useContext(AuthContext);
     const [runs, setRuns] = useState(null);
     const {assets, colors, gradients, sizes} = useTheme();
+    const [isLoading, setIsLoading] = useState(true);
 
     function Item({ item }) {
         return (
@@ -52,6 +53,7 @@ const TeamRunsScreen = ({route, navigation}) => {
             method : "GET",
         }).then((res)=>{
             setRuns(res.data);
+            setIsLoading(false);
         }).catch((error) => {
             ErrorHandler(error)
         })
@@ -75,30 +77,40 @@ const TeamRunsScreen = ({route, navigation}) => {
         getRuns();
     }, []);
 
-    return (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.nameContainer}>
-                <Text h5 style={styles.itemName}>{route.params.teamName} Runs</Text>
+    if (isLoading) {
+        return (
+            <View style={{flex:1}}>
+                <View style={styles.nameContainer}>
+                    <Text h5 style={styles.runName}>Loading...</Text>
+                </View>
             </View>
-            <Button
-                style={styles.button}
-                title="Start New Run"
-                onPress={() =>
-                    navigation.navigate('RaidListScreen', {
-                        teamId: route.params.teamId,
-                        teamName: route.params.teamName,
-                    })
-                }
-            ></Button>
-            <FlatList
-                style={{flex:1}}
-                data={runs}
-                renderItem={({ item }) => <Item item={item}/>}
-                keyExtractor={item => item.id}
-                extraData={runs}
-            />
-        </SafeAreaView>
-    )
+        );
+    } else {
+        return (
+            <SafeAreaView style={styles.container}>
+                <View style={styles.nameContainer}>
+                    <Text h5 style={styles.itemName}>{route.params.teamName} Runs</Text>
+                </View>
+                <Button
+                    style={styles.button}
+                    title="Start New Run"
+                    onPress={() =>
+                        navigation.navigate('RaidListScreen', {
+                            teamId: route.params.teamId,
+                            teamName: route.params.teamName,
+                        })
+                    }
+                ></Button>
+                <FlatList
+                    style={{flex:1}}
+                    data={runs}
+                    renderItem={({ item }) => <Item item={item}/>}
+                    keyExtractor={item => item.id}
+                    extraData={runs}
+                />
+            </SafeAreaView>
+        );
+    }
 }
 
 const styles = StyleSheet.create({

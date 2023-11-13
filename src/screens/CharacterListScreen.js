@@ -213,7 +213,7 @@ const CharacterListScreen = ({navigation}) => {
                                 setOpen={handleDropdownChange}
                                 setValue={handleFormChange}
                                 onChangeValue={(value) => {
-                                    const classSpecs = specs.filter(function(x){ return x["character_class_id"] == characterClass})
+                                    const classSpecs = specs.filter(function(x){ return x["character_class_id"] == form.class})
                                     setClassSpecs(classSpecs);
                                     setSpecsDisabled(false);
                                   }}

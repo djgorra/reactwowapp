@@ -1,12 +1,15 @@
-import React, {useContext, useEffect, useState} from "react"; 
-import {Button, StyleSheet, TextInput, View, Image, TouchableOpacity, ScrollView, SectionList, FlatList } from "react-native";
-import { Input, Text } from '../components';
+import React, {useEffect, useState} from "react"; 
+import {StyleSheet, TextInput, View, Image, TouchableOpacity, ScrollView, FlatList } from "react-native";
+import { Text, Button } from '../components';
 import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 import { BASE_URL } from "../config";
 import ErrorHandler from "../components/ErrorHandler.js"
 import { useTheme} from '../hooks/';
 import CharacterButton from "../components/CharacterButton";
+import { set } from "react-native-reanimated";
+import alertBox from '../components/AlertBox'
+
 
 
 const DropScreen = ({route, navigation}) => {
@@ -14,28 +17,57 @@ const DropScreen = ({route, navigation}) => {
     const battleId = route.params.battleId;
     const teamId = route.params.teamId;
     const [characters, setCharacters] = useState(null);
+    const [selectedCharacterId, setSelectedCharacterId] = useState(null);
     const [dropItem, setDropItem] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     const {assets, colors, gradients, sizes} = useTheme();
+
     const getData = async () => {
         axios({
-            url:`${BASE_URL}/api/battles/${battleId}/items/${route.params.itemId}`,
+            url:`${BASE_URL}/api/battles/${battleId}/drops/${route.params.itemId}`,
             method : "GET",
         }).then((res)=>{
-            console.log(res.data)
             setCharacters(res.data["characters"]);
             setDropItem(res.data["item"]);
+            setIsLoading(false);
         }).catch((error) => {
             ErrorHandler(error)
         })
+    };
+
+    const createDrop = (characterId, disenchanted) => {
+        if (characterId) {
+            axios.post(`${BASE_URL}/api/battles/${battleId}/drops?character_id=${characterId}&item_id=${dropItem.id}&disenchanted=${disenchanted}`
+            ).then((res)=>{
+                navigation.navigate('BattleScreen', {
+                    battleId: battleId,
+                    requestType: "show"
+                })
+            }).catch((error) => {
+                ErrorHandler(error)
+            })
+        } else {
+            alertBox("Please select a character")
+        }
     }
 
     useEffect(() => {
       getData();
     }, []);
 
-    if (characters && dropItem) {
-        console.log(characters)
+    if (isLoading) {
+
+        return (
+            <View style={{flex:1}}>
+                <View style={styles.nameContainer}>
+                    <Text h5 style={styles.runName}>Loading...</Text>
+                </View>
+            </View>
+        )
+
+    } else {
+
         return (
             <View style={{flex:1}}>
                 <View style={styles.nameContainer}>
@@ -57,52 +89,47 @@ const DropScreen = ({route, navigation}) => {
 
                                 <FlatList 
                                     data={item.data}
+                                    extraData={selectedCharacterId}
                                     numColumns={5}
                                     style={{marginTop: 10}}
                                     renderItem={({ item: innerData, index }) =>
-                                        <View style={styles.character} key={innerData["id"]}>
-                                            <CharacterButton item={innerData} size={60} />
-                                        </View>
+                                        <TouchableOpacity 
+                                            style={selectedCharacterId === innerData["id"] ? [styles.character, styles.selected] : [styles.character, styles.unselected]}
+                                            onPress={() => setSelectedCharacterId(innerData["id"])}
+                                            key={innerData["id"]}>
+                                                <CharacterButton 
+                                                    item={innerData} 
+                                                    size={60} />
+                                        </TouchableOpacity>
                                 }/>
 
                             </View>
                         </View>
-                 }
-                 />
-                
-                {/* <SectionList
-                    sections={characters}
-                    // extraData={spells}
-                    keyExtractor={(item, index) => item + index}
-                    style={styles.characterList}
-                    stickySectionHeadersEnabled={false}
-                    contentContainerStyle={{
-                        flexDirection: 'row',
-                        flexWrap: 'wrap',
-                      }}
-                    renderItem={({item}) => (
-                        <View style={styles.character} key={item["id"]}>
-                            <CharacterButton item={item} size={60} />
-                        </View>
-                    )}
-                    renderSectionHeader={({section: {title}}) => (
-                        <View>
-                        <View style={styles.header}>
-                            <Text white bold backgroundColor={colors.primary}>{title}</Text>
-                        </View>
-                        </View>
-                    )}
-                /> */}
-            </View>
-        );
-    } else {
-        return (
-            <View style={{flex:1}}>
-                <View style={styles.nameContainer}>
-                    <Text h5 style={styles.runName}>Loading...</Text>
+                    }
+                />
+                <View style={styles.btnContainer}>
+                <Button
+                    onPress={() => createDrop(selectedCharacterId, true)}
+                    flex={1}
+                    gradient={gradients.danger}
+                    style={styles.btn_save}>
+                    <Text white bold transform="uppercase">
+                        Disenchant
+                    </Text>
+                </Button>
+                <Button
+                    onPress={() => createDrop(selectedCharacterId, false)}
+                    flex={1}
+                    gradient={gradients.primary}
+                    style={styles.btnSave}>
+                    <Text white bold transform="uppercase">
+                        Assign
+                    </Text>
+                </Button>
                 </View>
             </View>
-        )
+        );
+
     }
 }
 
@@ -113,23 +140,39 @@ const styles = StyleSheet.create({
       marginTop:60
     },
     nameContainer: {
-      alignItems:"center",
+        alignItems:"center",
         justifyContent:"center",
         flexDirection:"row",
+        borderWidth: 1,
+        borderRadius: 10,
+        padding:10,
     },
     itemName: {
         margin: 10,
     },
-    header: {
-        alignSelf:"center",
-        width: "100%",
-        textAlign: "center",
-    },
     character: {
         width: 70,
+        padding: 2,
+        alignItems: 'center',
+    },
+    selected: {
+        backgroundColor: "#80cbe7",
+        borderWidth: 1,
+        borderColor: "#000",
     },
     characterList: {
       flex:1,
+    },
+    btnContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        backgroundColor: '#F7F7F7',
+        height:50,
+        zIndex: 100,
+    },
+    btnSave : {
+        padding : 10,
     },
   });
 export default DropScreen;

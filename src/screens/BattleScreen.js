@@ -6,6 +6,7 @@ import axios from "axios";
 import { BASE_URL } from "../config";
 import ErrorHandler from "../components/ErrorHandler.js"
 import { useTheme} from '../hooks/';
+import { useIsFocused } from '@react-navigation/native';
 
 
 
@@ -15,61 +16,31 @@ const BattleScreen = ({route, navigation}) => {
     const teamId = route.params.teamId;
     const runId = route.params.runId;
     const bossId = route.params.bossId;
-    function Item({ item }) {
-        return (
-            <View style={styles.listItem}>
-                <View style={styles.buttonContainer}>
-                    <Image style={{width: 50, height: 50}} source={{uri: `${BASE_URL}${item.image_path}`}} />
-                    <Text style={styles.itemInActive} >{item.name}</Text>
-                    <Button
-                          style={styles.button}
-                          title={"Assign"}
-                          onPress={() =>
-                              navigation.navigate('DropScreen', {
-                                    teamId: teamId,
-                                    battleId: battleId,
-                                    itemId: item.id,
-                              })
-                          }
-                          marginVertical={sizes.s}
-                          marginHorizontal={sizes.sm}
-                          gradient={gradients.primary}>
-                          <Text bold white transform="uppercase">
-                              Assign
-                          </Text>
-                      </Button>
-                </View>
-            </View>
-        );
-      }
-    // const {bosses, characterList, setUserInfo} = useContext(AuthContext);
-    // const character = characterList.filter((c)=>{ return c["id"]==route.params.characterId; } )[0];
 
-    // const [items, setItems] = useState({});
-    // const [checkedItems, setCheckedItems] = useState(character["wishlist_items"].map((j)=>{ return j["id"]; } ));
     const [battle, setBattle] = useState(null);
     const {assets, colors, gradients, sizes} = useTheme();
+    const [isLoading, setIsLoading] = useState(true);
+    const [drops, setDrops] = useState(null);
+    const isFocused = useIsFocused();
+
     const getData = async () => {
         if (route.params.requestType == "show") {
             axios({
                 url:`${BASE_URL}/api/battles/${route.params.battleId}`,
                 method : "GET"
             }).then((res)=>{
-            console.log(res.data)
                 setBattle(res.data);
+                setDrops(res.data["drops"]);
+                setIsLoading(false);
             }).catch((error) => {
                 ErrorHandler(error)
             })
         } else if (route.params.requestType == "create") {
-            axios.post(`${BASE_URL}/api/battles`, {
-                params: {
-                    "run_id": runId,
-                    "boss_id": bossId,
-                }
-            }
+            axios.post(`${BASE_URL}/api/battles?run_id=${runId}&boss_id=${bossId}`
             ).then((res)=>{
-                console.log(res.data)
                 setBattle(res.data);
+                setDrops(res.data["drops"]);
+                setIsLoading(false);
             }).catch((error) => {
                 ErrorHandler(error)
             })
@@ -77,26 +48,60 @@ const BattleScreen = ({route, navigation}) => {
     }
 
     useEffect(() => {
-      getData();
-    }, []);
+        console.log(battle)
+        getData();
+    }, [isFocused]);
 
-    // function addItems(){
-    //     axios({
-    //         url:`${BASE_URL}/api/characters/${route.params.characterId}/items.json`,
-    //         method : "POST",
-    //         data: {
-    //             "item_ids": checkedItems,
-    //             "raid_id": route.params.raidId,
-    //         }
-    //     }).then((res)=>{
-    //         setUserInfo(res.data);
-    //         navigation.navigate('Characters');
-    //     }).catch((error) => {
-    //         ErrorHandler(error)
-    //     })
-    // }
-    if (battle) {
+    function isAssigned (item) {
+        if (drops) {
+            for (let i = 0; i < drops.length; i++) {
+                if (drops[i]["item"]["id"] == item.id) {
+                    console.log("hello!")
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
 
+    function Item({ item }) {
+        return (
+            <View style={styles.listItem}>
+                <View style={styles.buttonContainer}>
+                    <Image style={{width: 50, height: 50}} source={{uri: `${BASE_URL}${item.image_path}`}} />
+                    <Text style={styles.itemInActive} >{item.name}</Text>
+                    <Button
+                        style={styles.button}
+                        title={isAssigned(item) ? "Assigned" : "Assign"}
+                          onPress={() =>
+                              navigation.navigate('DropScreen', {
+                                    teamId: teamId,
+                                    battleId: battle.id,
+                                    itemId: item.id,
+                              })
+                          }
+                          marginVertical={sizes.s}
+                          marginHorizontal={sizes.sm}
+                          gradient={gradients.primary}>
+                          <Text bold white transform="uppercase">
+                            {isAssigned(item) ? "Assigned" : "Assign"}
+                          </Text>
+                      </Button>
+                </View>
+            </View>
+        );
+    }
+
+    if (isLoading) {
+        return (
+            <View style={{flex:1}}>
+                <View style={styles.nameContainer}>
+                    <Text h5 style={styles.runName}>Loading...</Text>
+                </View>
+            </View>
+        );
+    } else {
         return (
             <View style={{flex:1}}>
                 <View style={styles.nameContainer}>
@@ -109,15 +114,6 @@ const BattleScreen = ({route, navigation}) => {
                     renderItem={({ item }) => <Item item={item}/>}
                     keyExtractor={item => item.id}
                     />
-            </View>
-        );
-    }
-    else {
-        return (
-            <View style={{flex:1}}>
-                <View style={styles.nameContainer}>
-                    <Text h5 style={styles.runName}>Loading...</Text>
-                </View>
             </View>
         );
     }
@@ -135,24 +131,15 @@ const styles = StyleSheet.create({
       margin:10,
       padding:10,
       backgroundColor:"#FFF",
-      width:"80%",
+      width:"90%",
       flex:1,
       alignSelf:"center",
-      flexDirection:"row",
       borderRadius:5
     },    
-    footer: {
-        justifyContent: 'center',
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor: '#F7F7F7',
-        height:50,
-        zIndex: 100,
-    },
-    addBtn: {
-        borderWidth: 1,
-        borderColor: '#000',
-        borderRadius: 5,
-        padding:10,
     },
   });
 export default BattleScreen;
