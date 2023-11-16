@@ -34,7 +34,7 @@ const TeamCreateScreen = ({route, navigation}) => {
             }).catch((error) => {
                 ErrorHandler(error)
             })
-        }
+        } //get list of buffs
 
         if (activeChars.length === 0){
             axios({
@@ -43,11 +43,10 @@ const TeamCreateScreen = ({route, navigation}) => {
             }).then((res)=>{
                 setActiveChars(res.data["characters"])
                 setSpells(res.data["spells"])
-                console.log(res.data["spells"])
             }).catch((error) => {
                 ErrorHandler(error)
             })
-        }
+        }//get list of active characters
 
         if (friends){
             setCombinedChars([]);
@@ -86,7 +85,6 @@ const TeamCreateScreen = ({route, navigation}) => {
             url:`${BASE_URL}/api/teams/${teamId}/characters?character_id=${charId}`,
             method : "DELETE",
         }).then((res)=>{
-            console.log(res.data["characters"])
             setActiveChars(res.data["characters"])
             setSpells(res.data["spells"])
             newCombinedChars = combinedChars.concat(removedCharacter)

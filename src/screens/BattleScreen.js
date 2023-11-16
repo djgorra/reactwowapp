@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from "react"; 
-import {Button, StyleSheet, TextInput, View, Image, TouchableOpacity, ScrollView, FlatList } from "react-native";
-import { Input, Text } from '../components';
+import {StyleSheet, TextInput, View, Image, TouchableOpacity, ScrollView, FlatList } from "react-native";
+import { Button, Text } from '../components';
 import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 import { BASE_URL } from "../config";
@@ -12,7 +12,6 @@ import { useIsFocused } from '@react-navigation/native';
 
 
 const BattleScreen = ({route, navigation}) => {
-    const battleId = route.params.battleId;
     const teamId = route.params.teamId;
     const runId = route.params.runId;
     const bossId = route.params.bossId;
@@ -21,34 +20,22 @@ const BattleScreen = ({route, navigation}) => {
     const {assets, colors, gradients, sizes} = useTheme();
     const [isLoading, setIsLoading] = useState(true);
     const [drops, setDrops] = useState(null);
+    const [battleId, setBattleId] = useState(route.params.battleId);
     const isFocused = useIsFocused();
 
     const getData = async () => {
-        if (route.params.requestType == "show") {
-            axios({
-                url:`${BASE_URL}/api/battles/${route.params.battleId}`,
-                method : "GET"
-            }).then((res)=>{
-                setBattle(res.data);
-                setDrops(res.data["drops"]);
-                setIsLoading(false);
-            }).catch((error) => {
-                ErrorHandler(error)
-            })
-        } else if (route.params.requestType == "create") {
-            axios.post(`${BASE_URL}/api/battles?run_id=${runId}&boss_id=${bossId}`
-            ).then((res)=>{
-                setBattle(res.data);
-                setDrops(res.data["drops"]);
-                setIsLoading(false);
-            }).catch((error) => {
-                ErrorHandler(error)
-            })
-        }
+        axios.post(`${BASE_URL}/api/battles?run_id=${runId}&boss_id=${bossId}`
+        ).then((res)=>{
+            setBattle(res.data);
+            setDrops(res.data["drops"]);
+            setBattleId(res.data["id"]);
+            setIsLoading(false);
+        }).catch((error) => {
+            ErrorHandler(error)
+        })
     }
 
     useEffect(() => {
-        console.log(battle)
         getData();
     }, [isFocused]);
 
@@ -56,7 +43,6 @@ const BattleScreen = ({route, navigation}) => {
         if (drops) {
             for (let i = 0; i < drops.length; i++) {
                 if (drops[i]["item"]["id"] == item.id) {
-                    console.log("hello!")
                     return true;
                 }
             }
@@ -67,17 +53,19 @@ const BattleScreen = ({route, navigation}) => {
 
     function Item({ item }) {
         return (
-            <View style={styles.listItem}>
+            <View style={[styles.listItem, isAssigned(item) ? styles.assignedListItem : null]}>
                 <View style={styles.buttonContainer}>
-                    <Image style={{width: 50, height: 50}} source={{uri: `${BASE_URL}${item.image_path}`}} />
-                    <Text style={styles.itemInActive} >{item.name}</Text>
+                    <Image style={styles.itemImage} source={{uri: `${BASE_URL}${item.image_path}`}} />
+                    <Text style={{flex:6}}>{item.name}</Text>
                     <Button
                         style={styles.button}
                         title={isAssigned(item) ? "Assigned" : "Assign"}
                           onPress={() =>
                               navigation.navigate('DropScreen', {
                                     teamId: teamId,
-                                    battleId: battle.id,
+                                    runId: runId,
+                                    bossId: bossId,
+                                    battleId: battleId,
                                     itemId: item.id,
                               })
                           }
@@ -95,7 +83,7 @@ const BattleScreen = ({route, navigation}) => {
 
     if (isLoading) {
         return (
-            <View style={{flex:1}}>
+            <View style={styles.container}>
                 <View style={styles.nameContainer}>
                     <Text h5 style={styles.runName}>Loading...</Text>
                 </View>
@@ -103,7 +91,7 @@ const BattleScreen = ({route, navigation}) => {
         );
     } else {
         return (
-            <View style={{flex:1}}>
+            <View style={styles.container}>
                 <View style={styles.nameContainer}>
                     <Text h5 style={styles.runName}>{battle ? battle["boss"]["name"] : ""}</Text>
                 </View>
@@ -121,11 +109,16 @@ const BattleScreen = ({route, navigation}) => {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#F7F7F7',
-      marginTop:60
     },
     runName: {
       alignSelf:"center",
+    },
+    nameContainer: {
+        alignItems:"center",
+        borderRadius: 10,
+        padding:10,
+        margin:10,
+        borderBottomWidth: 1,
     },
     listItem:{
       margin:10,
@@ -136,10 +129,24 @@ const styles = StyleSheet.create({
       alignSelf:"center",
       borderRadius:5
     },    
+    assignedListItem:{
+        backgroundColor: "#42f58a",
+        borderWidth: 1,
+      },
+    itemImage: {
+        width: 50,
+        height: 50,
+        margin: 10,
+    },
     buttonContainer: {
+        flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+    },
+    button: {
+        width: 70,
+        height: 30,
     },
   });
 export default BattleScreen;

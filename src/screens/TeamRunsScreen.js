@@ -1,6 +1,6 @@
 import React, {useContext, useState, useEffect} from "react"; 
-import {Button, StyleSheet, View, FlatList,SafeAreaView } from "react-native";
-import { Input, Text } from '../components';
+import {StyleSheet, View, FlatList,SafeAreaView } from "react-native";
+import { Button, Text } from '../components';
 import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 import {BASE_URL} from "../config";
@@ -17,16 +17,15 @@ const TeamRunsScreen = ({route, navigation}) => {
     function Item({ item }) {
         return (
           <View style={styles.listItem}>
-            <View style={styles.nameContainer}>
-                <Text h6 style={styles.itemName}>{item["raid_name"]}</Text>
+            <View style={styles.itemName}>
+                <Text h5>{item["raid_name"]}</Text>
                 <Text h6>{item["timestamp"]}</Text>
-
             </View>
 
             <View style={styles.buttonContainer}>
                 <Button
                     style={styles.button}
-                    title={"Show Drops"}
+                    title={"Show"}
                     onPress={() =>
                         navigation.navigate('RunScreen', {
                             raidName: item["raid_name"],
@@ -39,7 +38,7 @@ const TeamRunsScreen = ({route, navigation}) => {
                     marginHorizontal={sizes.sm}
                     gradient={gradients.primary}>
                     <Text bold white transform="uppercase">
-                        Show Drops
+                        Show
                     </Text>
                 </Button>
             </View>
@@ -89,10 +88,10 @@ const TeamRunsScreen = ({route, navigation}) => {
         return (
             <SafeAreaView style={styles.container}>
                 <View style={styles.nameContainer}>
-                    <Text h5 style={styles.itemName}>{route.params.teamName} Runs</Text>
+                    <Text h4 style={{alignSelf:'center'}}>{route.params.teamName} Runs</Text>
                 </View>
                 <Button
-                    style={styles.button}
+                    style={styles.newRunButton}
                     title="Start New Run"
                     onPress={() =>
                         navigation.navigate('RaidListScreen', {
@@ -100,9 +99,15 @@ const TeamRunsScreen = ({route, navigation}) => {
                             teamName: route.params.teamName,
                         })
                     }
-                ></Button>
+                    marginVertical={sizes.s}
+                    marginHorizontal={sizes.sm}
+                    gradient={gradients.primary}
+                >
+                    <Text white bold transform="uppercase">
+                        Start New Run
+                    </Text>
+                </Button>
                 <FlatList
-                    style={{flex:1}}
                     data={runs}
                     renderItem={({ item }) => <Item item={item}/>}
                     keyExtractor={item => item.id}
@@ -116,34 +121,42 @@ const TeamRunsScreen = ({route, navigation}) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // backgroundColor: '#F7F7F7',
-        marginTop:20,
-        marginLeft: 20,
-        marginRight:20
     },
     listItem:{
         margin:10,
         padding:10,
         backgroundColor:"#FFF",
-        width:"80%",
+        width:"90%",
         flex:1,
         alignSelf:"center",
         flexDirection:"row",
         borderRadius:5,
     },
-    itemName:{
-        alignSelf:"center",
+    nameContainer: {
+        alignItems:"center",
+        borderRadius: 10,
+        padding:10,
+        margin:10,
+        borderBottomWidth: 1,
     },
-    nameContainer:{
-        alignContent:"center",
+    itemName:{
+        justifyContent:"center",
+        flex:4,
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flex:2,
     },
     button:{
-        alignSelf:"right",
-        marginLeft: 20,
+        width: 70,
+        height: 30,
     },
-    buttonContainer:{
-        flex:2,
-        alignSelf:"",
+    newRunButton:{
+        width: 200,
+        alignSelf:"center",
+        margin:10,
     },
 });
 

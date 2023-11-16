@@ -26,7 +26,6 @@ const LoginScreen = ({navigation}) => {
           let userInfo = res.data
           setUserInfo(userInfo);
           AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
-          console.log(userInfo);
           axios.defaults.headers.common = {'Authorization': `Bearer ${userInfo.access_token}`};
           getData();
           setIsLoading(false);

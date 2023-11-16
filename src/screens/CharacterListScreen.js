@@ -150,7 +150,6 @@ const CharacterListScreen = ({navigation}) => {
 
     const handleEdit = (item) => {
         setCharacterId(item["id"])
-        console.log(item)
         const classSpecs = specs.filter(function(x){ return x["character_class_id"] == item["character_class_id"]})
         setClassSpecs(classSpecs)
         setSpecsDisabled(false)

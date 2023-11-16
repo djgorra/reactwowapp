@@ -9,6 +9,7 @@ import { useTheme} from '../hooks/';
 import CharacterButton from "../components/CharacterButton";
 import { set } from "react-native-reanimated";
 import alertBox from '../components/AlertBox'
+import Checkbox from 'expo-checkbox';
 
 
 
@@ -18,8 +19,10 @@ const DropScreen = ({route, navigation}) => {
     const teamId = route.params.teamId;
     const [characters, setCharacters] = useState(null);
     const [selectedCharacterId, setSelectedCharacterId] = useState(null);
+    const [drop, setDrop] = useState(null);
     const [dropItem, setDropItem] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [toggleCheckBox, setToggleCheckBox] = useState(false);
 
     const {assets, colors, gradients, sizes} = useTheme();
 
@@ -29,6 +32,10 @@ const DropScreen = ({route, navigation}) => {
             method : "GET",
         }).then((res)=>{
             setCharacters(res.data["characters"]);
+            if (res.data["drop"] != null) {
+                setDrop(res.data["drop"]);
+                setToggleCheckBox(res.data["drop"]["disenchanted"]);
+            }
             setDropItem(res.data["item"]);
             setIsLoading(false);
         }).catch((error) => {
@@ -37,18 +44,33 @@ const DropScreen = ({route, navigation}) => {
     };
 
     const createDrop = (characterId, disenchanted) => {
+        drop ? url = `${BASE_URL}/api/battles/${battleId}/drops/${drop.id}` : url = `${BASE_URL}/api/battles/${battleId}/drops`
+        // if drop exists post to update, else post to create
+        console.log(url)
         if (characterId) {
-            axios.post(`${BASE_URL}/api/battles/${battleId}/drops?character_id=${characterId}&item_id=${dropItem.id}&disenchanted=${disenchanted}`
+            axios.post(`${url}?character_id=${characterId}&item_id=${dropItem.id}&disenchanted=${disenchanted}`
             ).then((res)=>{
                 navigation.navigate('BattleScreen', {
                     battleId: battleId,
-                    requestType: "show"
+                    runId: route.params.runId,
+                    bossId: route.params.bossId,
                 })
             }).catch((error) => {
                 ErrorHandler(error)
             })
         } else {
             alertBox("Please select a character")
+        }
+    }
+
+    function isAssigned (id) {
+        if (characters) {
+            if (selectedCharacterId == id) {
+                return styles.selected;
+            }
+            if (drop && drop["character_id"] == id) {
+                return styles.currentSelected;
+            }
         }
     }
 
@@ -74,6 +96,8 @@ const DropScreen = ({route, navigation}) => {
                     <Image style={{width: 50, height: 50}} source={{uri: `${BASE_URL}${dropItem.image_path}`}} />
                     <Text h4 style={styles.itemName}>{dropItem.name}</Text>
                 </View>
+                    <Text h5 style={{alignSelf:'center'}}>{drop ? `Currently assigned to: ${drop.character_name}` : ""}</Text>
+                    <Text h5 danger style={{alignSelf:'center'}}>{drop ? `${drop.disenchanted ? "Disenchanted" : ""}` : ""}</Text>
 
                 <FlatList
                     data={characters}
@@ -94,7 +118,7 @@ const DropScreen = ({route, navigation}) => {
                                     style={{marginTop: 10}}
                                     renderItem={({ item: innerData, index }) =>
                                         <TouchableOpacity 
-                                            style={selectedCharacterId === innerData["id"] ? [styles.character, styles.selected] : [styles.character, styles.unselected]}
+                                            style={[styles.character, isAssigned(innerData["id"])]}
                                             onPress={() => setSelectedCharacterId(innerData["id"])}
                                             key={innerData["id"]}>
                                                 <CharacterButton 
@@ -108,22 +132,19 @@ const DropScreen = ({route, navigation}) => {
                     }
                 />
                 <View style={styles.btnContainer}>
+                <Checkbox
+                    disabled={false}
+                    value={toggleCheckBox}
+                    onValueChange={setToggleCheckBox}
+                />
+                <Text style={{marginLeft:5}}>Disenchant</Text>
                 <Button
-                    onPress={() => createDrop(selectedCharacterId, true)}
-                    flex={1}
-                    gradient={gradients.danger}
-                    style={styles.btn_save}>
-                    <Text white bold transform="uppercase">
-                        Disenchant
-                    </Text>
-                </Button>
-                <Button
-                    onPress={() => createDrop(selectedCharacterId, false)}
+                    onPress={() => createDrop(selectedCharacterId, toggleCheckBox)}
                     flex={1}
                     gradient={gradients.primary}
                     style={styles.btnSave}>
                     <Text white bold transform="uppercase">
-                        Assign
+                        {drop ? "Update" : "Assign"}
                     </Text>
                 </Button>
                 </View>
@@ -143,7 +164,7 @@ const styles = StyleSheet.create({
         alignItems:"center",
         justifyContent:"center",
         flexDirection:"row",
-        borderWidth: 1,
+        borderBottomWidth: 1,
         borderRadius: 10,
         padding:10,
     },
@@ -160,6 +181,11 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "#000",
     },
+    currentSelected: {
+        backgroundColor: "#42f58a",
+        borderWidth: 1,
+        borderColor: "#000",
+    },
     characterList: {
       flex:1,
     },
@@ -168,11 +194,13 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         backgroundColor: '#F7F7F7',
-        height:50,
+        height:60,
         zIndex: 100,
+        padding:10,
     },
     btnSave : {
-        padding : 10,
+        width: 50,
+        marginLeft: 10,
     },
   });
 export default DropScreen;

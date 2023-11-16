@@ -39,7 +39,6 @@ const ItemListScreen = ({route, navigation}) => {
           checkedItems.splice(arrayindex, 1);
         }
       }
-      console.log(checkedItems);
     }
 
     function addItems(){
