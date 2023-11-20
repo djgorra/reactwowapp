@@ -92,10 +92,6 @@ const BattleScreen = ({route, navigation}) => {
     } else {
         return (
             <View style={styles.container}>
-                <View style={styles.nameContainer}>
-                    <Text h5 style={styles.runName}>{battle ? battle["boss"]["name"] : ""}</Text>
-                </View>
-
                 <FlatList
                     style={{flex:1}}
                     data={battle["boss"]["items"]}

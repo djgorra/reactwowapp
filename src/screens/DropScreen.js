@@ -94,9 +94,9 @@ const DropScreen = ({route, navigation}) => {
             <View style={{flex:1}}>
                 <View style={styles.nameContainer}>
                     <Image style={{width: 50, height: 50}} source={{uri: `${BASE_URL}${dropItem.image_path}`}} />
-                    <Text h4 style={styles.itemName}>{dropItem.name}</Text>
+                    <Text h5 style={styles.itemName}>{dropItem.name}</Text>
                 </View>
-                    <Text h5 style={{alignSelf:'center'}}>{drop ? `Currently assigned to: ${drop.character_name}` : ""}</Text>
+                    <Text h6 style={{alignSelf:'center'}}>{drop ? `Currently assigned to: ${drop.character_name}` : ""}</Text>
                     <Text h5 danger style={{alignSelf:'center'}}>{drop ? `${drop.disenchanted ? "Disenchanted" : ""}` : ""}</Text>
 
                 <FlatList

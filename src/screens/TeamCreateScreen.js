@@ -66,6 +66,10 @@ const TeamCreateScreen = ({route, navigation}) => {
     }, [friends]);
 
     const addToTeam = (charId) => {
+        if (activeChars.length >= 25){
+            alertBox("You can only have 25 characters on a team")
+            return;
+        }
         axios({
             url:`${BASE_URL}/api/teams/${teamId}/characters?character_id=${charId}`,
             method : "POST",

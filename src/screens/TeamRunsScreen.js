@@ -77,19 +77,15 @@ const TeamRunsScreen = ({route, navigation}) => {
     }, []);
 
     if (isLoading) {
+        //todo: add loading screen styling 
         return (
             <View style={{flex:1}}>
-                <View style={styles.nameContainer}>
-                    <Text h5 style={styles.runName}>Loading...</Text>
-                </View>
+                <Text h5 style={styles.runName}>Loading...</Text>
             </View>
         );
     } else {
         return (
             <SafeAreaView style={styles.container}>
-                <View style={styles.nameContainer}>
-                    <Text h4 style={{alignSelf:'center'}}>{route.params.teamName} Runs</Text>
-                </View>
                 <Button
                     style={styles.newRunButton}
                     title="Start New Run"
@@ -131,13 +127,6 @@ const styles = StyleSheet.create({
         alignSelf:"center",
         flexDirection:"row",
         borderRadius:5,
-    },
-    nameContainer: {
-        alignItems:"center",
-        borderRadius: 10,
-        padding:10,
-        margin:10,
-        borderBottomWidth: 1,
     },
     itemName:{
         justifyContent:"center",

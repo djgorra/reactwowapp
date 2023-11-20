@@ -35,6 +35,7 @@ const RunScreen = ({route, navigation}) => {
                         battleId: item.id,
                         runId: runId,
                         bossId: item.boss.id,
+                        bossName: item.boss.name,
                       })
 
                   }
@@ -67,6 +68,7 @@ const RunScreen = ({route, navigation}) => {
                     navigation.navigate('BattleScreen', {
                       runId: runId,
                       bossId: item.id,
+                      bossName: item.name,
                     })
       
                 }
@@ -111,9 +113,6 @@ const RunScreen = ({route, navigation}) => {
       return (
         
           <ScrollView style={styles.container}>
-              <View style={styles.nameContainer}>
-                  <Text h4 style={styles.runName}>{route.params.raidName} - {route.params.timestamp}</Text>
-              </View>
               <View style={styles.bossList}>
                 <View style={styles.nameContainer}>
                   <Text styles={styles.header} h5>Completed Bosses</Text>

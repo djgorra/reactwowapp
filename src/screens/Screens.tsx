@@ -29,7 +29,7 @@ export default () => {
       <Stack.Screen 
           name="Characters" 
           component={CharacterListScreen} 
-          options={{headerShown: false}}
+          options={{title: 'Characters'}}
       />
       <Stack.Screen 
           name="Profile" 
@@ -39,47 +39,47 @@ export default () => {
       <Stack.Screen 
           name="RaidListScreen" 
           component={RaidListScreen} 
-          options={{headerShown: true}}
+          options={{title: 'Edit Wishlist - Select Raid'}}
       />
       <Stack.Screen 
           name="ItemListScreen" 
           component={ItemListScreen} 
-          options={{headerShown: true}}
+          options={{title: 'Edit Wishlist - Select Items'}}
       />
       <Stack.Screen
           name="FriendsListScreen"
           component={FriendsListScreen}
-          options={{headerShown: false}}
+          options={{title: 'Friends List'}}
       />
       <Stack.Screen
           name="TeamListScreen"
           component={TeamListScreen}
-          options={{headerShown: false}}
+          options={{title: 'Team List'}}
       />
       <Stack.Screen
           name="TeamCreateScreen"
           component={TeamCreateScreen}
-          options={{headerShown: true}}
+          options={({ route }) => ({ title: `Edit ${route.params.teamName}` })}
       />
       <Stack.Screen
           name="TeamRunsScreen"
           component={TeamRunsScreen}
-          options={{headerShown: true}}
+          options={({ route }) => ({ title: `${route.params.teamName} Runs` })}
       />
       <Stack.Screen
           name="RunScreen"
           component={RunScreen}
-          options={{headerShown: true}}
+          options={({ route }) => ({ title: `${route.params.raidName} - ${route.params.timestamp}` })}
       />
       <Stack.Screen
           name="BattleScreen"
           component={BattleScreen}
-          options={{headerShown: true}}
+          options={({ route }) => ({ title: route.params.bossName })}
       />
       <Stack.Screen
           name="DropScreen"
           component={DropScreen}
-          options={{headerShown: true}}
+          options={{headerShown: true, title: 'Assign Drop'}}
       />
 
 
