@@ -1,7 +1,7 @@
-import React, {useContext, useState, useEffect} from "react"; 
+import React, {useContext, useEffect} from "react"; 
 import {StyleSheet, View, FlatList, SafeAreaView, ImageBackground, Image, TouchableOpacity, SectionList } from "react-native";
 import {Button, Block, Text} from '../components/';
-
+import useState from 'react-usestateref';
 import Modal from 'react-native-modal';
 import { Input } from '../components';
 import { AuthContext } from "../context/AuthContext";
@@ -20,10 +20,10 @@ const TeamCreateScreen = ({route, navigation}) => {
     const [buffs, setBuffs] = useState([]);
     const [spells, setSpells] = useState([]);
     const [combinedChars, setCombinedChars] = useState([]);
-    const [activeChars, setActiveChars] = useState([]);
+    const [activeChars, setActiveChars, activeCharsRef] = useState([]);
     const [visible, setVisible] = useState(false);
-    
 
+    
     useEffect(() => {
         if (buffs.length === 0){
             axios({
@@ -43,27 +43,40 @@ const TeamCreateScreen = ({route, navigation}) => {
             }).then((res)=>{
                 setActiveChars(res.data["characters"])
                 setSpells(res.data["spells"])
+                updateCombinedChars()
             }).catch((error) => {
                 ErrorHandler(error)
             })
         }//get list of active characters
 
         if (friends){
-            setCombinedChars([]);
-            let tempArray = userInfo["characters"];
+          updateCombinedChars()  
+        } else {
+            getFriends();
+        }
+    }, [friends]);
+
+    function updateCombinedChars(){
+        if (friends && activeCharsRef){ 
+            setCombinedChars([]); 
+
+            //i.e. make tempArray a deep copy of userInfo["characters"]
+            let tempArray = JSON.parse(JSON.stringify(userInfo["characters"]));
+            let out = [];
             for (let i = 0; i < friends.length; i++) {
                 let chars = friends[i].characters;
                 for (let j = 0; j < chars.length; j++) {
                     tempArray.push(chars[j])
                 }
             }
-            tempArray = tempArray.filter((char) => !activeChars.includes(char));
 
-            setCombinedChars(tempArray);
-        } else {
-            getFriends();
+            //i.e. make an array of all character id's for characters in activeChars
+            let activeCharIds = activeCharsRef.current.map((char) => char.id);
+            //i.e. remove characters from tempArray if the id appears in activeCharIds using filter
+            out = tempArray.filter((char) => !activeCharIds.includes(char.id))
+            setCombinedChars(out);
         }
-    }, [friends]);
+    }
 
     const addToTeam = (charId) => {
         if (activeChars.length >= 25){
@@ -203,7 +216,7 @@ const TeamCreateScreen = ({route, navigation}) => {
                     numColumns={5}
                     renderItem={({ item }) => <Item item={item}/>}
                     keyExtractor={item => item.id}
-                    extraData={combinedChars}
+                    // extraData={combinedChars}
                 />
             </View>
             <Button
