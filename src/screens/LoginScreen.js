@@ -1,5 +1,5 @@
 import React, {useContext, useState, useCallback, useEffect} from "react"; 
-import { TouchableOpacity, View, StyleSheet } from "react-native";
+import { TouchableOpacity, View, StyleSheet, ImageBackground } from "react-native";
 import { AuthContext } from "../context/AuthContext";
 import LoadingSpinner from '../components/LoadingSpinner';
 import {useData, useTheme, useTranslation} from '../hooks/';
@@ -9,6 +9,7 @@ import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import alertBox from "../components/AlertBox.js"
 import { BASE_URL } from "../config";
+import background from '../assets/images/splash.png';
 
 const isAndroid = Platform.OS === 'android';
 
@@ -56,7 +57,8 @@ const LoginScreen = ({navigation}) => {
   }
 
     return (
-        <Block safe marginTop={sizes.md}>
+        <Block safe color={colors.primary} marginTop={sizes.md}>
+        <ImageBackground source={background} style={styles.container}>
         <Block paddingHorizontal={sizes.s}>
           <Block flex={0} style={{zIndex: 0}}>
             <Image
@@ -64,7 +66,6 @@ const LoginScreen = ({navigation}) => {
               resizeMode="cover"
               padding={sizes.sm}
               radius={sizes.cardRadius}
-              source={assets.background}
               height={sizes.height * 0.3}>
 
               {/* <Button
@@ -89,6 +90,7 @@ const LoginScreen = ({navigation}) => {
           {/* register form */}
           <Block
             keyboard
+            style={{opacity: 0.8}}
             behavior={!isAndroid ? 'padding' : 'height'}
             marginTop={-(sizes.height * 0.2 - sizes.l)}>
             <Block
@@ -148,7 +150,7 @@ const LoginScreen = ({navigation}) => {
                 onPress={() => {login(email, password)}}
                 marginVertical={sizes.s}
                 marginHorizontal={sizes.sm}
-                gradient={gradients.primary}>
+                color={colors.secondary}>
                 <Text bold white transform="uppercase">
                   Log In
                 </Text>
@@ -163,6 +165,7 @@ const LoginScreen = ({navigation}) => {
             </Block>
           </Block>
         </Block>
+        </ImageBackground>
       </Block>
     );
 };

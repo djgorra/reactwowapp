@@ -1,7 +1,7 @@
 {
   "common": {
     "appDetails": "App Details",
-    "appName": "App name",
+    "appName": "RaidCraft",
     "appVersion": "App version",
     "buildVersion": "Build version",
     "expoVersion": "Expo version",
@@ -49,7 +49,7 @@
     }
   },
   "app": {
-    "name": "App Name",
+    "name": "RaidCraft",
     "fullname": "Soft UI Kit",
     "native": "React Native",
     "link": "creative-tim.com"

@@ -18,7 +18,7 @@ WebBrowser.maybeCompleteAuthSession();
 
 const ConnectButton = ({title}) => {
     const [myUuid, setMyUuid] = useState(uuid.v4());
-    const {gradients, sizes} = useTheme();
+    const {colors, sizes} = useTheme();
     const discovery = {
       authorizationEndpoint: 'https://oauth.battle.net/authorize',
       tokenEndpoint: 'https://oauth.battle.net/token',
@@ -81,7 +81,7 @@ const ConnectButton = ({title}) => {
                 onPress={() => {
                     promptAsync();
                 }}
-                 gradient={gradients.primary} margin={sizes.base}
+                 color={colors.secondary} margin={sizes.base}
             >
                <Text white bold transform="uppercase">{title}</Text>
             </Button>
