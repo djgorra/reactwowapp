@@ -19,6 +19,21 @@ export const AuthProvider = ({children}) => {
     const [bosses, setBosses] = useState([]);
     const [friends, setFriends] = useState(null);
     const [teams, setTeams] = useState(null);
+    const [buffs, setBuffs] = useState([]);
+
+    const getBuffs = async () => {
+        setIsLoading(true);
+        axios({
+            url:`${BASE_URL}/api/buffs/`,
+            method : "GET",
+        }).then((res)=>{
+            setBuffs(res.data);
+            setIsLoading(false);
+        }).catch((error) => {
+            ErrorHandler(error);
+            setIsLoading(false);
+        })
+    }
 
     const register = (email, password) => {
         setIsLoading(true);
@@ -181,6 +196,8 @@ export const AuthProvider = ({children}) => {
             teams,
             setTeams,
             getTeams,
+            buffs,
+            getBuffs
         }}>
             {children}
         </AuthContext.Provider>

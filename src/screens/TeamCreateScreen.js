@@ -1,64 +1,62 @@
 import React, {useContext, useEffect} from "react"; 
-import {StyleSheet, View, FlatList, SafeAreaView, ImageBackground, Image, TouchableOpacity, SectionList } from "react-native";
+import {StyleSheet, View, FlatList, SafeAreaView, ImageBackground, Image, TouchableOpacity, SectionList, ScrollView, LogBox } from "react-native";
 import {Button, Block, Text} from '../components/';
 import useState from 'react-usestateref';
 import Modal from 'react-native-modal';
-import { Input } from '../components';
 import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 import {BASE_URL} from "../config";
 import {ErrorHandler} from "../components/ErrorHandler.js";
 import { useTheme} from '../hooks/';
-import { set } from "react-native-reanimated";
 import CharacterButton from "../components/CharacterButton";
 
 const TeamCreateScreen = ({route, navigation}) => {
-    const {friends, getFriends, userInfo} = useContext(AuthContext);
-    const {assets, colors, gradients, sizes} = useTheme();
+    const {friends, getFriends, userInfo, buffs, getBuffs, setIsLoading} = useContext(AuthContext);
+    const { colors, gradients, sizes} = useTheme();
     const { teamId, teamName } = route.params;
     
-    const [buffs, setBuffs] = useState([]);
     const [spells, setSpells] = useState([]);
-    const [combinedChars, setCombinedChars] = useState([]);
+    const [availableChars, setAvailableChars] = useState([]);
     const [activeChars, setActiveChars, activeCharsRef] = useState([]);
-    const [visible, setVisible] = useState(false);
+    const [visible, setVisible] = useState(false); //i.e. for modal
+    const numColumns = 4; //i.e. number of columns in both flatlists
+    const gap = 2; //i.e. gap between flatlist items
+
+    //i.e. ignore yellowbox warning about nested virtualized lists
+    LogBox.ignoreLogs(['VirtualizedLists should never be nested inside plain ScrollViews with the same orientation because it can break windowing and other functionality - use another VirtualizedList-backed container instead.']);
 
     
     useEffect(() => {
         if (buffs.length === 0){
-            axios({
-                url:`${BASE_URL}/api/buffs/`,
-                method : "GET",
-            }).then((res)=>{
-                setBuffs(res.data)
-            }).catch((error) => {
-                ErrorHandler(error)
-            })
+            getBuffs();
         } //get list of buffs
 
         if (activeChars.length === 0){
+            setIsLoading(true);
             axios({
                 url:`${BASE_URL}/api/teams/${teamId}/`,
                 method : "GET",
             }).then((res)=>{
                 setActiveChars(res.data["characters"])
                 setSpells(res.data["spells"])
-                updateCombinedChars()
+                updateAvailableChars();
+                setIsLoading(false);
             }).catch((error) => {
-                ErrorHandler(error)
+                ErrorHandler(error);
+                setIsLoading(false);
             })
         }//get list of active characters
 
         if (friends){
-          updateCombinedChars()  
+          updateAvailableChars()  
         } else {
             getFriends();
         }
     }, [friends]);
 
-    function updateCombinedChars(){
+    function updateAvailableChars(){
         if (friends && activeCharsRef){ 
-            setCombinedChars([]); 
+            setAvailableChars([]); 
 
             //i.e. make tempArray a deep copy of userInfo["characters"]
             let tempArray = JSON.parse(JSON.stringify(userInfo["characters"]));
@@ -74,7 +72,7 @@ const TeamCreateScreen = ({route, navigation}) => {
             let activeCharIds = activeCharsRef.current.map((char) => char.id);
             //i.e. remove characters from tempArray if the id appears in activeCharIds using filter
             out = tempArray.filter((char) => !activeCharIds.includes(char.id))
-            setCombinedChars(out);
+            setAvailableChars(out);
         }
     }
 
@@ -89,8 +87,8 @@ const TeamCreateScreen = ({route, navigation}) => {
         }).then((res)=>{
             setActiveChars(res.data["characters"])
             setSpells(res.data["spells"])
-            newCombinedChars = combinedChars.filter((char) => char.id != charId)
-            setCombinedChars(newCombinedChars)
+            newavailableChars = availableChars.filter((char) => char.id != charId)
+            setAvailableChars(newavailableChars)
         }).catch((error) => {
             ErrorHandler(error)
         })
@@ -104,8 +102,8 @@ const TeamCreateScreen = ({route, navigation}) => {
         }).then((res)=>{
             setActiveChars(res.data["characters"])
             setSpells(res.data["spells"])
-            newCombinedChars = combinedChars.concat(removedCharacter)
-            setCombinedChars(newCombinedChars)
+            newavailableChars = availableChars.concat(removedCharacter)
+            setAvailableChars(newavailableChars)
         }).catch((error) => {
             ErrorHandler(error)
         })
@@ -154,7 +152,8 @@ const TeamCreateScreen = ({route, navigation}) => {
     }
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View>
+        <ScrollView style={styles.container}>
             <Modal
                 animationType="slide"
                 isVisible={visible}
@@ -202,42 +201,48 @@ const TeamCreateScreen = ({route, navigation}) => {
                     style={styles.list}
                     data={activeChars}
                     scrollEnabled={false}
-                    numColumns={5}
+                    numColumns={numColumns}
                     renderItem={({ item }) => <ActiveItem item={item}/>}
                     keyExtractor={item => item.id}
                     extraData={activeChars}
+                    contentContainerStyle={{gap}}
+                    columnWrapperStyle={{gap}}
                 />
             </View>
             <Text>Available Characters</Text>
-            <View style={styles.listContainer}>
+            
                 <FlatList
                     style={styles.list}
-                    data={combinedChars}
-                    numColumns={5}
+                    data={availableChars}
+                    numColumns={numColumns}
                     renderItem={({ item }) => <Item item={item}/>}
                     keyExtractor={item => item.id}
-                    // extraData={combinedChars}
+                    contentContainerStyle={{gap}}
+                    columnWrapperStyle={{gap}}
+                    // extraData={availableChars}
                 />
-            </View>
-            <Button
-                style={styles.modalButton}
-                onPress={handleVisibleModal}
-                gradient={gradients.secondary}>
-                <Text white bold transform="uppercase">
-                    Show Buffs
-                </Text>
-            </Button>
-        </SafeAreaView>
+      
+        </ScrollView>
+        <Button
+        style={styles.modalButton}
+        onPress={handleVisibleModal}
+        gradient={gradients.secondary}>
+            <Text white bold transform="uppercase">
+                Show Buffs
+            </Text>
+        </Button>
+        </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        // flex: 1,
         // backgroundColor: '#F7F7F7',
         marginLeft: 20,
         marginRight:20,
         width: '100%',
+        paddingBottom:40 //i.e. to prevent bottom of screen from being cut off with short lists
     },
     modal:{
         backgroundColor : "#ffffff",
@@ -256,20 +261,16 @@ const styles = StyleSheet.create({
     },
     spellIconList: {
 
-       
     },
     listItem:{
         backgroundColor:"#FFF",
         borderRadius:5,
     },
     listContainer : {
-        flex:1,
-        flexDirection: 'row',
+
     },
     item: {
-        flex: 1,
-        flexDirection: 'row',
-        display: "flex",
+
     },
     item_character : {
         padding :15,
@@ -283,18 +284,16 @@ const styles = StyleSheet.create({
         borderColor: '#000',
     },
     iconContainer : {
-      justifyContent: 'flex-start',
+
     },
     textContainer : {
         width: '60%',
-        alignContent : "flex-end",
     },
     txt_name : {
       width: "auto",
-      alignSelf: "flex-start",
     },
     imageContainer : {
-        flexDirection: 'row',
+
     },
       header: {
         fontSize: 32,
