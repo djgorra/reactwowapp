@@ -19,8 +19,8 @@ const TeamCreateScreen = ({route, navigation}) => {
     const [availableChars, setAvailableChars] = useState([]);
     const [activeChars, setActiveChars, activeCharsRef] = useState([]);
     const [visible, setVisible] = useState(false); //i.e. for modal
-    const numColumns = 4; //i.e. number of columns in both flatlists
-    const gap = 2; //i.e. gap between flatlist items
+    const numColumns = 25; //i.e. 25 is max number of characters on a team
+    const columnWrapperStyle = { flexWrap: 'wrap', flex: 1, rowGap: 5, columnGap: 2 }; //i.e. automatically wrap the flatlist items
 
     //i.e. ignore yellowbox warning about nested virtualized lists
     LogBox.ignoreLogs(['VirtualizedLists should never be nested inside plain ScrollViews with the same orientation because it can break windowing and other functionality - use another VirtualizedList-backed container instead.']);
@@ -205,8 +205,7 @@ const TeamCreateScreen = ({route, navigation}) => {
                     renderItem={({ item }) => <ActiveItem item={item}/>}
                     keyExtractor={item => item.id}
                     extraData={activeChars}
-                    contentContainerStyle={{gap}}
-                    columnWrapperStyle={{gap}}
+                    columnWrapperStyle={columnWrapperStyle}
                 />
             </View>
             <Text>Available Characters</Text>
@@ -217,8 +216,7 @@ const TeamCreateScreen = ({route, navigation}) => {
                     numColumns={numColumns}
                     renderItem={({ item }) => <Item item={item}/>}
                     keyExtractor={item => item.id}
-                    contentContainerStyle={{gap}}
-                    columnWrapperStyle={{gap}}
+                    columnWrapperStyle={columnWrapperStyle}
                     // extraData={availableChars}
                 />
       
@@ -241,7 +239,7 @@ const styles = StyleSheet.create({
         // backgroundColor: '#F7F7F7',
         marginLeft: 20,
         marginRight:20,
-        width: '100%',
+        width: '90%',
         paddingBottom:40 //i.e. to prevent bottom of screen from being cut off with short lists
     },
     modal:{
