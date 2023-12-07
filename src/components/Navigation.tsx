@@ -36,6 +36,7 @@ const Navigation = () => {
         'OpenSans-SemiBold': theme.assets.OpenSansSemiBold,
         'OpenSans-ExtraBold': theme.assets.OpenSansExtraBold,
         'OpenSans-Bold': theme.assets.OpenSansBold,
+        'LifeCraft': theme.assets.LifeCraft,
     });
     if (!fontsLoaded) {
         return <AppLoading />;

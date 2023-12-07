@@ -178,6 +178,7 @@ function DrawerContent(props){
 };
 
 /* drawer menu navigation */
+/* See https://reactnavigation.org/docs/headers/ for styling header*/
 export default () => {
   const {gradients} = useTheme();
   const {t} = useTranslation();
@@ -192,7 +193,8 @@ export default () => {
           width: '60%',
           borderRightWidth: 0,
           backgroundColor: 'transparent',
-        }
+        },
+        headerTitleStyle: { fontFamily: 'LifeCraft' },
         }}
         drawerContent={(props) => <DrawerContent {...props} />}
         >
