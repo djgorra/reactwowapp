@@ -6,7 +6,8 @@ import {View } from "react-native";
 import { AuthContext } from "../context/AuthContext";
 import * as env from '../constants/env';
 import {useTheme} from '../hooks/';
-import { Button, Text, Block} from '../components/';
+import {Text, Block} from '../components/';
+import BlueButton from '../components/BlueButton';
 import uuid from 'react-native-uuid';
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -76,15 +77,15 @@ const ConnectButton = ({title}) => {
     return (
         <View>
             <Block>
-            <Button
+            <BlueButton
                 disabled={!request}
+                text={title}
                 onPress={() => {
                     promptAsync();
                 }}
                  color={colors.secondary} margin={sizes.base}
             >
-               <Text white bold transform="uppercase">{title}</Text>
-            </Button>
+            </BlueButton>
             </Block>
         </View>
 

@@ -5,6 +5,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import {useData, useTheme, useTranslation} from '../hooks/';
 import {Block, Button, Input, Image, Text} from '../components/';
 import BlueButton from '../components/BlueButton';
+import SubmitButton from '../components/SubmitButton';
 import ConnectButton from '../components/ConnectButton';
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -105,16 +106,16 @@ const LoginScreen = ({navigation}) => {
                   />
                 </Block>
 
-                <BlueButton
+                <SubmitButton
                   onPress={() => {login(email, password)}}
                   text="Log In">
+                </SubmitButton>
+
+                <BlueButton
+                  onPress={() => navigation.navigate('Register')}
+                  text="Register">
                 </BlueButton>
-                <View style={{flexDirection: 'row', marginTop: 20}}>
-                     <Text white>Don't have any account? </Text>
-                     <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-                         <Text style={styles.link}>Register</Text>
-                     </TouchableOpacity>
-                </View>
+
               </Block>
             </Block>
           </Block>
