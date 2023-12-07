@@ -51,7 +51,7 @@ export const COLORS: ThemeColors = {
 
   /** UI color for input borderColor on focus */
   focus: '#E293D3',
-  input: '#252F40',
+  input: '#FFFFFF',
 
   /** UI color for switch checked/active color */
   switchOn: '#3A416F',
