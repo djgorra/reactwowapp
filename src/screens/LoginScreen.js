@@ -4,12 +4,12 @@ import { AuthContext } from "../context/AuthContext";
 import LoadingSpinner from '../components/LoadingSpinner';
 import {useData, useTheme, useTranslation} from '../hooks/';
 import {Block, Button, Input, Image, Text} from '../components/';
+import BlueButton from '../components/BlueButton';
 import ConnectButton from '../components/ConnectButton';
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import alertBox from "../components/AlertBox.js"
 import { BASE_URL } from "../config";
-import background from '../assets/images/splash.png';
 
 const isAndroid = Platform.OS === 'android';
 
@@ -58,105 +58,59 @@ const LoginScreen = ({navigation}) => {
 
     return (
         <Block safe color={colors.primary} marginTop={sizes.md}>
-        <ImageBackground source={background} style={styles.container}>
+        <ImageBackground source={require('../assets/images/icecrown/login_bg2.png')} style={styles.container}>
         <Block paddingHorizontal={sizes.s}>
-          <Block flex={0} style={{zIndex: 0}}>
-            <Image
-              background
-              resizeMode="cover"
-              padding={sizes.sm}
-              radius={sizes.cardRadius}
-              height={sizes.height * 0.3}>
-
-              {/* <Button
-                row
-                flex={0}
-                justify="flex-start"
-                onPress={() => navigation.goBack()}>
-                <Image
-                  radius={0}
-                  width={10}
-                  height={18}
-                  color={colors.white}
-                  transform={[{rotate: '180deg'}]}
-                />
-              </Button> */}
-  
-              <Text h4 center white marginTop={sizes.md}>
-                {t('app.name')}
-              </Text>
-            </Image>
-          </Block>
           {/* register form */}
           <Block
             keyboard
-            style={{opacity: 0.8}}
             behavior={!isAndroid ? 'padding' : 'height'}
-            marginTop={-(sizes.height * 0.2 - sizes.l)}>
+            marginTop={(sizes.height * 0.2)}>
             <Block
               flex={0}
               radius={sizes.sm}
+              style={styles.card}
               marginHorizontal="8%"
               shadow={!isAndroid} // disabled shadow on Android due to blur overlay + elevation issue
             >
               <Block
-                blur
                 flex={0}
-                intensity={90}
                 radius={sizes.sm}
                 overflow="hidden"
                 justify="space-evenly"
-                tint={colors.blurTint}
                 paddingVertical={sizes.sm}>
                 {/* social buttons */}
+                <Image style={styles.logo} source={require('../assets/images/icecrown/logo.png')} />
+                <Image source={require('../assets/images/icecrown/under_title.png')} style={{alignSelf: 'center'}} />
+                
                 <ConnectButton title="Battle.net Login"></ConnectButton>
 
-
-
-
-
-
-                <Block
-                  row
-                  flex={0}
-                  align="center"
-                  justify="center"
-                  paddingHorizontal={sizes.xxl}>
-                  <Text h5 center>
-                    or
-                  </Text>
-                </Block>
                 {/* form inputs */}
-                <Block paddingHorizontal={sizes.sm}>
+                <Block 
+                paddingHorizontal={sizes.sm}>
                   <Input
+                    white
                     autoCapitalize="none"
                     marginBottom={sizes.m}
-                    label="Email"
                     keyboardType="email-address"
                     placeholder="Email"
                     onChangeText={text => setEmail(text)}
                   />
                   <Input
                     secureTextEntry
+                    white
                     autoCapitalize="none"
                     marginBottom={sizes.m}
-                    label="Password"
                     placeholder="Password"
                     onChangeText={text => setPassword(text)}
                   />
                 </Block>
 
-                <Button
-                onPress={() => {login(email, password)}}
-                marginVertical={sizes.s}
-                marginHorizontal={sizes.sm}
-                color={colors.secondary}>
-                <Text bold white transform="uppercase">
-                  Log In
-                </Text>
-              </Button>
+                <BlueButton
+                  onPress={() => {login(email, password)}}
+                  text="Log In">
+                </BlueButton>
                 <View style={{flexDirection: 'row', marginTop: 20}}>
-                     <Text>Don't have any account? </Text>
+                     <Text white>Don't have any account? </Text>
                      <TouchableOpacity onPress={() => navigation.navigate('Register')}>
                          <Text style={styles.link}>Register</Text>
                      </TouchableOpacity>
@@ -180,6 +134,18 @@ const styles = StyleSheet.create(
         wrapper: {
             width:'80%',
         },
+        logo: {
+          opacity:1.0,
+          width: 200,
+          resizeMode: 'contain',
+          alignSelf: 'center',
+        },
+        card: {
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            width: '80%',
+            borderRadius: 10,
+            padding: 10,
+        },
         input: {
             marginBottom:12,
             borderWidth: 1,
@@ -188,7 +154,7 @@ const styles = StyleSheet.create(
             paddingHorizontal: 14,
         },
         link: {
-            color:'blue',
+            color:'lightblue',
         },
     }
 );
