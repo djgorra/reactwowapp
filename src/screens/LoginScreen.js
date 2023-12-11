@@ -87,23 +87,34 @@ const LoginScreen = ({navigation}) => {
 
                 {/* form inputs */}
                 <Block 
+                paddingTop={sizes.sm}
                 paddingHorizontal={sizes.sm}>
-                  <Input
-                    white
-                    autoCapitalize="none"
-                    marginBottom={sizes.m}
-                    keyboardType="email-address"
-                    placeholder="Email"
-                    onChangeText={text => setEmail(text)}
-                  />
-                  <Input
-                    secureTextEntry
-                    white
-                    autoCapitalize="none"
-                    marginBottom={sizes.m}
-                    placeholder="Password"
-                    onChangeText={text => setPassword(text)}
-                  />
+                  <Block style={styles.inputContainer}>
+                    <Image style={styles.redDot} source={require('../assets/images/icecrown/red_dot.png')} />
+                    <Input
+                      white
+                      autoCapitalize="none"
+                      style={styles.input}
+                      marginBottom={sizes.m}
+                      keyboardType="email-address"
+                      placeholder="Email"
+                      textAlign="center"
+                      onChangeText={text => setEmail(text)}
+                    />
+                  </Block>
+
+                  <Block style={styles.inputContainer}>
+                    <Image style={styles.redDot} source={require('../assets/images/icecrown/red_dot.png')} />
+                    <Input
+                      secureTextEntry
+                      white
+                      autoCapitalize="none"
+                      style={styles.input}
+                      textAlign="center"
+                      placeholder="Password"
+                      onChangeText={text => setPassword(text)}
+                    />
+                  </Block>
                 </Block>
 
                 <SubmitButton
@@ -147,12 +158,29 @@ const styles = StyleSheet.create(
             borderRadius: 10,
             padding: 10,
         },
+        redDot: {
+          width: 20,
+          height: 20,
+          resizeMode: 'contain',
+          position: 'absolute',
+          left:5,
+          top:24,
+        },
+        inputContainer: {
+          flex: 1,
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
         input: {
-            marginBottom:12,
-            borderWidth: 1,
-            borderColor: '#bbb',
-            borderRadius: 5,
-            paddingHorizontal: 14,
+            flex: 1,
+            width: '100%',
+            textAlign: 'center',
+            paddingTop: 10,
+            paddingRight: 10,
+            paddingBottom: 10,
+            paddingLeft: 0,
+            color: '#424242',
         },
         link: {
             color:'lightblue',

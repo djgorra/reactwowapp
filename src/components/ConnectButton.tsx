@@ -75,7 +75,7 @@ const ConnectButton = ({title}) => {
     }, [response]);
 
     return (
-        <View>
+        <View paddingTop={sizes.sm}>
             <Block>
             <BlueButton
                 disabled={!request}
