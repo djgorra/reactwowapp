@@ -1,10 +1,11 @@
 import React, {useCallback, useContext, useEffect, useState} from 'react';
-import {Platform} from 'react-native';
+import {Platform, StyleSheet, ImageBackground} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 import { AuthContext } from '../context/AuthContext';
 import {useData, useTheme, useTranslation} from '../hooks/';
 import * as regex from '../constants/regex';
 import {Block, Button, Input, Image, Text} from '../components/';
+import SubmitButton from '../components/SubmitButton';
 
 const isAndroid = Platform.OS === 'android';
 
@@ -68,214 +69,148 @@ const RegisterScreen = () => {
   }, [registration, setIsValid]);
 
   return (
-    <Block safe marginTop={sizes.md}>
-      <Block paddingHorizontal={sizes.s}>
-        <Block flex={0} style={{zIndex: 0}}>
-          <Image
-            background
-            resizeMode="cover"
-            padding={sizes.sm}
-            radius={sizes.cardRadius}
-            source={assets.background}
-            height={sizes.height * 0.3}>
-            <Button
-              row
-              flex={0}
-              justify="flex-start"
-              onPress={() => navigation.goBack()}>
-              <Image
-                radius={0}
-                width={10}
-                height={18}
-                color={colors.white}
-                source={assets.arrow}
-                transform={[{rotate: '180deg'}]}
-              />
-              <Text p white marginLeft={sizes.s}>
-                Go Back
-              </Text>
-            </Button>
-
-            <Text h4 center white marginBottom={sizes.md}>
-                {t('app.name')}
-            </Text>
-          </Image>
-        </Block>
-        {/* register form */}
-        <Block
-          keyboard
-          behavior={!isAndroid ? 'padding' : 'height'}
-          marginTop={-(sizes.height * 0.2 - sizes.l)}>
+    <Block safe color={colors.primary} marginTop={sizes.md}>
+        <ImageBackground source={require('../assets/images/icecrown/login_bg1.png')} style={styles.container}>
+        <Block paddingHorizontal={sizes.s}>
+          {/* register form */}
           <Block
-            flex={0}
-            radius={sizes.sm}
-            marginHorizontal="8%"
-            shadow={!isAndroid} // disabled shadow on Android due to blur overlay + elevation issue
-          >
+            keyboard
+            behavior={!isAndroid ? 'padding' : 'height'}
+            marginTop={(sizes.height * 0.2)}>
             <Block
-              blur
               flex={0}
-              intensity={90}
               radius={sizes.sm}
-              overflow="hidden"
-              justify="space-evenly"
-              tint={colors.blurTint}
-              paddingVertical={sizes.sm}>
-
-              {/* social buttons */}
-              <Block row center justify="space-evenly" marginVertical={sizes.m}>
-              </Block>
-              <Block
-                row
-                flex={0}
-                align="center"
-                justify="center"
-                marginBottom={sizes.sm}
-                paddingHorizontal={sizes.xxl}>
-                <Text h5 center>
-                    {t('common.signup')}
-                </Text>
-              </Block>
-              {/* form inputs */}
-              <Block paddingHorizontal={sizes.sm}>
-                <Input
-                  autoCapitalize="none"
-                  marginBottom={sizes.m}
-                  label="Email"
-                  keyboardType="email-address"
-                  placeholder="Email"
-                  success={Boolean(registration.email && isValid.email)}
-                  danger={Boolean(registration.email && !isValid.email)}
-                  onChangeText={(value) => handleChange({email: value})}
-                />
-                <Input
-                  secureTextEntry
-                  autoCapitalize="none"
-                  marginBottom={sizes.m}
-                  label="Password"
-                  placeholder="Password"
-                  onChangeText={(value) => handleChange({password: value})}
-                  success={Boolean(registration.password && isValid.password)}
-                  danger={Boolean(registration.password && !isValid.password)}
-                />
-              </Block>
-
+              style={styles.card}
+              marginHorizontal="8%"
+              shadow={!isAndroid} // disabled shadow on Android due to blur overlay + elevation issue
+            >
               <Button
-                onPress={() => {
-                    register(email, password);
-                }}
-                marginVertical={sizes.s}
-                marginHorizontal={sizes.sm}
-                gradient={gradients.primary}
-                disabled={Object.values(isValid).includes(false)}>
-                <Text bold white transform="uppercase">
-                  Sign Up
+                style={{alignSelf: 'flex-start'}}
+                row
+                onPress={() => navigation.goBack()}>
+                <Image
+                  radius={0}
+                  width={10}
+                  height={18}
+                  color={colors.white}
+                  source={assets.arrow}
+                  transform={[{rotate: '180deg'}]}
+                />
+                <Text p white marginLeft={sizes.s}>
+                  Go Back
                 </Text>
               </Button>
+              <Block
+                flex={0}
+                radius={sizes.sm}
+                overflow="hidden"
+                justify="space-evenly"
+                paddingVertical={sizes.sm}>
+                {/* social buttons */}
+                <Image style={styles.logo} source={require('../assets/images/icecrown/logo.png')} />
+                <Image source={require('../assets/images/icecrown/under_title.png')} style={{alignSelf: 'center'}} />
+                
+
+                {/* form inputs */}
+                <Block 
+                paddingTop={sizes.sm}
+                paddingHorizontal={sizes.sm}>
+                  <Text h5 white bold center style={{fontFamily:'LifeCraft'}}> Sign Up </Text>
+                  <Block style={styles.inputContainer}>
+                    <Image style={styles.redDot} source={require('../assets/images/icecrown/red_dot.png')} />
+                    <Input
+                      autoCapitalize="none"
+                      marginBottom={sizes.m}
+                      keyboardType="email-address"
+                      placeholder="Email"
+                      textAlign='center'
+                      style={styles.input}
+                      success={Boolean(registration.email && isValid.email)}
+                      danger={Boolean(registration.email && !isValid.email)}
+                      onChangeText={(value) => handleChange({email: value})}
+                    />
+                  </Block>
+
+                  <Block style={styles.inputContainer}>
+                    <Image style={styles.redDot} source={require('../assets/images/icecrown/red_dot.png')} />
+                    <Input
+                      secureTextEntry
+                      autoCapitalize="none"
+                      marginBottom={sizes.m}
+                      style={styles.input}
+                      textAlign="center"
+                      placeholder="Password"
+                      onChangeText={(value) => handleChange({password: value})}
+                      success={Boolean(registration.password && isValid.password)}
+                      danger={Boolean(registration.password && !isValid.password)}
+                    />
+                  </Block>
+                </Block>
+
+                <SubmitButton
+                  onPress={() => {register(email, password)}}
+                  text="Sign Up">
+                </SubmitButton>
+
+              </Block>
             </Block>
           </Block>
         </Block>
+        </ImageBackground>
       </Block>
-    </Block>
   );
 };
 
+const styles = StyleSheet.create(
+  {
+      container: {
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+      },
+      wrapper: {
+          width:'80%',
+      },
+      logo: {
+        opacity:1.0,
+        width: 200,
+        resizeMode: 'contain',
+        alignSelf: 'center',
+      },
+      card: {
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          width: '80%',
+          borderRadius: 10,
+          padding: 10,
+      },
+      redDot: {
+        width: 20,
+        height: 20,
+        resizeMode: 'contain',
+        position: 'absolute',
+        left:5,
+        top:24,
+      },
+      inputContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      input: {
+          flex: 1,
+          width: '100%',
+          textAlign: 'center',
+          paddingTop: 10,
+          paddingRight: 10,
+          paddingBottom: 10,
+          paddingLeft: 0,
+          color: '#424242',
+      },
+      link: {
+          color:'lightblue',
+      },
+  }
+);
+
 export default RegisterScreen;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import React, {useContext, useState} from "react"; 
-// import { Button, Text, TextInput, TouchableOpacity, View, StyleSheet, useColorScheme, } from "react-native";
-// import { AuthContext } from "../context/AuthContext";
-// import LoadingSpinner from '../components/LoadingSpinner';
-
-// const RegisterScreen = ({navigation}) => {
-//     const [name, setName] = useState(null);
-//     const [email, setEmail] = useState(null);
-//     const [password, setPassword] = useState(null);
-//     const {isLoading, register} = useContext(AuthContext);
-
-//     return (
-//         <View style={styles.container}>
-//             <LoadingSpinner visible={isLoading} />
-//             <View style={styles.wrapper}>
-//                 <Text>Hello</Text>
-//                 <TextInput 
-//                     style={styles.input} 
-//                     value={name} 
-//                     placeholder="Enter Name" 
-//                     onChangeText={text => setName(text)}/>
-//                 <TextInput 
-//                     style={styles.input} 
-//                     value={email} 
-//                     placeholder="Enter Email" 
-//                     onChangeText={text => setEmail(text)}/>
-
-//                 <TextInput 
-//                     style={styles.input} 
-//                     value={password} 
-//                     placeholder="Enter Password" 
-//                     onChangeText={text => setPassword(text)}
-//                     secureTextEntry />
-
-//                 <Button 
-//                     title="Register" 
-//                     onPress={() => {
-//                         register(name, email, password);
-//                     }}
-//                 />
-
-//                 <View style={{flexDirection: 'row', marginTop: 20}}>
-//                     <Text>Already have an account? </Text>
-//                     <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-//                         <Text style={styles.link}>Login</Text>
-//                     </TouchableOpacity>
-//                 </View>
-//             </View>
-//         </View>
-//     );
-// };
-
-// const styles = StyleSheet.create(
-//     {
-//         container: {
-//             flex: 1,
-//             alignItems: 'center',
-//             justifyContent: 'center',
-//         },
-//         wrapper: {
-//             width:'80%',
-//         },
-//         input: {
-//             marginBottom:12,
-//             borderWidth: 1,
-//             borderColor: '#bbb',
-//             borderRadius: 5,
-//             paddingHorizontal: 14,
-//         },
-//         link: {
-//             color:'blue',
-//         },
-//     }
-// );
-
-// export default RegisterScreen;
