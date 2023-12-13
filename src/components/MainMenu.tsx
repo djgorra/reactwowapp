@@ -195,6 +195,10 @@ export default () => {
           backgroundColor: 'transparent',
         },
         headerTitleStyle: { fontFamily: 'LifeCraft' },
+        headerStyle: {
+          backgroundColor: '#0d1c3a',
+        },
+        headerTintColor: '#fff',
         }}
         drawerContent={(props) => <DrawerContent {...props} />}
         >

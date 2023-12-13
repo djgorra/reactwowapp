@@ -1,11 +1,13 @@
 import {useContext, useState} from "react"; 
 import * as WebBrowser from 'expo-web-browser';
-import {Button, StyleSheet, Text, View } from "react-native";
+import {Button, StyleSheet, Text, View, ImageBackground } from "react-native";
 import LoadingSpinner from '../components/LoadingSpinner';
 import ConnectButton from '../components/ConnectButton';
 import { AuthContext } from "../context/AuthContext";
 import {useData, useTheme, useTranslation} from '../hooks/';
 import { SafeAreaView } from "react-native-safe-area-context";
+import HomeButton from '../components/HomeButton';
+
 WebBrowser.maybeCompleteAuthSession();
 
 // Endpoint
@@ -14,17 +16,23 @@ const HomeScreen = ({navigation}) => {
     const {userInfo, isLoading} = useContext(AuthContext);
     const {t} = useTranslation();
     return (
-        <SafeAreaView style={styles.container}>
-            <LoadingSpinner visible={isLoading} />
-            <Text style={styles.welcome}>Welcome!</Text>
-            {
-                userInfo["user"]["battletag"] ?  
-                <Text style={styles.welcome}>Your Battletag is <Text style={styles.boldText}>{userInfo["user"]["battletag"]}</Text></Text> :
-                <ConnectButton title="Connect your WOW Account"></ConnectButton>
-
-            }
-            <Button title="Add your user avatar!" color="blue" onPress={() => navigation.navigate('Profile')}/>
-        </SafeAreaView>
+        <ImageBackground source={require('../assets/images/icecrown/home_bg.png')} style={styles.container}>
+            <SafeAreaView>
+                    <View style={styles.welcomeContainer}>
+                        {
+                            userInfo["user"]["battletag"] ?  
+                            <Text style={styles.welcome}>Your Battletag is <Text style={styles.boldText}>{userInfo["user"]["battletag"]}</Text></Text> :
+                            <ConnectButton title="Connect your WOW Account"></ConnectButton>
+                            
+                        }
+                        <View style={styles.buttonContainer}>
+                            <HomeButton text="Characters" color="blue" onPress={() => navigation.navigate('Characters')}/>
+                            <HomeButton text="Friends" color="blue" onPress={() => navigation.navigate('Friends')}/>
+                            <HomeButton text="Teams" color="blue" onPress={() => navigation.navigate('TeamListScreen')}/>
+                        </View>
+                    </View>
+            </SafeAreaView>
+        </ImageBackground>
 
         
     );
@@ -34,18 +42,32 @@ const HomeScreen = ({navigation}) => {
 const styles = StyleSheet.create(
     {
         container: {
-            flex: 1,
+            height: '100%',
+            width: '100%',
             alignItems: 'center',
             justifyContent: 'center',
-            marginTop:15
         },
         welcome: {
-            fontSize: 18, 
-            marginBottom: 8,
+            fontSize: 24, 
+            fontFamily: 'LifeCraft',
+            textAlign: 'center',
+            textShadowRadius: 10,
+            textShadowColor: 'black',
+            textShadowOffset: {width: 1, height: 1},
+            color: 'white',
+
         },
         boldText: {
             fontWeight: 'bold',
         },
+        welcomeContainer: {
+            width: '100%',
+
+        },
+        buttonContainer: {
+            width: '100%',
+            flexDirection: 'row',
+        }
     }
 );
 

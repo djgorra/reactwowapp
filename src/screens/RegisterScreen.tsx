@@ -1,10 +1,10 @@
 import React, {useCallback, useContext, useEffect, useState} from 'react';
-import {Platform, StyleSheet, ImageBackground} from 'react-native';
+import {Platform, StyleSheet, ImageBackground, Text} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 import { AuthContext } from '../context/AuthContext';
 import {useData, useTheme, useTranslation} from '../hooks/';
 import * as regex from '../constants/regex';
-import {Block, Button, Input, Image, Text} from '../components/';
+import {Block, Button, Input, Image} from '../components/';
 import SubmitButton from '../components/SubmitButton';
 
 const isAndroid = Platform.OS === 'android';
@@ -120,7 +120,6 @@ const RegisterScreen = () => {
                     <Image style={styles.redDot} source={require('../assets/images/icecrown/red_dot.png')} />
                     <Input
                       autoCapitalize="none"
-                      marginBottom={sizes.m}
                       keyboardType="email-address"
                       placeholder="Email"
                       textAlign='center'

@@ -20,7 +20,13 @@ export default () => {
   // const {t} = useTranslation();
   // const screenOptions = useScreenOptions();
   return (
-    <Stack.Navigator screenOptions={{}}>
+    <Stack.Navigator screenOptions={{
+        headerTitleStyle: { fontFamily: 'LifeCraft' },
+        headerStyle: {
+          backgroundColor: '#0d1c3a',
+        },
+        headerTintColor: '#fff',
+    }}>
       <Stack.Screen
         name="Home"
         component={HomeScreen}

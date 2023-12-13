@@ -95,7 +95,6 @@ const LoginScreen = ({navigation}) => {
                       white
                       autoCapitalize="none"
                       style={styles.input}
-                      marginBottom={sizes.m}
                       keyboardType="email-address"
                       placeholder="Email"
                       textAlign="center"
@@ -181,6 +180,7 @@ const styles = StyleSheet.create(
             paddingBottom: 10,
             paddingLeft: 0,
             color: '#424242',
+            borderRadius: 0,
         },
         link: {
             color:'lightblue',
