@@ -13,6 +13,29 @@ import TeamRunsScreen from './TeamRunsScreen'
 import RunScreen from './RunScreen'
 import BattleScreen from './BattleScreen'
 import DropScreen from './DropScreen'
+import { Image, View, Text, StyleSheet } from 'react-native';
+import { Appbar } from 'react-native-paper';
+import { getHeaderTitle } from '@react-navigation/elements';
+
+function CustomNavigationBar({ navigation, route, options, back = null }) {
+    const title = getHeaderTitle(options, route.name);
+  
+    return (
+        <View style={styles.headerContainer}>
+            {back ? <Appbar.BackAction onPress={navigation.goBack} color="#dff0f8" style={{width:10}}/> : null}
+            <View style={styles.logoColumn}>
+                <Image source={require('../assets/images/icecrown/under_title.png')} style={styles.center} />
+                <Text style={styles.headerText}>{title}</Text>
+                <Image source={require('../assets/images/icecrown/under_title.png')} style={styles.center} />
+            </View>
+            <View style={styles.headerSpacer}>
+                <Text>
+                    {/* tip: a dummy element to center the title */}
+                </Text>
+            </View>
+        </View>
+    );
+  }
 
 const Stack = createStackNavigator();
 
@@ -21,12 +44,13 @@ export default () => {
   // const screenOptions = useScreenOptions();
   return (
     <Stack.Navigator screenOptions={{
+        header: (props) => <CustomNavigationBar {...props} />,
         headerTitleStyle: { fontFamily: 'LifeCraft' },
         headerStyle: {
           backgroundColor: '#0d1c3a',
         },
         headerTintColor: '#fff',
-    }}>
+      }}>
       <Stack.Screen
         name="Home"
         component={HomeScreen}
@@ -45,22 +69,22 @@ export default () => {
       <Stack.Screen 
           name="RaidListScreen" 
           component={RaidListScreen} 
-          options={{title: 'Edit Wishlist - Select Raid'}}
+          options={{title: 'Select Raid'}}
       />
       <Stack.Screen 
           name="ItemListScreen" 
           component={ItemListScreen} 
-          options={{title: 'Edit Wishlist - Select Items'}}
+          options={{title: 'Select Items'}}
       />
       <Stack.Screen
           name="FriendsListScreen"
           component={FriendsListScreen}
-          options={{title: 'Friends List'}}
+          options={{title: 'Friends'}}
       />
       <Stack.Screen
           name="TeamListScreen"
           component={TeamListScreen}
-          options={{title: 'Team List'}}
+          options={{title: 'Teams'}}
       />
       <Stack.Screen
           name="TeamCreateScreen"
@@ -93,3 +117,36 @@ export default () => {
   );
 
 };
+
+const styles = StyleSheet.create(
+    {
+        center: {
+            alignSelf: 'center'
+        },
+        logoColumn: {
+            flexDirection: 'column', 
+            alignSelf: 'center', 
+            width:"88%"
+        },
+        headerContainer: {
+            flexDirection: 'row',
+            backgroundColor: '#000',
+            justifyContent:'space-between', 
+            width:"100%"
+        },
+        headerSpacer: {
+            height:"100%", 
+            width:10, 
+            backgroundColor: "#000"
+        },
+        headerText: { 
+            color: '#dff0f8', 
+            fontFamily: "OpenSans-Bold", 
+            fontWeight: "bold", 
+            textTransform: 'uppercase',
+            fontSize: 20,
+            letterSpacing: 2,
+            textAlign: 'center',
+        },
+    }
+);
