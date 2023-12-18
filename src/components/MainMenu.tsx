@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {Alert, Animated, Linking, StyleSheet} from 'react-native';
+import {Alert, Animated, Linking, StyleSheet, Text} from 'react-native';
 
 import {
   useDrawerStatus,
@@ -8,7 +8,7 @@ import {
 } from '@react-navigation/drawer';
 
 import Screens from '../screens/Screens';
-import {Block, Text, Switch, Button, Image} from '.';
+import {Block, Switch, Button, Image} from '.';
 import {useData, useTheme, useTranslation} from '../hooks';
 
 const Drawer = createDrawerNavigator();
@@ -94,21 +94,14 @@ function DrawerContent(props){
       renderToHardwareTextureAndroid
       contentContainerStyle={{paddingBottom: sizes.padding}}>
       <Block paddingHorizontal={sizes.padding}>
-        <Block flex={0} row align="center" marginBottom={sizes.m}>
-          {/* <Image
-            radius={0}
-            width={33}
-            height={33}
-            color={colors.text}
-            source={assets.logo}
-            marginRight={sizes.sm}
-          /> */}
-          {/* <Block>
-            <Text size={12} semibold>
+        <Block flex={0} row align="center" marginBottom={sizes.m} marginTop={sizes.m}>
+
+          <Block >
+            <Text style={{fontFamily:'LifeCraft', color:'#dff0f8', fontWeight:'bold', textAlign:'center', fontSize:30, letterSpacing:2}}>
               {t('app.name')}
             </Text>
 
-          </Block> */}
+          </Block>
         </Block>
 
         {screens?.map((screen, index) => {
@@ -137,7 +130,7 @@ function DrawerContent(props){
                   color={colors[isActive ? 'white' : 'black']}
                 />
               </Block>
-              <Text p semibold={isActive} color={labelColor}>
+              <Text style={{color: labelColor}}>
                 {screen.name}
               </Text>
             </Button>
@@ -173,7 +166,7 @@ export default () => {
         }}
         drawerContent={(props) => <DrawerContent {...props} />}
         >
-        <Drawer.Screen name={t('common.appName')} component={ScreensStack} />
+        <Drawer.Screen name={" "} component={ScreensStack} />
       </Drawer.Navigator>
     </Block>
   );

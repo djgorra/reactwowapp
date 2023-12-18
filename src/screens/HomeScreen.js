@@ -7,6 +7,7 @@ import { AuthContext } from "../context/AuthContext";
 import {useData, useTheme, useTranslation} from '../hooks/';
 import { SafeAreaView } from "react-native-safe-area-context";
 import HomeButton from '../components/HomeButton';
+import {Block} from '../components/';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -17,7 +18,8 @@ const HomeScreen = ({navigation}) => {
     const {t} = useTranslation();
     return (
         <ImageBackground source={require('../assets/images/icecrown/home_bg.png')} style={styles.container}>
-            <SafeAreaView>
+            <SafeAreaView style={{width:'100%'}}>
+                    <Block flex={0} row align="center" marginBottom={250}></Block>
                     <View style={styles.welcomeContainer}>
                         {
                             userInfo["user"]["battletag"] ?  
@@ -49,7 +51,7 @@ const styles = StyleSheet.create(
         },
         welcome: {
             fontSize: 24, 
-            fontFamily: 'LifeCraft',
+            // fontFamily: 'LifeCraft',
             textAlign: 'center',
             textShadowRadius: 10,
             textShadowColor: 'black',
@@ -67,6 +69,7 @@ const styles = StyleSheet.create(
         buttonContainer: {
             width: '100%',
             flexDirection: 'row',
+            flexShrink: 1,
         }
     }
 );

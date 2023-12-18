@@ -20,7 +20,7 @@ return (
                     style={{
                     color: "#dff0f8",
                     textAlign: "center",
-                    fontSize: 14,
+                    fontSize: 12,
                     fontFamily: "OpenSans-Bold",
                     }}
                 >
@@ -41,8 +41,8 @@ const styles = {
         paddingRight: 20,
     },
     btnImg: {
-        width: 120,
-        height: 120,
+        width: 110,
+        height: 110,
         alignSelf: 'center',
         justifyContent: 'center',
         backgroundColor:'white'
