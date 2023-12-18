@@ -289,6 +289,16 @@ const CharacterListScreen = ({navigation}) => {
                         </View>
                 </Modal>
             </SafeAreaView>
+            <View style={styles.footer_container}>
+                <Button
+                    onPress={handleVisibleModal}
+                    gradient={gradients.primary}
+                    marginBottom={sizes.base}>
+                    <Text white bold transform="uppercase">
+                        New Character
+                    </Text>
+                </Button>
+            </View>
             <ScrollView>
                 {characterList.map((item,index)=>{
                     return(
@@ -317,16 +327,6 @@ const CharacterListScreen = ({navigation}) => {
                         </View>
                     )
                 })}
-            <View style={styles.footer_container}>
-                <Button
-                    onPress={handleVisibleModal}
-                    gradient={gradients.primary}
-                    marginBottom={sizes.base}>
-                    <Text white bold transform="uppercase">
-                        New Character
-                    </Text>
-                </Button>
-            </View>
             </ScrollView>
         </SafeAreaView>
     );

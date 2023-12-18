@@ -58,10 +58,9 @@ const LoginScreen = ({navigation}) => {
   }
 
     return (
-        <Block safe color={colors.primary} marginTop={sizes.md}>
+        <Block>
         <ImageBackground source={require('../assets/images/icecrown/login_bg2.png')} style={styles.container}>
         <Block paddingHorizontal={sizes.s}>
-          {/* register form */}
           <Block
             keyboard
             behavior={!isAndroid ? 'padding' : 'height'}

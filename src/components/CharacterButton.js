@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     },
     txt_name : {
       width: "auto",
-      alignSelf: "flex-start",
+      textAlign: "center",
     },
     nameContainer : {
         width: "100%"
