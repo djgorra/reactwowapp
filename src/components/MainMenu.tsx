@@ -66,7 +66,7 @@ function DrawerContent(props){
   const {isDark, handleIsDark} = useData();
   const [active, setActive] = useState('Home');
   const {assets, colors, gradients, sizes} = useTheme();
-  const labelColor = colors.text;
+  const labelColor = "#dff0f8";
 
   const handleNavigation = useCallback(
     (to) => {
@@ -76,22 +76,14 @@ function DrawerContent(props){
     [navigation, setActive],
   );
 
-  const handleWebLink = useCallback((url) => Linking.openURL(url), []);
+  // const handleWebLink = useCallback((url) => Linking.openURL(url), []);
 
   // screen list for Drawer menu
   const screens = [
     {name: t('screens.home'), to: 'Home', icon: assets.home},
     {name: t('screens.friends'), to: 'FriendsListScreen', icon: assets.profile},
     {name: t('screens.characters'), to: 'Characters', icon: assets.users},
-    // {name: t('screens.profile'), to: 'Profile', icon: assets.profile},
     {name: t('screens.teams'), to: 'TeamListScreen', icon: assets.components}
-    // {name: t('screens.components'), to: 'Components', icon: assets.components},
-    // {name: t('screens.articles'), to: 'Articles', icon: assets.document},
-    // {name: t('screens.rental'), to: 'Pro', icon: assets.rental},
-    // {name: t('screens.profile'), to: 'Profile', icon: assets.profile},
-    // {name: t('screens.settings'), to: 'Pro', icon: assets.settings},
-    // {name: t('screens.register'), to: 'Register', icon: assets.register},
-    // {name: t('screens.extra'), to: 'Pro', icon: assets.extras},
   ];
 
   return (
@@ -102,23 +94,21 @@ function DrawerContent(props){
       renderToHardwareTextureAndroid
       contentContainerStyle={{paddingBottom: sizes.padding}}>
       <Block paddingHorizontal={sizes.padding}>
-        <Block flex={0} row align="center" marginBottom={sizes.l}>
-          <Image
+        <Block flex={0} row align="center" marginBottom={sizes.m}>
+          {/* <Image
             radius={0}
             width={33}
             height={33}
             color={colors.text}
             source={assets.logo}
             marginRight={sizes.sm}
-          />
-          <Block>
+          /> */}
+          {/* <Block>
             <Text size={12} semibold>
               {t('app.name')}
             </Text>
-            {/* <Text size={12} semibold>
-              {t('app.native')}
-            </Text> */}
-          </Block>
+
+          </Block> */}
         </Block>
 
         {screens?.map((screen, index) => {
@@ -153,25 +143,6 @@ function DrawerContent(props){
             </Button>
           );
         })}
-
-        {/* <Block
-          flex={0}
-          height={1}
-          marginRight={sizes.md}
-          marginVertical={sizes.sm}
-          gradient={gradients.menu}
-        /> */}
-
-
-        {/* <Block row justify="space-between" marginTop={sizes.sm}>
-          <Text color={labelColor}>{t('darkMode')}</Text>
-          <Switch
-            checked={isDark}
-            onPress={(checked) => {
-              handleIsDark(checked);
-            }}
-          />
-        </Block> */}
       </Block>
     </DrawerContentScrollView>
   );
@@ -183,7 +154,7 @@ export default () => {
   const {gradients} = useTheme();
   const {t} = useTranslation();
   return (
-    <Block gradient={gradients.light}>
+    <Block gradient={gradients.dark}>
       <Drawer.Navigator
         screenOptions={{drawerType:"slide",
         overlayColor:"transparent",
@@ -196,9 +167,9 @@ export default () => {
         },
         headerTitleStyle: { fontFamily: 'LifeCraft' },
         headerStyle: {
-          backgroundColor: '#0d1c3a',
+          backgroundColor: 'transparent',
         },
-        headerTintColor: '#fff',
+        headerTintColor: '#dff0f8',
         }}
         drawerContent={(props) => <DrawerContent {...props} />}
         >
