@@ -29,7 +29,7 @@ const HomeScreen = ({navigation}) => {
                         }
                         <View style={styles.buttonContainer}>
                             <HomeButton text="Characters" color="blue" onPress={() => navigation.navigate('Characters')}/>
-                            <HomeButton text="Friends" color="blue" onPress={() => navigation.navigate('Friends')}/>
+                            <HomeButton text="Friends" color="blue" onPress={() => navigation.navigate('FriendsListScreen')}/>
                             <HomeButton text="Teams" color="blue" onPress={() => navigation.navigate('TeamListScreen')}/>
                         </View>
                     </View>
@@ -70,6 +70,8 @@ const styles = StyleSheet.create(
             width: '100%',
             flexDirection: 'row',
             flexShrink: 1,
+            justifyContent: 'space-evenly',
+            marginTop: 20,
         }
     }
 );

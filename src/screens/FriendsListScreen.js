@@ -1,6 +1,7 @@
 import React, {useContext, useState, useEffect} from "react"; 
-import { StyleSheet, View, FlatList,SafeAreaView, Image } from "react-native";
+import { StyleSheet, View, FlatList,SafeAreaView, Image, TouchableOpacity, Alert } from "react-native";
 import {Button, Text, Block} from '../components/';
+import BlueButton from '../components/BlueButton';
 import { Input } from '../components';
 import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
@@ -8,28 +9,39 @@ import {BASE_URL} from "../config";
 import {ErrorHandler} from "../components/ErrorHandler.js";
 import { useTheme} from '../hooks/';
 import alertBox from "../components/AlertBox.js"
+import { createAvatar } from '@dicebear/core';
+import { shapes } from '@dicebear/collection';
+import { SvgXml } from 'react-native-svg';
 
 
 const FriendsListScreen = () => {
 
+    
     function Item({ item }) {
         return (
           <View style={styles.listItem}>
-            <Text style={{textAlign:"center"}}>{item.username}</Text>
             <View style={{flex:1, flexDirection:'row'}}>
-            <Image
-                src={`https://ui-avatars.com/api/?name=${item.username}`}
-                style={{ flex:1, marginTop:5}} />
-            <Button
-                style={styles.removeButton}
-                title="Remove"
-                onPress={() => {removeFriend(item.id)}}
-                marginLeft={5}
-                gradient={gradients.secondary}>
-                <Text bold white transform="uppercase">
-                    Remove
-                </Text>
-            </Button>
+                <SvgXml xml={createAvatar(shapes, {seed: `${item.username}`}).toString()} width='75' height='75' style={{ flex:1, marginTop:5}} />
+                <View style={{flex:1, flexDirection:'column'}}>    
+                    <Text h4 white bold style={{textAlign:"center"}}>{item.username}</Text>
+                    <TouchableOpacity 
+                        style={styles.removeButton}
+                        onPress={() => {Alert.alert('Please Confirm', `Are you sure you wish to remove ${item.username} from your friend list?`, [
+                                {
+                                    text: 'Cancel',
+                                    onPress: () => console.log('Cancel Pressed'),
+                                    style: 'cancel'
+                                },
+                                {
+                                    text: 'Confirm',
+                                    onPress: () => {removeFriend(item.id)},
+                                    style: 'destructive'
+                                }
+                            ])
+                        }}>
+                        <Text gray style={{textAlign:'center'}}>Remove</Text>
+                </TouchableOpacity>
+                </View>
             </View>
           </View>
         );
@@ -77,26 +89,24 @@ const FriendsListScreen = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <Input
-            value={name}
-            autoCapitalize="none"
-            marginBottom={sizes.m}
-            label="Add Friend"
-            keyboardType="default"
-            placeholder="Username or Battletag"
-            onChangeText={text => setName(text)}
-            textAlign="center"
-            />
-            <Button
-                    title="Add"
-                    onPress={() => {addFriend(name)}}
-                    marginVertical={sizes.s}
-                    marginHorizontal={sizes.sm}
-                    gradient={gradients.primary}>
-                    <Text bold white transform="uppercase">
-                    Add
-                    </Text>
-            </Button>
+            <Block style={styles.inputContainer}>
+                <Image style={styles.redDot} source={require('../assets/images/icecrown/red_dot.png')} />
+                <Input
+                value={name}
+                autoCapitalize="none"
+                keyboardType="default"
+                placeholder="Username or Battletag"
+                onChangeText={text => setName(text)}
+                textAlign="center"
+                />
+            </Block>
+            <BlueButton
+                text="Add a Friend"
+                onPress={() => {addFriend(name)}}>
+            </BlueButton>
+            <View style={styles.dividerContainer}>
+                <Image source={require('../assets/images/icecrown/divider.png')} style={styles.divider} />
+            </View>
             <FlatList
                 style={{flex:1}}
                 data={friends}
@@ -111,15 +121,11 @@ const FriendsListScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // backgroundColor: '#F7F7F7',
-        marginTop:60,
-        marginLeft: 20,
-        marginRight:20
+        backgroundColor: '#02000b',
       },
       listItem:{
         margin:10,
         padding:10,
-        backgroundColor:"#FFF",
         width:"80%",
         flex:1,
         alignSelf:"center",
@@ -127,10 +133,32 @@ const styles = StyleSheet.create({
         borderRadius:5,
       },
       removeButton:{
-        flex:1,
         margin: 0,
-        padding:10
+        padding:10,
+        textAlign:"center",
       },
+      redDot: {
+        width: 20,
+        height: 20,
+        resizeMode: 'contain',
+        position: 'absolute',
+        left:10,
+        top:14,
+      },
+      inputContainer: {
+       marginTop: 20,
+       marginBottom: -300,
+      },
+      dividerContainer: {
+        height: 50,
+        marginTop: 20,
+      },
+      divider: {
+        width: '100%',
+        height: '100%',
+        resizeMode: 'contain',
+        alignSelf: 'center',
+      }
 });
 
 export default FriendsListScreen;
