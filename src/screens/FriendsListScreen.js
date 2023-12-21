@@ -105,8 +105,11 @@ const FriendsListScreen = () => {
                 onPress={() => {addFriend(name)}}>
             </BlueButton>
             <View style={styles.dividerContainer}>
-            <Text h4 style={{fontFamily:"LifeCraft", alignSelf:"center", fontSize:50, fontWeight:"bold", color:"#506986"}}>-  +  -</Text>
-                {/* <Image source={require('../assets/images/icecrown/divider.png')} style={styles.divider} /> */}
+            <View style={{ flexDirection: 'row', alignSelf:"center"}}>
+                  <View style={{width:50, borderBottomWidth:1, borderColor:"gray", height:2, transform: [{translateY: 12}] }}></View>
+                  <Text style={{fontFamily:"LifeCraft",  fontSize:50, color:"#506986", transform: [{translateY: -5}] }}> = </Text>
+                  <View style={{width:50, borderBottomWidth:1, borderColor:"gray", height:2, transform: [{translateY: 12}] }}></View>
+            </View>
             </View>
             <FlatList
                 style={{flex:1}}

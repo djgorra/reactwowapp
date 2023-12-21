@@ -26,7 +26,11 @@ function CustomNavigationBar({ navigation, route, options, back = null }) {
             {back ? <Appbar.BackAction onPress={navigation.goBack} color="#dff0f8" style={{width:10}}/> : null}
             <View style={styles.logoColumn}>
                 <Text style={styles.headerText}>{title}</Text>
-                <View style={{borderBottomWidth:1, borderColor:"#506986", width:"50%", alignSelf:"center"}}></View>
+                <View style={styles.headerDivider}>
+                <Text style={[styles.headerFont, styles.left]}>|</Text>
+                <Text style={[styles.headerFont, styles.center]}>  +  </Text>
+                <Text style={[styles.headerFont, styles.right]}>|</Text>
+                </View>
             </View>
             <View style={styles.headerSpacer}>
                 <Text>
@@ -120,14 +124,20 @@ export default () => {
 
 const styles = StyleSheet.create(
     {
-        brackets: {
-            fontFamily:"LifeCraft", 
-            color:"#506986",
-            fontWeight: "bold",
-            fontSize: 30
+        headerDivider: {
+            flexDirection: 'row', alignSelf:"center", transform: [{translateY:0}]
+        },
+        headerFont: {
+            fontFamily:"LifeCraft",  fontSize:50, fontWeight:"bold", color:"#506986"
+        },
+        left: {
+            transform: [{rotate: '-90deg'}]
+        },
+        right: {
+            transform: [{rotate: '90deg'}]
         },
         center: {
-            alignSelf: 'center'
+            transform: [{translateY: 3}]
         },
         logoColumn: {
             flexDirection: 'column', 
@@ -154,6 +164,7 @@ const styles = StyleSheet.create(
             fontSize: 20,
             letterSpacing: 2,
             textAlign: 'center',
+            transform: [{translateY: 10}]
         },
     }
 );
