@@ -1,5 +1,13 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {Alert, Animated, Linking, StyleSheet, Text} from 'react-native';
+import React, {useCallback, useEffect, useRef, useState, useContext} from 'react';
+import {Alert, Animated, Linking, StyleSheet, Text, View} from 'react-native';
+import { AuthContext } from "../context/AuthContext";
+import { SvgXml } from 'react-native-svg';
+import castle from '../assets/icons/093 - Castle';
+import weaponBook from '../assets/icons/044 - Weapon Book';
+import spartaHelmet from '../assets/icons/030 - Sparta Helmet';
+import sword from '../assets/icons/005 - Sword';
+import goldBars from '../assets/icons/056 - Gold Bars';
+import vikingHelmet from '../assets/icons/027 - Viking Helmet';
 
 import {
   useDrawerStatus,
@@ -67,6 +75,7 @@ function DrawerContent(props){
   const [active, setActive] = useState('Home');
   const {assets, colors, gradients, sizes} = useTheme();
   const labelColor = "#dff0f8";
+  const {logout} = useContext(AuthContext);
 
   const handleNavigation = useCallback(
     (to) => {
@@ -80,10 +89,10 @@ function DrawerContent(props){
 
   // screen list for Drawer menu
   const screens = [
-    {name: t('screens.home'), to: 'Home', icon: assets.home},
-    {name: t('screens.friends'), to: 'FriendsListScreen', icon: assets.profile},
-    {name: t('screens.characters'), to: 'Characters', icon: assets.users},
-    {name: t('screens.teams'), to: 'TeamListScreen', icon: assets.components}
+    {name: t('screens.home'), to: 'Home', icon: castle},
+    {name: t('screens.friends'), to: 'FriendsListScreen', icon: vikingHelmet},
+    {name: t('screens.characters'), to: 'Characters', icon: sword},
+    {name: t('screens.teams'), to: 'TeamListScreen', icon: weaponBook}
   ];
 
   return (
@@ -110,32 +119,33 @@ function DrawerContent(props){
             <Button
               row
               justify="flex-start"
+              style={{flex:1}}
               marginBottom={sizes.s}
               key={`menu-screen-${screen.name}-${index}`}
               onPress={() => handleNavigation(screen.to)}>
-              <Block
-                flex={0}
-                radius={6}
-                align="center"
-                justify="center"
-                width={sizes.md}
-                height={sizes.md}
-                marginRight={sizes.s}
-                gradient={gradients[isActive ? 'primary' : 'white']}>
-                <Image
-                  radius={0}
-                  width={14}
-                  height={14}
-                  source={screen.icon}
-                  color={colors[isActive ? 'white' : 'black']}
-                />
-              </Block>
-              <Text style={{color: labelColor}}>
+              <View style={{borderColor:"#c0c0c0", borderWidth: 1, padding:5, margin:5, flex:0, width:30, height:30}}>
+                <SvgXml xml={screen.icon} width="18" height="18" color="#dff0f8"/>
+              </View>
+              <Text style={{color: labelColor, marginLeft: 5}}>
                 {screen.name}
               </Text>
             </Button>
           );
         })}
+        <Button
+          row
+          justify="flex-start"
+          style={{flex:1}}
+          marginBottom={sizes.s}
+          key={`menu-screen-${t('screens.home')}-${3}`}
+          onPress={() => logout()}>
+          <View style={{borderColor:"#c0c0c0", borderWidth: 1, padding:5, margin:5, flex:0, width:30, height:30}}>
+            <SvgXml xml={goldBars} width="18" height="18" color="#dff0f8" />
+          </View>
+          <Text style={{color: labelColor, marginLeft: 5}}>
+            Log Out
+          </Text>
+        </Button>
       </Block>
     </DrawerContentScrollView>
   );
