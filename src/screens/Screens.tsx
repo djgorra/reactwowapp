@@ -17,6 +17,7 @@ import { Image, View, Text, StyleSheet } from 'react-native';
 import { Appbar } from 'react-native-paper';
 import { getHeaderTitle } from '@react-navigation/elements';
 
+
 function CustomNavigationBar({ navigation, route, options, back = null }) {
     const title = getHeaderTitle(options, route.name);
   
@@ -24,9 +25,8 @@ function CustomNavigationBar({ navigation, route, options, back = null }) {
         <View style={styles.headerContainer}>
             {back ? <Appbar.BackAction onPress={navigation.goBack} color="#dff0f8" style={{width:10}}/> : null}
             <View style={styles.logoColumn}>
-                <Image source={require('../assets/images/icecrown/under_title.png')} style={styles.center} />
                 <Text style={styles.headerText}>{title}</Text>
-                <Image source={require('../assets/images/icecrown/under_title.png')} style={styles.center} />
+                <View style={{borderBottomWidth:1, borderColor:"#506986", width:"50%", alignSelf:"center"}}></View>
             </View>
             <View style={styles.headerSpacer}>
                 <Text>
@@ -120,13 +120,20 @@ export default () => {
 
 const styles = StyleSheet.create(
     {
+        brackets: {
+            fontFamily:"LifeCraft", 
+            color:"#506986",
+            fontWeight: "bold",
+            fontSize: 30
+        },
         center: {
             alignSelf: 'center'
         },
         logoColumn: {
             flexDirection: 'column', 
             alignSelf: 'center', 
-            width:"88%"
+            justifyContent: "flex-start",
+            width:"88%",
         },
         headerContainer: {
             flexDirection: 'row',

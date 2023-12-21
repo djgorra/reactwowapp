@@ -1,6 +1,6 @@
 import React, {useContext, useState, useEffect} from "react"; 
-import { StyleSheet, View, FlatList,SafeAreaView, Image, TouchableOpacity, Alert } from "react-native";
-import {Button, Text, Block} from '../components/';
+import { Text, StyleSheet, View, FlatList,SafeAreaView, Image, TouchableOpacity, Alert } from "react-native";
+import {Button, Block} from '../components/';
 import BlueButton from '../components/BlueButton';
 import { Input } from '../components';
 import { AuthContext } from "../context/AuthContext";
@@ -23,7 +23,7 @@ const FriendsListScreen = () => {
             <View style={{flex:1, flexDirection:'row'}}>
                 <SvgXml xml={createAvatar(shapes, {seed: `${item.username}`}).toString()} width='75' height='75' style={{ flex:1, marginTop:5}} />
                 <View style={{flex:1, flexDirection:'column'}}>    
-                    <Text h4 white bold style={{textAlign:"center"}}>{item.username}</Text>
+                    <Text style={{textAlign:"center", color:"white", fontWeight:"bold", fontSize:25}}>{item.username}</Text>
                     <TouchableOpacity 
                         style={styles.removeButton}
                         onPress={() => {Alert.alert('Please Confirm', `Are you sure you wish to remove ${item.username} from your friend list?`, [
@@ -39,7 +39,7 @@ const FriendsListScreen = () => {
                                 }
                             ])
                         }}>
-                        <Text gray style={{textAlign:'center'}}>Remove</Text>
+                        <Text style={{textAlign:'center', color:"gray"}}>Remove</Text>
                 </TouchableOpacity>
                 </View>
             </View>
@@ -105,7 +105,8 @@ const FriendsListScreen = () => {
                 onPress={() => {addFriend(name)}}>
             </BlueButton>
             <View style={styles.dividerContainer}>
-                <Image source={require('../assets/images/icecrown/divider.png')} style={styles.divider} />
+            <Text h4 style={{fontFamily:"LifeCraft", alignSelf:"center", fontSize:50, fontWeight:"bold", color:"#506986"}}>-  +  -</Text>
+                {/* <Image source={require('../assets/images/icecrown/divider.png')} style={styles.divider} /> */}
             </View>
             <FlatList
                 style={{flex:1}}
