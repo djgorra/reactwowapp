@@ -25,17 +25,18 @@ import CharacterButton from "../components/CharacterButton";
 
 
 const CharacterListScreen = ({navigation}) => {
+
     const {userInfo, setUserInfo, setIsLoading, logout, updateUser, classes, specs, races, genders, characterList, setCharacterList} = useContext(AuthContext);
     const {assets, colors, gradients, sizes} = useTheme();
     const [visible,setVisible] = useState(false); //modal popup
 
-    const [dropdowns, setDropdowns] = useState({
-        class: false,
-        spec1: false,
-        spec2: false,
-        race: false,
-        gender: false,
-    });
+    // const [dropdowns, setDropdowns] = useState({
+    //     class: false,
+    //     spec1: false,
+    //     spec2: false,
+    //     race: false,
+    //     gender: false,
+    // });
     const [openClass, setOpenClass] = useState(false); //dropdown
     const [openSpec1, setOpenSpec1] = useState(false); //dropdown
     const [openSpec2, setOpenSpec2] = useState(false); //dropdown
@@ -64,14 +65,26 @@ const CharacterListScreen = ({navigation}) => {
         setCharacterList(userInfo["characters"]);
     }
 
-    const handleFormChange = (e) => {
-        setForm({...form, [e.target.name]: e.target.value});
-    };
+    const handleClassChange = (e) => {
+       setForm({...form, ["class"]: e()});
+    }
 
-    const handleDropdownChange = (e) => {
-        setDropdowns({...dropdowns, [e.target.name]: !dropdowns[e.target.name]});
+    const handleSpec1Change = (e) => {
+       setForm({...form, ["spec1"]: e()});
+    }
+    const handleSpec2Change = (e) => {
+        setForm({...form, ["spec2"]: e()});
+     }
+     const handleRaceChange = (e) => {
+        setForm({...form, ["race"]: e()});
+     }
+     const handleGenderChange = (e) => {
+        setForm({...form, ["gender"]: e()});
+     }
+     const handleNameChange = (e) => {
+        setForm({...form, ["name"]: e});
     };
-
+    
     const confirmDelete = (characterId) =>
     Alert.alert(
         'Notice:',
@@ -199,18 +212,17 @@ const CharacterListScreen = ({navigation}) => {
                                 value={form.name}
                                 style={styles.text_input}
                                 placeholder="Character Name"
-                                onChangeText={handleFormChange}
+                                onChangeText={handleNameChange}
                             />
                             <DropDownPicker
                                 zIndex={10}
                                 placeholder="Choose Class"
                                 name="class"
-                                onOpen
-                                open={dropdowns.class}
+                                open={openClass}
                                 value={form.class}
                                 items={classes}
-                                setOpen={handleDropdownChange}
-                                setValue={handleFormChange}
+                                setOpen={setOpenClass}
+                                setValue={handleClassChange}
                                 onChangeValue={(value) => {
                                     const classSpecs = specs.filter(function(x){ return x["character_class_id"] == form.class})
                                     setClassSpecs(classSpecs);
@@ -221,49 +233,49 @@ const CharacterListScreen = ({navigation}) => {
                                 zIndex={9}
                                 placeholder="Choose Primary Spec"
                                 name="spec1"
-                                open={dropdowns.spec1}
+                                open={openSpec1}
                                 value={form.spec1}
                                 items={classSpecs}
                                 disabled={specsDisabled}
                                 disabledStyle={{
                                     opacity: 0.5
                                   }}
-                                setOpen={handleDropdownChange}
-                                setValue={handleFormChange}
+                                setOpen={setOpenSpec1}
+                                setValue={handleSpec1Change}
                                 />
                             <DropDownPicker
                                 zIndex={8}
                                 placeholder="Choose Secondary Spec"
                                 name="spec2"
-                                open={dropdowns.spec2}
+                                open={openSpec2}
                                 value={form.spec2}
                                 items={classSpecs}
                                 disabled={specsDisabled}
                                 disabledStyle={{
                                     opacity: 0.5
                                   }}
-                                setOpen={handleDropdownChange}
-                                setValue={handleFormChange}
+                                setOpen={setOpenSpec2}
+                                setValue={handleSpec2Change}
                             />
                             <DropDownPicker
                                 zIndex={7}
                                 placeholder="Choose Character Race"
                                 name="race"
-                                open={dropdowns.race}
+                                open={openRace}
                                 value={form.race}
                                 items={races}
-                                setOpen={handleDropdownChange}
-                                setValue={handleFormChange}
+                                setOpen={setOpenRace}
+                                setValue={handleRaceChange}
                             />
                              <DropDownPicker
                                 zIndex={6}
                                 placeholder="Choose Character Gender"
                                 name="gender"
-                                open={dropdowns.gender}
+                                open={openGender}
                                 value={form.gender}
                                 items={genders}
-                                setOpen={handleDropdownChange}
-                                setValue={handleFormChange}
+                                setOpen={setOpenGender}
+                                setValue={handleGenderChange}
                             />
                             <Button
                                 onPress={handleSave}
