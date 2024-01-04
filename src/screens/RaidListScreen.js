@@ -32,17 +32,17 @@ const RaidListScreen = ({route, navigation}) => {
 
     function Item({ item }) {
         return (
-          <View style={styles.listItem}>
-            <Image source={{uri:item.photo}}  style={{width:60, height:30,borderRadius:30}} />
-            <View style={{alignItems:"center",flex:1}}>
-              <Text style={{fontWeight:"bold"}}>{item.name}</Text>
-              <Text>{item.position}</Text>
+          <TouchableOpacity
+            onPress={() =>handlePress(item) }>
+            <View style={styles.listItem}>
+              <Image source={{uri:item.photo}}  style={{width:60, height:30,borderRadius:30}} />
+              <View style={{flex:4}}>
+                <Text style={styles.listItemText}>{item.name}</Text>
+                <Text>{item.position}</Text>
+              </View>
+                  <Text style={styles.listItemCaret}> > </Text>
             </View>
-            <TouchableOpacity
-                onPress={() =>handlePress(item) }>
-                <Text style={styles.txt_edit}>{route.params.labelForLink || "Select"}</Text>
-            </TouchableOpacity>
-          </View>
+          </TouchableOpacity>
         );
       }
     const {raids} = useContext(AuthContext);
@@ -67,20 +67,37 @@ const RaidListScreen = ({route, navigation}) => {
         </View>
     );
 }
+
+const borderColor = '#34455e';
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#F7F7F7',
+      backgroundColor: '#02000b',
     },
     listItem:{ 
       margin:10,
       padding:10,
-      backgroundColor:"#FFF",
+      backgroundColor: '#02000b',
+      borderColor: borderColor,
+      borderWidth: 2,
       width:"80%",
-      flex:1,
       alignSelf:"center",
       flexDirection:"row",
       borderRadius:5
+    },
+    listItemText:{
+      fontFamily:"LifeCraft",
+      fontSize:20,
+      textAlign:"center",
+      fontWeight:"bold",
+      color:"#FFF"
+    },
+    listItemCaret:{
+      flex:1,
+      fontFamily:"LifeCraft",
+      fontSize:30,
+      fontWeight:"bold",
+      color:"#FFF"
     }
   });
 export default RaidListScreen;

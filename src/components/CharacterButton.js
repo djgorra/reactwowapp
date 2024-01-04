@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
     txt_name : {
       width: "auto",
       textAlign: "center",
+        color: "#fff",
     },
     nameContainer : {
         width: "100%"

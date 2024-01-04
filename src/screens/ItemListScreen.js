@@ -1,5 +1,6 @@
 import React, {useContext, useEffect, useState} from "react"; 
 import {Button, StyleSheet, Text, TextInput, View, Image, TouchableOpacity, ScrollView } from "react-native";
+import BlueButton from "../components/BlueButton";
 import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 import { BASE_URL } from "../config";
@@ -59,7 +60,7 @@ const ItemListScreen = ({route, navigation}) => {
     
     return (
         <View style={{flex:1}}>
-            <ScrollView nestedScrollEnabled={true}>
+            <ScrollView style={styles.listContainer} nestedScrollEnabled={true}>
             {Object.keys(items).map((key,index)=>{
                 const boss = bosses.filter((b)=>{ return b["id"]==key; } )[0];
                 return(
@@ -70,41 +71,38 @@ const ItemListScreen = ({route, navigation}) => {
             })}
             </ScrollView>
             <View style={styles.footer}>
-                <Button title="Add Items" onPress={()=>addItems()}>
-                    <Text style={styles.addBtn}>Add Items</Text>
-                </Button>
+                <BlueButton text="Add Items" onPress={()=>addItems()}/>
             </View>
         </View>
     );
 }
+
+const borderColor = '#34455e';
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#F7F7F7',
+      backgroundColor: '#02000b',
       marginTop:60
     },
     listItem:{
       margin:10,
       padding:10,
-      backgroundColor:"#FFF",
+      backgroundColor:"#02000b",
       width:"80%",
-      flex:1,
       alignSelf:"center",
       flexDirection:"row",
       borderRadius:5
     },    
+    listContainer:{
+        backgroundColor:"#02000b",
+    },
     footer: {
         justifyContent: 'center',
+        paddingTop: 10,
         alignItems: 'center',
-        backgroundColor: '#F7F7F7',
-        height:50,
+        backgroundColor: '#02000b',
+        height:75,
         zIndex: 100,
-    },
-    addBtn: {
-        borderWidth: 1,
-        borderColor: '#000',
-        borderRadius: 5,
-        padding:10,
     },
   });
 export default ItemListScreen;

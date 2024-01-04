@@ -1,7 +1,10 @@
 import React, {useContext, useState, useEffect} from "react"; 
 import { AuthContext } from "../context/AuthContext";
 import {useTheme} from '../hooks/';
-import {Button, Text, Block} from '../components/';
+import {Button, Text, Block, Input} from '../components/';
+import BlueButton from '../components/BlueButton';
+import SubmitButton from '../components/SubmitButton';
+import Divider from '../components/Divider';
 import { BASE_URL } from "../config";
 import axios from 'axios';
 import alertBox from "../components/AlertBox.js"
@@ -14,7 +17,6 @@ import {
     StyleSheet,
     ScrollView,
     TouchableOpacity,
-    TextInput,
     Image,
     Alert,
     ImageBackground,
@@ -194,30 +196,32 @@ const CharacterListScreen = ({navigation}) => {
 
     return (
 
-        <SafeAreaView style={{flex:1}}>
+        <SafeAreaView style={styles.container}>
             <SafeAreaView>
                 <Modal
                     animationType="slide"
                     isVisible={visible}
                     style={styles.modal}
-                    hasBackdrop={true}
-                    backdropColor="black"
                 >
                         <View style={styles.form}>
-                        <Block>
-                        <Text h1>Add a Character</Text>
-                        </Block>
-                            <TextInput
-                                name="name"
-                                value={form.name}
-                                style={styles.text_input}
-                                placeholder="Character Name"
-                                onChangeText={handleNameChange}
+                            <Block>
+                                <Text h1>Add a Character</Text>
+                            </Block>
+                            <Image style={styles.redDot} source={require('../assets/images/icecrown/red_dot.png')} />
+                            <Input
+                            value={form.name}
+                            style={styles.textInput}
+                            placeholder="Character Name"
+                            onChangeText={handleNameChange}
+                            textAlign="center"
                             />
                             <DropDownPicker
                                 zIndex={10}
                                 placeholder="Choose Class"
                                 name="class"
+                                style={styles.dropdown}
+                                textStyle={styles.dropdownText}
+                                arrowIconStyle={{tintColor: '#ffffff'}}
                                 open={openClass}
                                 value={form.class}
                                 items={classes}
@@ -233,6 +237,9 @@ const CharacterListScreen = ({navigation}) => {
                                 zIndex={9}
                                 placeholder="Choose Primary Spec"
                                 name="spec1"
+                                style={styles.dropdown}
+                                textStyle={styles.dropdownText}
+                                arrowIconStyle={{tintColor: '#ffffff'}}
                                 open={openSpec1}
                                 value={form.spec1}
                                 items={classSpecs}
@@ -247,6 +254,9 @@ const CharacterListScreen = ({navigation}) => {
                                 zIndex={8}
                                 placeholder="Choose Secondary Spec"
                                 name="spec2"
+                                style={styles.dropdown}
+                                textStyle={styles.dropdownText}
+                                arrowIconStyle={{tintColor: '#ffffff'}}
                                 open={openSpec2}
                                 value={form.spec2}
                                 items={classSpecs}
@@ -261,6 +271,9 @@ const CharacterListScreen = ({navigation}) => {
                                 zIndex={7}
                                 placeholder="Choose Character Race"
                                 name="race"
+                                style={styles.dropdown}
+                                textStyle={styles.dropdownText}
+                                arrowIconStyle={{tintColor: '#ffffff'}}
                                 open={openRace}
                                 value={form.race}
                                 items={races}
@@ -271,70 +284,59 @@ const CharacterListScreen = ({navigation}) => {
                                 zIndex={6}
                                 placeholder="Choose Character Gender"
                                 name="gender"
+                                style={styles.dropdown}
+                                textStyle={styles.dropdownText}
+                                arrowIconStyle={{tintColor: '#ffffff'}}
                                 open={openGender}
                                 value={form.gender}
                                 items={genders}
                                 setOpen={setOpenGender}
                                 setValue={handleGenderChange}
                             />
-                            <Button
+                            <SubmitButton
                                 onPress={handleSave}
-                                flex={1}
-                                gradient={gradients.primary}
-                                style={styles.btn_save}>
-                                <Text white bold transform="uppercase">
-                                    {characterId == null ? "Save" : "Update"}
-                                </Text>
-                            </Button>
-                            <Button flex={1} gradient={gradients.secondary} marginHorizontal={sizes.s} onPress={handleVisibleModal}>
-                                <Text white bold transform="uppercase" marginHorizontal={sizes.s}>
-                                    Close
-                                </Text>
-                            </Button>
+                                flex={1}    
+                                text={characterId == null ? "Save" : "Update"}
+                                style={styles.btn_save}/>
+                            <BlueButton flex={1} text="Close" onPress={handleVisibleModal}/>
                             {characterId == null ? null : 
-                                <Button flex={1} style={styles.btn_save} gradient={gradients.danger} marginHorizontal={sizes.s} onPress={()=>confirmDelete(characterId)}>
-                                    <Text white bold transform="uppercase">
-                                        Delete
-                                    </Text>
-                                </Button>
+                                <TouchableOpacity style={styles.button} onPress={()=>confirmDelete(characterId)}>
+                                    <Text darkblue bold style={{textAlign:'center', margin:20}}>Delete Character</Text>
+                                </TouchableOpacity>
+                         
                             }
                         </View>
                 </Modal>
             </SafeAreaView>
             <View style={styles.footer_container}>
-                <Button
+                <BlueButton
                     onPress={handleVisibleModal}
-                    gradient={gradients.primary}
-                    marginBottom={sizes.base}>
-                    <Text white bold transform="uppercase">
-                        New Character
-                    </Text>
-                </Button>
+                    text="New Character">
+                </BlueButton>
+                <Divider/>
             </View>
             <ScrollView>
                 {characterList.map((item,index)=>{
                     return(
                         <View style={styles.item_character} key={index}>
+                            <View style={styles.iconContainer}>
                             <CharacterButton item={item} size={80}/>
-                            <View>
-                                <Button
-                                    style={styles.btnContainer}
-                                    gradient={gradients.primary}
-                                    onPress={()=>handleEdit(item)}
-                                >
-                                    <Text white bold style={styles.txt_edit}>Edit Character</Text>
-                                </Button>
-                                <Button
-                                    style={styles.btnContainer}
-                                    gradient={gradients.primary}
+                            </View>
+                            <View style={styles.buttonContainer}>
+                                <TouchableOpacity
+                                    style={styles.button} 
                                     onPress={() =>
                                         navigation.navigate('RaidListScreen', {
                                         characterId: item.id,
                                         labelForLink: "Add Item",
                                         })
                                     }>
-                                    <Text white bold style={styles.txt_save}>Edit Wishlist</Text>
-                                </Button>
+                                    <Text white bold style={{textAlign:'center'}}>Edit Wishlist ({item.wishlist_items.length})</Text>
+                                </TouchableOpacity>
+                                <View style={styles.buttonDivider}/>
+                                <TouchableOpacity style={styles.button} onPress={()=>handleEdit(item)}>
+                                    <Text white bold style={{textAlign:'center'}}>Edit Character</Text>
+                                </TouchableOpacity>
                             </View>
                         </View>
                     )
@@ -344,126 +346,101 @@ const CharacterListScreen = ({navigation}) => {
     );
 };
 
+const borderColor = '#34455e';
 const styles = StyleSheet.create(
-    {
-           
-    form:{
-        padding : 15,
-        marginTop:10,
-        marginBottom:50,
-        color:"#ffffff"
-    },
+    {   
+        container: {
+            flex: 1,
+            backgroundColor: '#02000b',
+        },
+        form:{
+            padding : 15,
+            marginTop:10,
+            marginBottom:50,
+            color:"#ffffff"
+        },
 
-    modal:{
-        backgroundColor : "#ffffff",
-        marginBottom:20,
-    },
-    dropdownPicker: {
-        zIndex: 10,
-    },
-    txtClose:{
-        right:0,
-        backgroundColor : "#eeeeee",
-        fontSize:18,
-        fontWeight : "bold",
-        textAlign : "right",
-    },
-    btnClose:{
-        width:50,
-    },
-    text_input:{
-        padding :10,
-        borderWidth :1,
-        borderColor : "gray",
-        borderRadius : 10,
-        marginTop :10
-    },
-    footer_container : {
-        padding : 10,
-        backgroundColor : "#eeeeee",
-        flexDirection:"center",
-        justifyContent : "space-between",
-    },
-    txt_main : {
-        fontSize : 22,
-        fontWeight : "bold"
-    },
-    item_character : {
-        padding :15,
-        borderBottomWidth: 3,
-        borderBottomColor : "darkgray",
-        flexDirection : "row",
-        justifyContent:"space-between",
-        alignItems : "center",
+        modal:{
+            backgroundColor : "#02000b",
+            margin:0,
+        },
+        textInput:{
+            borderWidth :1,
+            borderColor : borderColor,
+            borderRadius : 10,
+            marginBottom :10
+        },
+        dropdown:{
+            marginBottom :10,
+            backgroundColor : "#324461",
+            borderRadius : 20,
+            borderWidth : 2,
+            borderColor : "#ffffff",
+        },
+        dropdownText:{
+            color:"#ffffff",
+            fontWeight:"bold",
+        },
+        item_character : {
+            margin: 5,
+            borderWidth: 2,
+            borderColor : borderColor,
+            flexDirection : "row",
 
-    },
-    characterIcon : {
-        width: 30 , 
-        height: 30,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderWidth: 1,
-        borderColor: '#000',
-        borderRadius: 30
-    },
-    iconContainer : {
-        marginLeft : 3,
-        flex: 1,
-        flexWrap:'wrap', 
-        justifyContent:'space-between',
-        alignItems: 'flex-end',
-    },
-    txt_name : {
-        fontSize : 26,
-    },
-    txt_item : {
-        fontSize : 14,
-        marginTop : 5
-    },
-    txt_enabled : {
-        fontSize : 14,
-        marginTop : 5,
-        color:"green",
-        fontWeight : "bold"
-    },
-    txt_disabled : {
-        fontSize : 14,
-        marginTop : 5,
-        color:"green",
-        fontWeight : "bold"
-    },
-    txt_del:{
-        fontSize : 14,
-        marginTop : 5,
-        color:"red",
-        fontWeight : "bold"
-    },
-    txt_edit:{
-        fontSize : 14,
-        marginTop : 5,
-        color:"blue",
-        fontWeight : "bold"
-    },
-    btnContainer : {
-        margin:5,
-    },
-    btnNewContainer : {
-        padding :10,
-        backgroundColor : "#000",
-    },
-    btn_save : {
-        margin:20,
-        marginBottom:30,
-        padding : 10,
-    },
-    textButton : {
-        textAlign : "center",
-        color : "#FFFFFF"
-    },
-    img_avatar : {
-        height: 56,
-        flexDirection : "row",
-    }
+        },
+        iconContainer : {
+            alignItems: 'center',
+            flex: 1,
+            borderRightColor: borderColor,
+            borderRightWidth: 2,
+        },
+        buttonContainer : {
+            flex: 2,
+            alignItems: 'center',
+            justifyContent: 'space-around',
+        },
+        buttonDivider: {
+            width: '100%',
+            height: 2,
+            backgroundColor: borderColor,
+        },
+        button: {
+            alignSelf: 'stretch',
+        },
+        dividerContainer: {
+            height: 50,
+            marginTop: 20,
+        },
+        divider: {
+            width: '100%',
+            height: '100%',
+            resizeMode: 'contain',
+            alignSelf: 'center',
+        },
+        redDot: {
+            width: 20,
+            height: 20,
+            resizeMode: 'contain',
+            position: 'absolute',
+            left:25,
+            top:30,
+        },
+        inputContainer: {
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginBottom: 30,
+        },
+        input: {
+            width: '100%',
+            textAlign: 'center',
+            paddingTop: 10,
+            paddingRight: 10,
+            paddingBottom: 10,
+            paddingLeft: 0,
+            color: '#424242',
+            borderRadius: 0,
+        },
     }
 );
 

@@ -2,6 +2,7 @@ import React, {useContext, useState, useEffect} from "react";
 import { Text, StyleSheet, View, FlatList,SafeAreaView, Image, TouchableOpacity, Alert } from "react-native";
 import {Button, Block} from '../components/';
 import BlueButton from '../components/BlueButton';
+import Divider from '../components/Divider';
 import { Input } from '../components';
 import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
@@ -89,30 +90,23 @@ const FriendsListScreen = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <Block style={styles.inputContainer}>
-                <Image style={styles.redDot} source={require('../assets/images/icecrown/red_dot.png')} />
-                <Input
-                value={name}
-                autoCapitalize="none"
-                keyboardType="default"
-                placeholder="Username or Battletag"
-                onChangeText={text => setName(text)}
-                textAlign="center"
-                />
-            </Block>
+            <Image style={styles.redDot} source={require('../assets/images/icecrown/red_dot.png')} />
+            <Input
+            value={name}
+            autoCapitalize="none"
+            keyboardType="default"
+            marginBottom={sizes.m}
+            placeholder="Username or Battletag"
+            onChangeText={text => setName(text)}
+            textAlign="center"
+            />
             <BlueButton
                 text="Add a Friend"
                 onPress={() => {addFriend(name)}}>
             </BlueButton>
-            <View style={styles.dividerContainer}>
-            <View style={{ flexDirection: 'row', alignSelf:"center"}}>
-                  <View style={{width:50, borderBottomWidth:1, borderColor:"gray", height:2, transform: [{translateY: 12}] }}></View>
-                  <Text style={{fontFamily:"LifeCraft",  fontSize:50, color:"#506986", transform: [{translateY: -5}] }}> = </Text>
-                  <View style={{width:50, borderBottomWidth:1, borderColor:"gray", height:2, transform: [{translateY: 12}] }}></View>
-            </View>
-            </View>
+            <Divider/>
             <FlatList
-                style={{flex:1}}
+                style={{flex:6}}
                 data={friends}
                 renderItem={({ item }) => <Item item={item}/>}
                 keyExtractor={item => item.id}
@@ -151,18 +145,8 @@ const styles = StyleSheet.create({
       },
       inputContainer: {
        marginTop: 20,
-       marginBottom: -300,
+       flex: 1,
       },
-      dividerContainer: {
-        height: 50,
-        marginTop: 20,
-      },
-      divider: {
-        width: '100%',
-        height: '100%',
-        resizeMode: 'contain',
-        alignSelf: 'center',
-      }
 });
 
 export default FriendsListScreen;

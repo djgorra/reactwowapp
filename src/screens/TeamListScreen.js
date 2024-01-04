@@ -1,6 +1,8 @@
 import React, {useContext, useState, useEffect} from "react"; 
-import {Button, StyleSheet, View, FlatList,SafeAreaView } from "react-native";
+import {Button, StyleSheet, View, FlatList,SafeAreaView, Image, TouchableOpacity } from "react-native";
 import { Input, Text } from '../components';
+import BlueButton from '../components/BlueButton';
+import Divider from '../components/Divider';
 import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 import {BASE_URL} from "../config";
@@ -15,44 +17,34 @@ const TeamListScreen = ({route, navigation}) => {
     function Item({ item }) {
         return (
           <View style={styles.listItem}>
-            <View style={styles.nameContainer}>
-                <Text h5 style={styles.itemName}>{item.name}</Text>
-            </View>
-
             <View style={styles.buttonContainer}>
-                <Button
-                    style={styles.button}
-                    title="Edit"
+                <Text h4 white style={styles.itemName}>{item.name}</Text>
+                <TouchableOpacity
                     onPress={() =>
                         navigation.navigate('TeamCreateScreen', {
                             teamId: item.id,
                             teamName: item.name,
                         })
-                    }
-                    marginVertical={sizes.s}
-                    marginHorizontal={sizes.sm}
-                    gradient={gradients.primary}>
-                    <Text bold white transform="uppercase">
-                        Roster
+                    }>
+                    <Text bold gray h5 style={{alignSelf:"center"}}>
+                        Edit Roster
                     </Text>
-                </Button>
-                <Button
-                    style={styles.button}
-                    title="Runs"
+                </TouchableOpacity>
+                
+            </View>
+            <View style={styles.nameContainer}>
+                <BlueButton
+                    text="Runs"
                     onPress={() =>
                         navigation.navigate('TeamRunsScreen', {
                             teamId: item.id,
                             teamName: item.name,
                         })
                     }
-                    marginVertical={sizes.s}
-                    marginHorizontal={sizes.sm}
-                    gradient={gradients.primary}>
-                    <Text bold white transform="uppercase">
-                        Select Raid
-                    </Text>
-                </Button>
+                />
+                
             </View>
+
           </View>
         );
       }
@@ -79,26 +71,21 @@ const TeamListScreen = ({route, navigation}) => {
 
     return (
         <SafeAreaView style={styles.container}>
+            <Image style={styles.redDot} source={require('../assets/images/icecrown/red_dot.png')} />
             <Input
             value={name}
+            style={styles.textInput}
             autoCapitalize="none"
             marginBottom={sizes.m}
-            label="Create Team"
             keyboardType="default"
             placeholder="Team Name"
+            textAlign="center"
             onChangeText={text => setName(text)}
             />
-            <Button
-                    title="Add"
-                    onPress={() => {createTeam(name)}}
-                    marginVertical={sizes.s}
-                    marginHorizontal={sizes.sm}
-                    gradient={gradients.primary}>
-                    style={styles.button}
-                    <Text bold white transform="uppercase">
-                    Add
-                    </Text>
-            </Button>
+            <BlueButton
+                text="Create Team"
+                onPress={() => {createTeam(name)}}/>
+            <Divider/>
             <FlatList
                 style={{flex:1}}
                 data={teams}
@@ -110,18 +97,17 @@ const TeamListScreen = ({route, navigation}) => {
     )
 }
 
+const borderColor = '#34455e';
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // backgroundColor: '#F7F7F7',
-        marginTop:60,
-        marginLeft: 20,
-        marginRight:20
+        backgroundColor: '#02000b',
     },
     listItem:{
         margin:10,
         padding:10,
-        backgroundColor:"#FFF",
+        borderWidth: 2,
+        borderColor: borderColor,
         width:"80%",
         flex:1,
         alignSelf:"center",
@@ -132,17 +118,27 @@ const styles = StyleSheet.create({
         alignSelf:"center",
     },
     nameContainer:{
-        flex:4,
+        flex:2,
         alignContent:"center",
         flexDirection:"row",
     },
-    button:{
-        alignSelf:"right",
-        marginLeft: 20,
-    },
     buttonContainer:{
-        flex:2,
+        flex:4,
         alignSelf:"",
+    },
+    redDot: {
+        width: 20,
+        height: 20,
+        resizeMode: 'contain',
+        position: 'absolute',
+        left:10,
+        top:15,
+    },
+    textInput:{
+        borderWidth :1,
+        borderColor : borderColor,
+        borderRadius : 10,
+        marginBottom :10
     },
 });
 

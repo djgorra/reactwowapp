@@ -51,7 +51,12 @@ const Accordion = ({sendData, title, data, character}) => {
                      <View>
                          <TouchableOpacity style={[styles.childRow, styles.button, item.value ? styles.btnActive : styles.btnInActive]} onPress={()=>onClick(index)}>
                              <Image style={{width: 50, height: 50}} source={{uri: `${BASE_URL}${item.image_path}`}} />
-                             <Text style={styles.itemInActive} >{item.name}</Text>
+                             <Text 
+                             adjustsFontSizeToFit={true}
+                             numberOfLines={1}
+                             style={styles.itemInActive}>
+                                {item.name}
+                            </Text>
                              <Icon name={'check-circle'} size={24} color={ item["checked"] ? 'green' :  'lightgray' } />
                          </TouchableOpacity>
                          <View style={styles.childHr}/>
@@ -80,17 +85,17 @@ const styles = StyleSheet.create({
       fontSize: 12,
   },
   title:{
-      fontSize: 14,
+      fontSize: 18,
       fontWeight:'bold',
-      color: 'black',
+      color: 'white',
   },
   itemActive:{
-      fontSize: 12,
+      fontSize: 14,
       color: 'green',
   },
   itemInActive:{
-      fontSize: 12,
-      color: 'black',
+      fontSize: 14,
+      color: 'white',
   },
   btnActive:{
       borderColor: 'green',
@@ -103,16 +108,17 @@ const styles = StyleSheet.create({
       borderColor: '#000',
       flexDirection: 'row',
       justifyContent:'space-between',
-      height:56,
+      height:75,
       paddingLeft:25,
       paddingRight:18,
       alignItems:'center',
-      backgroundColor: 'lightgray',
+      backgroundColor: '#02000b',
   },
   childRow:{
       flexDirection: 'row',
       justifyContent:'space-between',
-      backgroundColor: 'white',
+      backgroundColor: '#02000b',
+      width:'100%',
   },
   parentHr:{
       height:1,

@@ -27,9 +27,10 @@ function CustomNavigationBar({ navigation, route, options, back = null }) {
             <View style={styles.logoColumn}>
                 <Text style={styles.headerText}>{title}</Text>
                 <View style={styles.headerDivider}>
-                <Text style={[styles.headerFont, styles.left]}>|</Text>
-                <Text style={[styles.headerFont, styles.center]}>  +  </Text>
-                <Text style={[styles.headerFont, styles.right]}>|</Text>
+                    <Text style={[styles.headerFont, styles.left]}>|</Text>
+                    <Text style={[styles.headerFont, styles.center]}>  +  </Text>
+                    <Text style={[styles.headerFont, styles.right]}>|</Text>
+                    <View style={{margin:10}}></View>
                 </View>
             </View>
             <View style={styles.headerSpacer}>
