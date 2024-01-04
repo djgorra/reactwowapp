@@ -118,7 +118,7 @@ const TeamCreateScreen = ({route, navigation}) => {
         return (
           <View style={styles.listItem}>
             <TouchableOpacity style={styles.listItem} onPress={() => {addToTeam(item.id)}}>
-                <CharacterButton item={item} size={60} />
+                <CharacterButton item={item} size={120} />
             </TouchableOpacity>
           </View>
         );
@@ -128,7 +128,7 @@ const TeamCreateScreen = ({route, navigation}) => {
         return (
           <View style={styles.listItem}>
             <TouchableOpacity style={styles.listItem} onPress={() => {removeFromTeam(item.id)}}>
-                <CharacterButton item={item} size={60} />
+                <CharacterButton item={item} size={120} />
             </TouchableOpacity>
           </View>
         );
@@ -261,8 +261,6 @@ const styles = StyleSheet.create({
 
     },
     listItem:{
-        backgroundColor:"#FFF",
-        borderRadius:5,
     },
     listContainer : {
 

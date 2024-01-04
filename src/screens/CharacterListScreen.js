@@ -320,7 +320,7 @@ const CharacterListScreen = ({navigation}) => {
                     return(
                         <View style={styles.item_character} key={index}>
                             <View style={styles.iconContainer}>
-                            <CharacterButton item={item} size={80}/>
+                            <CharacterButton item={item}/>
                             </View>
                             <View style={styles.buttonContainer}>
                                 <TouchableOpacity
@@ -333,7 +333,7 @@ const CharacterListScreen = ({navigation}) => {
                                     }>
                                     <Text white bold style={{textAlign:'center'}}>Edit Wishlist ({item.wishlist_items.length})</Text>
                                 </TouchableOpacity>
-                                <View style={styles.buttonDivider}/>
+                                {/* <View style={styles.buttonDivider}/> */}
                                 <TouchableOpacity style={styles.button} onPress={()=>handleEdit(item)}>
                                     <Text white bold style={{textAlign:'center'}}>Edit Character</Text>
                                 </TouchableOpacity>
@@ -383,16 +383,12 @@ const styles = StyleSheet.create(
         },
         item_character : {
             margin: 5,
-            borderWidth: 2,
-            borderColor : borderColor,
             flexDirection : "row",
 
         },
         iconContainer : {
             alignItems: 'center',
-            flex: 1,
-            borderRightColor: borderColor,
-            borderRightWidth: 2,
+            flex: 2,
         },
         buttonContainer : {
             flex: 2,
@@ -402,7 +398,6 @@ const styles = StyleSheet.create(
         buttonDivider: {
             width: '100%',
             height: 2,
-            backgroundColor: borderColor,
         },
         button: {
             alignSelf: 'stretch',

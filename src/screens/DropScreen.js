@@ -114,7 +114,7 @@ const DropScreen = ({route, navigation}) => {
                                 <FlatList 
                                     data={item.data}
                                     extraData={selectedCharacterId}
-                                    numColumns={5}
+                                    numColumns={2}
                                     style={{marginTop: 10}}
                                     renderItem={({ item: innerData, index }) =>
                                         <TouchableOpacity 
@@ -123,7 +123,7 @@ const DropScreen = ({route, navigation}) => {
                                             key={innerData["id"]}>
                                                 <CharacterButton 
                                                     item={innerData} 
-                                                    size={60} />
+                                                    size={120} />
                                         </TouchableOpacity>
                                 }/>
 
