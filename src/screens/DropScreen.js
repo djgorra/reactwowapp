@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react"; 
 import {StyleSheet, TextInput, View, Image, TouchableOpacity, ScrollView, FlatList } from "react-native";
 import { Text, Button } from '../components';
+import BlueButton from "../components/BlueButton";
 import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 import { BASE_URL } from "../config";
@@ -81,7 +82,7 @@ const DropScreen = ({route, navigation}) => {
     if (isLoading) {
 
         return (
-            <View style={{flex:1}}>
+            <View style={styles.container}>
                 <View style={styles.nameContainer}>
                     <Text h5 style={styles.runName}>Loading...</Text>
                 </View>
@@ -91,12 +92,12 @@ const DropScreen = ({route, navigation}) => {
     } else {
 
         return (
-            <View style={{flex:1}}>
+            <View style={styles.container}>
                 <View style={styles.nameContainer}>
                     <Image style={{width: 50, height: 50}} source={{uri: `${BASE_URL}${dropItem.image_path}`}} />
-                    <Text h5 style={styles.itemName}>{dropItem.name}</Text>
+                    <Text h5 white style={styles.itemName}>{dropItem.name}</Text>
                 </View>
-                    <Text h6 style={{alignSelf:'center'}}>{drop ? `Currently assigned to: ${drop.character_name}` : ""}</Text>
+                    <Text h6 white style={{alignSelf:'center'}}>{drop ? `Currently assigned to: ${drop.character_name}` : ""}</Text>
                     <Text h5 danger style={{alignSelf:'center'}}>{drop ? `${drop.disenchanted ? "Disenchanted" : ""}` : ""}</Text>
 
                 <FlatList
@@ -132,21 +133,18 @@ const DropScreen = ({route, navigation}) => {
                     }
                 />
                 <View style={styles.btnContainer}>
-                <Checkbox
-                    disabled={false}
-                    value={toggleCheckBox}
-                    onValueChange={setToggleCheckBox}
-                />
-                <Text style={{marginLeft:5}}>Disenchant</Text>
-                <Button
-                    onPress={() => createDrop(selectedCharacterId, toggleCheckBox)}
-                    flex={1}
-                    gradient={gradients.primary}
-                    style={styles.btnSave}>
-                    <Text white bold transform="uppercase">
-                        {drop ? "Update" : "Assign"}
-                    </Text>
-                </Button>
+                    <View style={styles.checkboxContainer}>
+                        <Checkbox
+                            disabled={false}
+                            value={toggleCheckBox}
+                            onValueChange={setToggleCheckBox}
+                            />
+                        <Text white style={{marginLeft:10}}>Disenchant</Text>
+                    </View>
+                    <BlueButton
+                        onPress={() => createDrop(selectedCharacterId, toggleCheckBox)}
+                        text={drop ? "Update" : "Assign"}
+                    />
                 </View>
             </View>
         );
@@ -157,8 +155,7 @@ const DropScreen = ({route, navigation}) => {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#F7F7F7',
-      marginTop:60
+      backgroundColor: '#02000b',
     },
     nameContainer: {
         alignItems:"center",
@@ -193,10 +190,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor: '#F7F7F7',
         height:60,
         zIndex: 100,
         padding:10,
+    },
+    checkboxContainer: {
+        flexDirection: 'row',
     },
     btnSave : {
         width: 50,

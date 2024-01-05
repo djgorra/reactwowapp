@@ -1,6 +1,7 @@
 import React, {useContext, useEffect, useState} from "react"; 
 import {StyleSheet, TextInput, View, Image, TouchableOpacity, ScrollView, FlatList } from "react-native";
 import { Button, Text } from '../components';
+import BlueButton from "../components/BlueButton";
 import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 import { BASE_URL } from "../config";
@@ -56,10 +57,9 @@ const BattleScreen = ({route, navigation}) => {
             <View style={[styles.listItem, isAssigned(item) ? styles.assignedListItem : null]}>
                 <View style={styles.buttonContainer}>
                     <Image style={styles.itemImage} source={{uri: `${BASE_URL}${item.image_path}`}} />
-                    <Text style={{flex:6}}>{item.name}</Text>
-                    <Button
-                        style={styles.button}
-                        title={isAssigned(item) ? "Assigned" : "Assign"}
+                    <Text white bold style={{flex:6}}>{item.name}</Text>
+                    <BlueButton
+                        text={isAssigned(item) ? "Assigned" : "Assign"}
                           onPress={() =>
                               navigation.navigate('DropScreen', {
                                     teamId: teamId,
@@ -69,13 +69,7 @@ const BattleScreen = ({route, navigation}) => {
                                     itemId: item.id,
                               })
                           }
-                          marginVertical={sizes.s}
-                          marginHorizontal={sizes.sm}
-                          gradient={gradients.primary}>
-                          <Text bold white transform="uppercase">
-                            {isAssigned(item) ? "Assigned" : "Assign"}
-                          </Text>
-                      </Button>
+                    />
                 </View>
             </View>
         );
@@ -102,9 +96,12 @@ const BattleScreen = ({route, navigation}) => {
         );
     }
 }
+
+borderColor = '#34455e';
 const styles = StyleSheet.create({
     container: {
       flex: 1,
+      backgroundColor: '#02000b',
     },
     runName: {
       alignSelf:"center",
@@ -119,15 +116,15 @@ const styles = StyleSheet.create({
     listItem:{
       margin:10,
       padding:10,
-      backgroundColor:"#FFF",
+      borderColor: borderColor,
+      borderWidth: 2,
       width:"90%",
       flex:1,
       alignSelf:"center",
       borderRadius:5
     },    
     assignedListItem:{
-        backgroundColor: "#42f58a",
-        borderWidth: 1,
+        backgroundColor: "#008a3e",
       },
     itemImage: {
         width: 50,
@@ -139,10 +136,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-    },
-    button: {
-        width: 70,
-        height: 30,
     },
   });
 export default BattleScreen;

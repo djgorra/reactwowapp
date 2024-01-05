@@ -21,7 +21,12 @@ const RaidListScreen = ({route, navigation}) => {
           url:`${BASE_URL}/api/teams/${route.params.teamId}/runs?raid_id=${item.id}`,
           method : "POST",
       }).then((res)=>{
-          navigation.navigate("TeamListScreen")
+          navigation.navigate("TeamRunsScreen", {
+            teamName: route.params.teamName,
+            teamId: route.params.teamId,
+            runs: res.data,
+          })
+
       }).catch((error) => {
           ErrorHandler(error)
       })

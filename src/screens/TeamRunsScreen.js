@@ -1,47 +1,40 @@
 import React, {useContext, useState, useEffect} from "react"; 
 import {StyleSheet, View, FlatList,SafeAreaView } from "react-native";
 import { Button, Text } from '../components';
+import BlueButton from "../components/BlueButton";
 import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 import {BASE_URL} from "../config";
 import {ErrorHandler} from "../components/ErrorHandler.js";
 import { useTheme} from '../hooks/';
 import { set } from "react-native-reanimated";
+import { useIsFocused } from '@react-navigation/native';
 
 const TeamRunsScreen = ({route, navigation}) => {
     const {teams, setTeams, getTeams} = useContext(AuthContext);
     const [runs, setRuns] = useState(null);
     const {assets, colors, gradients, sizes} = useTheme();
     const [isLoading, setIsLoading] = useState(true);
+    const isFocused = useIsFocused();
 
     function Item({ item }) {
         return (
           <View style={styles.listItem}>
             <View style={styles.itemName}>
-                <Text h5>{item["raid_name"]}</Text>
-                <Text h6>{item["timestamp"]}</Text>
+                <Text white h5>{item["raid_name"]}</Text>
+                <Text white h6>{item["timestamp"]}</Text>
             </View>
-
-            <View style={styles.buttonContainer}>
-                <Button
-                    style={styles.button}
-                    title={"Show"}
-                    onPress={() =>
-                        navigation.navigate('RunScreen', {
-                            raidName: item["raid_name"],
-                            timestamp: item["timestamp"],
-                            teamId: route.params.teamId,
-                            runId: item.id,
-                        })
-                    }
-                    marginVertical={sizes.s}
-                    marginHorizontal={sizes.sm}
-                    gradient={gradients.primary}>
-                    <Text bold white transform="uppercase">
-                        Show
-                    </Text>
-                </Button>
-            </View>
+            <BlueButton
+                text={"Show"}
+                onPress={() =>
+                    navigation.navigate('RunScreen', {
+                        raidName: item["raid_name"],
+                        timestamp: item["timestamp"],
+                        teamId: route.params.teamId,
+                        runId: item.id,
+                    })
+                }
+            />
           </View>
         );
       }
@@ -73,8 +66,13 @@ const TeamRunsScreen = ({route, navigation}) => {
     }
     
     useEffect(() => {
-        getRuns();
-    }, []);
+        if(route.params.runs) {
+            setRuns(route.params.runs);
+            setIsLoading(false);
+        }else{
+            getRuns();
+        }
+    }, [isFocused]);
 
     if (isLoading) {
         //todo: add loading screen styling 
@@ -86,23 +84,15 @@ const TeamRunsScreen = ({route, navigation}) => {
     } else {
         return (
             <SafeAreaView style={styles.container}>
-                <Button
-                    style={styles.newRunButton}
-                    title="Start New Run"
+                <BlueButton
+                    text="Start New Run"
                     onPress={() =>
                         navigation.navigate('RaidListScreen', {
                             teamId: route.params.teamId,
                             teamName: route.params.teamName,
                         })
                     }
-                    marginVertical={sizes.s}
-                    marginHorizontal={sizes.sm}
-                    gradient={gradients.primary}
-                >
-                    <Text white bold transform="uppercase">
-                        Start New Run
-                    </Text>
-                </Button>
+                />
                 <FlatList
                     data={runs}
                     renderItem={({ item }) => <Item item={item}/>}
@@ -114,14 +104,17 @@ const TeamRunsScreen = ({route, navigation}) => {
     }
 }
 
+const borderColor = '#34455e';
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#02000b',
     },
     listItem:{
         margin:10,
         padding:10,
-        backgroundColor:"#FFF",
+        borderColor: borderColor,
+        borderWidth: 2,
         width:"90%",
         flex:1,
         alignSelf:"center",
@@ -131,21 +124,6 @@ const styles = StyleSheet.create({
     itemName:{
         justifyContent:"center",
         flex:4,
-    },
-    buttonContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        flex:2,
-    },
-    button:{
-        width: 70,
-        height: 30,
-    },
-    newRunButton:{
-        width: 200,
-        alignSelf:"center",
-        margin:10,
     },
 });
 
