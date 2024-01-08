@@ -1,6 +1,7 @@
 import React, {useContext, useEffect} from "react"; 
 import {StyleSheet, View, FlatList, SafeAreaView, ImageBackground, Image, TouchableOpacity, SectionList, ScrollView, LogBox } from "react-native";
 import {Button, Block, Text} from '../components/';
+import BlueButton from "../components/BlueButton";
 import useState from 'react-usestateref';
 import Modal from 'react-native-modal';
 import { AuthContext } from "../context/AuthContext";
@@ -135,9 +136,9 @@ const TeamCreateScreen = ({route, navigation}) => {
       }
 
       if (activeChars.length > 0){
-        rosterHeader = <Text>Active Characters</Text>
+        rosterHeader = <Text white h5 style={{alignSelf:"center"}}>Active Characters</Text>
       } else {
-        rosterHeader = <Text>No Active Characters</Text>
+        rosterHeader = <Text white h5 style={{alignSelf:"center"}}>No Active Characters</Text>
       }
 
     function spellsforBuff(buff){
@@ -153,7 +154,8 @@ const TeamCreateScreen = ({route, navigation}) => {
 
     return (
         <View>
-        <ScrollView style={styles.container}>
+        <ScrollView style={styles.container}
+            contentContainerStyle={{alignContent:"center"}}>
             <Modal
                 animationType="slide"
                 isVisible={visible}
@@ -194,7 +196,6 @@ const TeamCreateScreen = ({route, navigation}) => {
             </Modal>
 
 
-            <Text h4 bold>{teamName}</Text>
             {rosterHeader}
             <View style={styles.listContainer}>
                 <FlatList
@@ -208,7 +209,7 @@ const TeamCreateScreen = ({route, navigation}) => {
                     columnWrapperStyle={columnWrapperStyle}
                 />
             </View>
-            <Text>Available Characters</Text>
+            <Text white h5 style={{alignSelf:"center"}}>Available Characters</Text>
             
                 <FlatList
                     style={styles.list}
@@ -221,14 +222,10 @@ const TeamCreateScreen = ({route, navigation}) => {
                 />
       
         </ScrollView>
-        <Button
-        style={styles.modalButton}
-        onPress={handleVisibleModal}
-        gradient={gradients.secondary}>
-            <Text white bold transform="uppercase">
-                Show Buffs
-            </Text>
-        </Button>
+        <BlueButton
+            text={"Show Buffs"}
+            style={styles.modalButton}
+            onPress={handleVisibleModal}/>
         </View>
     )
 }
@@ -236,11 +233,7 @@ const TeamCreateScreen = ({route, navigation}) => {
 const styles = StyleSheet.create({
     container: {
         // flex: 1,
-        // backgroundColor: '#F7F7F7',
-        marginLeft: 20,
-        marginRight:20,
-        width: '90%',
-        paddingBottom:40 //i.e. to prevent bottom of screen from being cut off with short lists
+        backgroundColor: '#02000b',
     },
     modal:{
         backgroundColor : "#ffffff",
@@ -262,8 +255,9 @@ const styles = StyleSheet.create({
     },
     listItem:{
     },
-    listContainer : {
-
+    list : {
+        flex: 1,
+        flexDirection: 'column',
     },
     item: {
 

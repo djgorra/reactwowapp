@@ -84,7 +84,7 @@ const DropScreen = ({route, navigation}) => {
         return (
             <View style={styles.container}>
                 <View style={styles.nameContainer}>
-                    <Text h5 style={styles.runName}>Loading...</Text>
+                    <Text h5 white style={styles.runName}>Loading...</Text>
                 </View>
             </View>
         )
@@ -97,8 +97,9 @@ const DropScreen = ({route, navigation}) => {
                     <Image style={{width: 50, height: 50}} source={{uri: `${BASE_URL}${dropItem.image_path}`}} />
                     <Text h5 white style={styles.itemName}>{dropItem.name}</Text>
                 </View>
-                    <Text h6 white style={{alignSelf:'center'}}>{drop ? `Currently assigned to: ${drop.character_name}` : ""}</Text>
-                    <Text h5 danger style={{alignSelf:'center'}}>{drop ? `${drop.disenchanted ? "Disenchanted" : ""}` : ""}</Text>
+
+                <Text h6 white style={{alignSelf:'center'}}>{drop ? `Currently assigned to: ${drop.character_name}` : ""}</Text>
+                <Text h5 danger style={{alignSelf:'center'}}>{drop ? `${drop.disenchanted ? "Disenchanted" : ""}` : ""}</Text>
 
                 <FlatList
                     data={characters}
@@ -124,7 +125,7 @@ const DropScreen = ({route, navigation}) => {
                                             key={innerData["id"]}>
                                                 <CharacterButton 
                                                     item={innerData} 
-                                                    size={120} />
+                                                    size={160} />
                                         </TouchableOpacity>
                                 }/>
 
@@ -169,7 +170,6 @@ const styles = StyleSheet.create({
         margin: 10,
     },
     character: {
-        width: 70,
         padding: 2,
         alignItems: 'center',
     },

@@ -21,6 +21,7 @@ const BattleScreen = ({route, navigation}) => {
     const {assets, colors, gradients, sizes} = useTheme();
     const [isLoading, setIsLoading] = useState(true);
     const [drops, setDrops] = useState(null);
+    const [search, setSearch] = useState("");
     const [battleId, setBattleId] = useState(route.params.battleId);
     const isFocused = useIsFocused();
 
@@ -34,6 +35,17 @@ const BattleScreen = ({route, navigation}) => {
         }).catch((error) => {
             ErrorHandler(error)
         })
+    }
+
+    const filterData = (item) => {
+        if (search === "") {
+            return ( <Item item={item}/> )
+        } else {
+            if (item["name"].toLowerCase().includes(search.toLowerCase())) {
+                return ( <Item item={item}/> )
+            }
+        }
+    
     }
 
     useEffect(() => {
@@ -86,10 +98,12 @@ const BattleScreen = ({route, navigation}) => {
     } else {
         return (
             <View style={styles.container}>
+                <TextInput style={styles.input} placeholder="Search" placeholderTextColor="#aaaaaa" onChangeText = {(text) => setSearch(text)} />
+
                 <FlatList
                     style={{flex:1}}
                     data={battle["boss"]["items"]}
-                    renderItem={({ item }) => <Item item={item}/>}
+                    renderItem={({ item, index }) => filterData(item)}
                     keyExtractor={item => item.id}
                     />
             </View>
@@ -105,6 +119,17 @@ const styles = StyleSheet.create({
     },
     runName: {
       alignSelf:"center",
+    },
+    input: {
+        backgroundColor: '#02000b',
+        borderColor: borderColor,
+        borderWidth: 1,
+        borderRadius: 5,
+        color: 'white',
+        margin: 10,
+        padding: 10,
+        width: "90%",
+        alignSelf: "center",
     },
     nameContainer: {
         alignItems:"center",

@@ -82,7 +82,12 @@ const RunScreen = ({route, navigation}) => {
     }
 
     useEffect(() => {
-      getData();
+      if (route.params.run) {
+        setRun(route.params.run);
+        setIsLoading(false);
+      } else {
+        getData();
+      }
     }, [isFocused]);
 
 
