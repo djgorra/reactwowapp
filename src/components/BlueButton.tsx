@@ -2,8 +2,32 @@ import React from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableOpacity, View,  Text } from "react-native";
 
-const BlueButton = ({text, onPress, isDisabled=false}) => {
-
+const BlueButton = ({text, onPress, isDisabled=false, padding=10}) => {
+  const styles = {
+    btnContainer: {
+      paddingTop: padding,
+      paddingBottom: padding,
+      paddingLeft: padding*2,
+      paddingRight: padding*2,
+  
+    },
+    disabled: {
+      paddingTop: padding,
+      paddingBottom: padding,
+      paddingLeft: padding*2,
+      paddingRight: padding*2,
+    },
+    imageContainerIOS: {
+      alignSelf: 'center',
+      borderRadius: 20,
+      overflow: "hidden",
+      borderWidth: 3,
+      borderColor: '#a8c8d3',
+  },
+  
+  
+  };
+  
 return (
     <View style={styles.imageContainerIOS} >
           <LinearGradient
@@ -39,30 +63,5 @@ return (
 )
 
 }
-
-const styles = {
-  btnContainer: {
-    paddingTop: 10,
-    paddingBottom: 10,
-    paddingLeft: 20,
-    paddingRight: 20,
-
-  },
-  disabled: {
-    paddingTop: 10,
-    paddingBottom: 10,
-    paddingLeft: 20,
-    paddingRight: 20,
-  },
-  imageContainerIOS: {
-    alignSelf: 'center',
-    borderRadius: 20,
-    overflow: "hidden",
-    borderWidth: 3,
-    borderColor: '#a8c8d3',
-},
-
-
-};
 
 export default BlueButton;

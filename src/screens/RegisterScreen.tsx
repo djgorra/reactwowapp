@@ -54,7 +54,6 @@ const RegisterScreen = () => {
   const handleSignUp = useCallback(() => {
     if (!Object.values(isValid).includes(false)) {
       /** send/save registratin data */
-      console.log('handleSignUp', registration);
     }
   }, [isValid, registration]);
 
@@ -96,8 +95,8 @@ const RegisterScreen = () => {
                   source={assets.arrow}
                   transform={[{rotate: '180deg'}]}
                 />
-                <Text p white marginLeft={sizes.s}>
-                  Go Back
+                <Text style={{color:"white"}} marginLeft={sizes.s}>
+                  Back
                 </Text>
               </Button>
               <Block
@@ -115,13 +114,12 @@ const RegisterScreen = () => {
                 <Block 
                 paddingTop={sizes.sm}
                 paddingHorizontal={sizes.sm}>
-                  <Text h5 white bold center style={{fontFamily:'LifeCraft'}}> Sign Up </Text>
                   <Block style={styles.inputContainer}>
                     <Image style={styles.redDot} source={require('../assets/images/icecrown/red_dot.png')} />
                     <Input
                       autoCapitalize="none"
                       keyboardType="email-address"
-                      placeholder="Email"
+                      placeholder="email..."
                       textAlign='center'
                       style={styles.input}
                       success={Boolean(registration.email && isValid.email)}
@@ -138,7 +136,7 @@ const RegisterScreen = () => {
                       marginBottom={sizes.m}
                       style={styles.input}
                       textAlign="center"
-                      placeholder="Password"
+                      placeholder="password..."
                       onChangeText={(value) => handleChange({password: value})}
                       success={Boolean(registration.password && isValid.password)}
                       danger={Boolean(registration.password && !isValid.password)}

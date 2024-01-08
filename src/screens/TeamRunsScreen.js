@@ -2,28 +2,26 @@ import React, {useContext, useState, useEffect} from "react";
 import {StyleSheet, View, FlatList,SafeAreaView } from "react-native";
 import { Button, Text } from '../components';
 import BlueButton from "../components/BlueButton";
-import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 import {BASE_URL} from "../config";
 import {ErrorHandler} from "../components/ErrorHandler.js";
-import { useTheme} from '../hooks/';
-import { set } from "react-native-reanimated";
 import { useIsFocused } from '@react-navigation/native';
+import moment from 'moment';
 
 const TeamRunsScreen = ({route, navigation}) => {
-    const {teams, setTeams, getTeams} = useContext(AuthContext);
     const [runs, setRuns] = useState(null);
-    const {assets, colors, gradients, sizes} = useTheme();
     const [isLoading, setIsLoading] = useState(true);
     const isFocused = useIsFocused();
+    const week_ago = moment(new Date()).subtract(7, 'day');
 
     function Item({ item }) {
         return (
           <View style={styles.listItem}>
             <View style={styles.itemName}>
-                <Text white h5>{item["raid_name"]}</Text>
+                <Text white h5 font="LifeCraft">{item["raid_name"]}</Text>
                 <Text white h6>{item["timestamp"]}</Text>
             </View>
+            { ( moment(week_ago).diff(moment(item["timestamp"],"MM/DD/YY")) < 0 ) ?   
             <BlueButton
                 text={"Show"}
                 onPress={() =>
@@ -34,7 +32,19 @@ const TeamRunsScreen = ({route, navigation}) => {
                         runId: item.id,
                     })
                 }
-            />
+            /> :
+            <BlueButton
+                text={"Summary"}
+                onPress={() =>
+                    navigation.navigate('RunScreen', {
+                        raidName: item["raid_name"],
+                        timestamp: item["timestamp"],
+                        teamId: route.params.teamId,
+                        runId: item.id,
+                    })
+                }
+            />             
+            }
           </View>
         );
       }

@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from "react"; 
-import {StyleSheet, TextInput, View, Image, TouchableOpacity, ScrollView, FlatList } from "react-native";
-import { Button, Text } from '../components';
+import {StyleSheet, TextInput, View, Image, TouchableOpacity, ScrollView, FlatList, Text } from "react-native";
+import { Button } from '../components';
 import BlueButton from "../components/BlueButton";
 import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
@@ -26,7 +26,7 @@ const RunScreen = ({route, navigation}) => {
     
             <View style={styles.buttonContainer}>
 
-              <Text white h5>{item.boss.name}</Text>
+              <Text style={styles.text}>{item.boss.name}</Text>
               <BlueButton
                   text={"Show"}
                   onPress={() =>
@@ -52,7 +52,7 @@ const RunScreen = ({route, navigation}) => {
         <View style={styles.listItem}>
   
           <View style={styles.buttonContainer}>
-            <Text white h5>{item.name}</Text>
+            <Text style={styles.text}>{item.name}</Text>
             <BlueButton
                 text={"Battle"}
                 onPress={() =>
@@ -134,6 +134,12 @@ const RunScreen = ({route, navigation}) => {
 
 const borderColor = '#34455e';
 const styles = StyleSheet.create({
+    text: {
+      color: '#ffffff',
+      fontSize: 14,
+      fontWeight: 'bold',
+      fontFamily: 'OpenSans-Bold',
+    },
     container: {
       flex:1,
       backgroundColor: '#02000b',

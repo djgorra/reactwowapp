@@ -95,7 +95,7 @@ const LoginScreen = ({navigation}) => {
                       autoCapitalize="none"
                       style={styles.input}
                       keyboardType="email-address"
-                      placeholder="Email"
+                      placeholder="email..."
                       textAlign="center"
                       onChangeText={text => setEmail(text)}
                     />
@@ -109,7 +109,7 @@ const LoginScreen = ({navigation}) => {
                       autoCapitalize="none"
                       style={styles.input}
                       textAlign="center"
-                      placeholder="Password"
+                      placeholder="password..."
                       onChangeText={text => setPassword(text)}
                     />
                   </Block>
@@ -117,7 +117,7 @@ const LoginScreen = ({navigation}) => {
 
                 <SubmitButton
                   onPress={() => {login(email, password)}}
-                  text="Log In">
+                  text="Login">
                 </SubmitButton>
 
                 <BlueButton

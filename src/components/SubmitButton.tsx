@@ -12,8 +12,8 @@ const SubmitButton = ({text, onPress, isDisabled=false}) => {
         <View style={styles.imageContainerIOS} >
             <LinearGradient
                 colors={[
-                "#a7b5d2",
-                "#616c7d",
+                "#b4bddc",
+                "#9aacc9",
                 ]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 0, y: 1 }}

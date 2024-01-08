@@ -8,6 +8,8 @@ import axios from "axios";
 import {BASE_URL} from "../config";
 import {ErrorHandler} from "../components/ErrorHandler.js";
 import { useTheme} from '../hooks/';
+import { SvgXml } from 'react-native-svg';
+import spanner from '../assets/icons/spanner';
 
 const TeamListScreen = ({route, navigation}) => {
     const {teams, setTeams, getTeams} = useContext(AuthContext);
@@ -17,24 +19,26 @@ const TeamListScreen = ({route, navigation}) => {
     function Item({ item }) {
         return (
           <View style={styles.listItem}>
+            <TouchableOpacity  style={{alignSelf:"center", paddingRight: 10}}
+                onPress={() =>
+                    navigation.navigate('TeamCreateScreen', {
+                        teamId: item.id,
+                        teamName: item.name,
+                    })
+                }>
+                <View>
+                <SvgXml xml={spanner} width="18" height="18" color="#dff0f8"/>
+                </View>
+                
+            </TouchableOpacity>
             <View style={styles.buttonContainer}>
-                <Text h4 white style={styles.itemName}>{item.name}</Text>
-                <TouchableOpacity
-                    onPress={() =>
-                        navigation.navigate('TeamCreateScreen', {
-                            teamId: item.id,
-                            teamName: item.name,
-                        })
-                    }>
-                    <Text bold gray h5 style={{alignSelf:"center"}}>
-                        Edit Roster
-                    </Text>
-                </TouchableOpacity>
+                <Text size={16} white font="OpenSans-Bold" style={styles.itemName}>{item.name}</Text>
                 
             </View>
             <View style={styles.nameContainer}>
                 <BlueButton
                     text="Runs"
+                    padding={6}
                     onPress={() =>
                         navigation.navigate('TeamRunsScreen', {
                             teamId: item.id,
@@ -108,7 +112,7 @@ const styles = StyleSheet.create({
         padding:10,
         borderWidth: 2,
         borderColor: borderColor,
-        width:"80%",
+        width:"90%",
         flex:1,
         alignSelf:"center",
         flexDirection:"row",
@@ -116,6 +120,7 @@ const styles = StyleSheet.create({
     },
     itemName:{
         alignSelf:"center",
+        textAlign:"center",
     },
     nameContainer:{
         flex:2,
@@ -124,7 +129,7 @@ const styles = StyleSheet.create({
     },
     buttonContainer:{
         flex:4,
-        alignSelf:"",
+        alignSelf:"center",
     },
     redDot: {
         width: 20,
