@@ -13,6 +13,7 @@ import TeamRunsScreen from './TeamRunsScreen'
 import RunScreen from './RunScreen'
 import BattleScreen from './BattleScreen'
 import DropScreen from './DropScreen'
+import SummaryScreen from './SummaryScreen'
 import { Image, View, Text, StyleSheet } from 'react-native';
 import { Appbar } from 'react-native-paper';
 import { getHeaderTitle } from '@react-navigation/elements';
@@ -116,6 +117,11 @@ export default () => {
           component={DropScreen}
           options={{headerShown: true, title: 'Assign Drop'}}
       />
+      <Stack.Screen
+          name="SummaryScreen"
+          component={SummaryScreen}
+          options={{headerShown: true, title: 'Run Summary'}}
+        />
 
 
     </Stack.Navigator>

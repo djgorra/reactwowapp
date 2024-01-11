@@ -98,8 +98,13 @@ const DropScreen = ({route, navigation}) => {
                     <Text h5 white style={styles.itemName}>{dropItem.name}</Text>
                 </View>
 
-                <Text h6 white style={{alignSelf:'center'}}>{drop ? `Currently assigned to: ${drop.character_name}` : ""}</Text>
-                <Text h5 danger style={{alignSelf:'center'}}>{drop ? `${drop.disenchanted ? "Disenchanted" : ""}` : ""}</Text>
+                {drop ?
+                    <View style={styles.dropInfoContainer}>
+                        <Text h6 white style={{alignSelf:'center'}}>{drop ? `Currently assigned to: ${drop.character_name}` : ""}</Text>
+                        <Text h5 danger style={{alignSelf:'center'}}>{drop ? `${drop.disenchanted ? "Disenchanted" : ""}` : ""}</Text>
+                    </View>
+                    : null
+                }
 
                 <FlatList
                     data={characters}
@@ -159,11 +164,16 @@ const styles = StyleSheet.create({
       backgroundColor: '#02000b',
     },
     nameContainer: {
+        backgroundColor: '#324461',
         alignItems:"center",
         justifyContent:"center",
         flexDirection:"row",
         borderBottomWidth: 1,
-        borderRadius: 10,
+        borderColor: "#FFF",
+        padding:10,
+    },
+    dropInfoContainer: {
+        backgroundColor: '#324461',
         padding:10,
     },
     itemName: {
@@ -179,7 +189,7 @@ const styles = StyleSheet.create({
         borderColor: "#000",
     },
     currentSelected: {
-        backgroundColor: "#42f58a",
+        backgroundColor: "#324461",
         borderWidth: 1,
         borderColor: "#000",
     },

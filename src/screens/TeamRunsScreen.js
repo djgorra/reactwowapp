@@ -36,7 +36,7 @@ const TeamRunsScreen = ({route, navigation}) => {
             <BlueButton
                 text={"Summary"}
                 onPress={() =>
-                    navigation.navigate('RunScreen', {
+                    navigation.navigate('SummaryScreen', {
                         raidName: item["raid_name"],
                         timestamp: item["timestamp"],
                         teamId: route.params.teamId,
@@ -87,8 +87,8 @@ const TeamRunsScreen = ({route, navigation}) => {
     if (isLoading) {
         //todo: add loading screen styling 
         return (
-            <View style={{flex:1}}>
-                <Text h5 style={styles.runName}>Loading...</Text>
+            <View style={styles.container}>
+                <Text h5 white style={styles.runName}>Loading...</Text>
             </View>
         );
     } else {
