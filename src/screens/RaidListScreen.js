@@ -41,10 +41,10 @@ const RaidListScreen = ({route, navigation}) => {
           <TouchableOpacity
             onPress={() =>handlePress(item) }>
             <View style={styles.listItem}>
-              <Image source={{uri:item.photo}}  style={{width:60, height:30,borderRadius:30}} />
+              {/* <Image source={{uri:item.photo}}  style={{width:60, height:30,borderRadius:30}} /> */}
               <View style={{flex:4}}>
                 <Text style={styles.listItemText}>{item.name}</Text>
-                <Text>{item.position}</Text>
+                {/* <Text>{item.position}</Text> */}
               </View>
                   <Text style={styles.listItemCaret}> > </Text>
             </View>
@@ -94,9 +94,9 @@ const styles = StyleSheet.create({
     listItemText:{
       fontFamily:"LifeCraft",
       fontSize:20,
-      textAlign:"center",
       fontWeight:"bold",
-      color:"#FFF"
+      color:"#FFF",
+      marginTop:5
     },
     listItemCaret:{
       flex:1,

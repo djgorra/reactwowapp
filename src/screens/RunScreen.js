@@ -1,13 +1,11 @@
-import React, {useContext, useEffect, useState} from "react"; 
-import {StyleSheet, TextInput, View, Image, TouchableOpacity, ScrollView, FlatList, Text } from "react-native";
-import { Button } from '../components';
+import React, {useEffect, useState} from "react"; 
+import {StyleSheet, View,  ScrollView, FlatList, Text } from "react-native";
 import BlueButton from "../components/BlueButton";
-import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 import { BASE_URL } from "../config";
 import ErrorHandler from "../components/ErrorHandler.js"
-import { useTheme} from '../hooks/';
 import { useIsFocused } from '@react-navigation/native';
+import Divider from '../components/Divider';
 
 
 
@@ -15,7 +13,6 @@ const RunScreen = ({route, navigation}) => {
   const runId = route.params.runId;
   const teamId = route.params.teamId;
   const [run, setRun] = useState([]);
-  const {assets, colors, gradients, sizes} = useTheme();
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -103,30 +100,38 @@ const RunScreen = ({route, navigation}) => {
       return (
         
           <ScrollView style={styles.container}>
-              <View style={styles.bossList}>
-                <View style={styles.nameContainer}>
-                  <Text styles={styles.header} h5 white>Completed Bosses</Text>
-                </View>
-                <FlatList
-                    data={run.battles}
-                    style={{flex:1}}
-                    scrollEnabled={false}
-                    renderItem={({ item }) => <CompletedBattle item={item}/>}
-                    keyExtractor={item => item.id}
-                />
-              </View>
-              <View style={styles.bossList}>
-                <View style={styles.nameContainer}>
-                  <Text styles={styles.header} h5 white>Remaining Bosses</Text>
-                </View>
-                <FlatList
+                {
+                run.remaining_bosses.length > 0 ?
+                  <FlatList
                     data={run.remaining_bosses}
                     style={{flex:1}}
                     scrollEnabled={false}
                     renderItem={({ item }) => <RemainingBattle item={item}/>}
                     keyExtractor={item => item.id}
-                />
-              </View>
+                    ListHeaderComponent={() => {
+                      return (<Text style={{color:"white", alignSelf:"center"}}>Remaining Bosses</Text>)
+                    }}
+                    ListFooterComponent={() => {
+                      return(<Divider/>)
+                    }}
+                  />
+                : <View></View>
+                }
+                {
+                  run.battles.length > 0 ? 
+                  <FlatList
+                    data={run.battles}
+                    style={{flex:1}}
+                    scrollEnabled={false}
+                    renderItem={({ item }) => <CompletedBattle item={item}/>}
+                    keyExtractor={item => item.id}
+                    ListHeaderComponent={() => {
+                      return (<Text style={{color:"white", alignSelf:"center"}}>Completed Bosses</Text>)
+                    }}
+                  />
+                : <View></View>
+                }
+              
           </ScrollView>
       );
     }
@@ -134,6 +139,11 @@ const RunScreen = ({route, navigation}) => {
 
 const borderColor = '#34455e';
 const styles = StyleSheet.create({
+   header: {
+    color: '#ffffff',
+    fontSize: 14,
+
+   },
     text: {
       color: '#ffffff',
       fontSize: 14,
@@ -141,19 +151,7 @@ const styles = StyleSheet.create({
       fontFamily: 'OpenSans-Bold',
     },
     container: {
-      flex:1,
       backgroundColor: '#02000b',
-    },
-    nameContainer: {
-      alignItems:"center",
-      borderRadius: 10,
-      padding:10,
-      margin:10,
-      borderColor: borderColor,
-      borderBottomWidth: 1,
-    },
-    header: {
-      alignSelf:"center",
     },
     listItem:{
       margin:10,
