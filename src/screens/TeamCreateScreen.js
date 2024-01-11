@@ -21,7 +21,7 @@ const TeamCreateScreen = ({route, navigation}) => {
     const [activeChars, setActiveChars, activeCharsRef] = useState([]);
     const [visible, setVisible] = useState(false); //i.e. for modal
     const numColumns = 25; //i.e. 25 is max number of characters on a team
-    const columnWrapperStyle = { flexWrap: 'wrap', flex: 1, rowGap: 5, columnGap: 2 }; //i.e. automatically wrap the flatlist items
+    const columnWrapperStyle = { flexWrap: 'wrap', flex: 1, rowGap: 5, columnGap: 2, justifyContent: 'center' }; //i.e. automatically wrap the flatlist items
 
     //i.e. ignore yellowbox warning about nested virtualized lists
     LogBox.ignoreLogs(['VirtualizedLists should never be nested inside plain ScrollViews with the same orientation because it can break windowing and other functionality - use another VirtualizedList-backed container instead.']);
@@ -153,86 +153,85 @@ const TeamCreateScreen = ({route, navigation}) => {
     }
 
     return (
-        <View>
-        <ScrollView style={styles.container}
-            contentContainerStyle={{alignContent:"center"}}>
-            <Modal
-                animationType="slide"
-                isVisible={visible}
-                style={styles.modal}
-                hasBackdrop={true}
-                backdropColor="black"
-            >
-                <View style={styles.modalView}>
-                    <SectionList
-                        sections={buffs}
-                        extraData={spells}
-                        keyExtractor={(item, index) => item + index}
-                        style={styles.spellIconList}
-                        renderItem={({item}) => (
-                            <View style={styles.item} key={item["id"]}>
-                                <Text style={styles.title}>{item["name"]}</Text>
-                                <View style={styles.imageContainer}>
-                                {spellsforBuff(item).map((key,index)=>{
-                                    return(
-                                        <Image
-                                            src={`${BASE_URL}/spells/${key["icon"]}.jpg`}
-                                            style={styles.characterIcon} />
-                                    )
-                                })}
+        <View style={{backgroundColor:'#02000b', height:'100%'}}>
+            <ScrollView style={styles.container}
+                contentContainerStyle={{alignContent:"center"}}>
+                <Modal
+                    animationType="slide"
+                    isVisible={visible}
+                    style={styles.modal}
+                    hasBackdrop={true}
+                    backdropColor="black"
+                >
+                    <View style={styles.modalView}>
+                        <SectionList
+                            sections={buffs}
+                            extraData={spells}
+                            keyExtractor={(item, index) => item + index}
+                            style={styles.spellIconList}
+                            renderItem={({item}) => (
+                                <View style={styles.item} key={item["id"]}>
+                                    <Text style={styles.title}>{item["name"]}</Text>
+                                    <View style={styles.imageContainer}>
+                                    {spellsforBuff(item).map((key,index)=>{
+                                        return(
+                                            <Image
+                                                src={`${BASE_URL}/spells/${key["icon"]}.jpg`}
+                                                style={styles.characterIcon} />
+                                        )
+                                    })}
+                                    </View>
                                 </View>
-                            </View>
-                        )}
-                        renderSectionHeader={({section: {title}}) => (
-                            <Text white bold backgroundColor={colors.primary} style={styles.header}>{title}</Text>
-                        )}
+                            )}
+                            renderSectionHeader={({section: {title}}) => (
+                                <Text white bold backgroundColor={colors.primary} style={styles.header}>{title}</Text>
+                            )}
+                        />
+                    </View>
+                    <Button style={styles.modalButton} gradient={gradients.secondary} marginHorizontal={sizes.s} onPress={handleVisibleModal}>
+                        <Text white bold transform="uppercase" marginHorizontal={sizes.s}>
+                            Close
+                        </Text>
+                    </Button>
+                </Modal>
+
+
+                {rosterHeader}
+                <View style={styles.listContainer}>
+                    <FlatList
+                        style={styles.list}
+                        data={activeChars}
+                        scrollEnabled={false}
+                        numColumns={numColumns}
+                        renderItem={({ item }) => <ActiveItem item={item}/>}
+                        keyExtractor={item => item.id}
+                        extraData={activeChars}
+                        columnWrapperStyle={columnWrapperStyle}
                     />
                 </View>
-                <Button style={styles.modalButton} gradient={gradients.secondary} marginHorizontal={sizes.s} onPress={handleVisibleModal}>
-                    <Text white bold transform="uppercase" marginHorizontal={sizes.s}>
-                        Close
-                    </Text>
-                </Button>
-            </Modal>
-
-
-            {rosterHeader}
-            <View style={styles.listContainer}>
-                <FlatList
-                    style={styles.list}
-                    data={activeChars}
-                    scrollEnabled={false}
-                    numColumns={numColumns}
-                    renderItem={({ item }) => <ActiveItem item={item}/>}
-                    keyExtractor={item => item.id}
-                    extraData={activeChars}
-                    columnWrapperStyle={columnWrapperStyle}
-                />
-            </View>
-            <Text white h5 style={{alignSelf:"center"}}>Available Characters</Text>
-            
-                <FlatList
-                    style={styles.list}
-                    data={availableChars}
-                    numColumns={numColumns}
-                    renderItem={({ item }) => <Item item={item}/>}
-                    keyExtractor={item => item.id}
-                    columnWrapperStyle={columnWrapperStyle}
-                    // extraData={availableChars}
-                />
-      
-        </ScrollView>
-        <BlueButton
-            text={"Show Buffs"}
-            style={styles.modalButton}
-            onPress={handleVisibleModal}/>
+                <Text white h5 style={{alignSelf:"center"}}>Available Characters</Text>
+                
+                    <FlatList
+                        style={styles.list}
+                        data={availableChars}
+                        numColumns={numColumns}
+                        renderItem={({ item }) => <Item item={item}/>}
+                        keyExtractor={item => item.id}
+                        columnWrapperStyle={columnWrapperStyle}
+                        // extraData={availableChars}
+                    />
+        
+            </ScrollView>
+            <BlueButton
+                text={"Show Buffs"}
+                onPress={handleVisibleModal}/>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        // flex: 1,
+        height: '90%',
         backgroundColor: '#02000b',
     },
     modal:{
