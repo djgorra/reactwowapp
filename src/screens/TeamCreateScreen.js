@@ -141,6 +141,23 @@ const TeamCreateScreen = ({route, navigation}) => {
         rosterHeader = <Text white h5 style={{alignSelf:"center"}}>No Active Characters</Text>
       }
 
+    function renderItem({ item }) {
+        return (
+            <View style={{flexDirection: 'row', flexWrap: 'wrap', height: 80, borderBottomWidth: 1, borderBottomColor : "#34455e", alignContent:'center'}} key={item["id"]}>
+                <Text h5 white style={{flex: 6, alignSelf:'center'}}>{item["name"]}</Text>
+                <View style={{flex:2, flexDirection: 'row', justifyContent:'center', alignSelf:'center'}}>
+                    {spellsforBuff(item).map((key,index)=>{
+                        return(
+                            <Image
+                                src={`${BASE_URL}/spells/${key["icon"]}.jpg`}
+                                style={styles.characterIcon} />
+                        )
+                    })}
+                </View>
+            </View>
+        );
+      }
+
     function spellsforBuff(buff){
         let tempArray = [];
         for (let i = 0; i < spells.length; i++) {
@@ -169,30 +186,13 @@ const TeamCreateScreen = ({route, navigation}) => {
                             extraData={spells}
                             keyExtractor={(item, index) => item + index}
                             style={styles.spellIconList}
-                            renderItem={({item}) => (
-                                <View style={styles.item} key={item["id"]}>
-                                    <Text style={styles.title}>{item["name"]}</Text>
-                                    <View style={styles.imageContainer}>
-                                    {spellsforBuff(item).map((key,index)=>{
-                                        return(
-                                            <Image
-                                                src={`${BASE_URL}/spells/${key["icon"]}.jpg`}
-                                                style={styles.characterIcon} />
-                                        )
-                                    })}
-                                    </View>
-                                </View>
-                            )}
+                            renderItem={renderItem}
                             renderSectionHeader={({section: {title}}) => (
-                                <Text white bold backgroundColor={colors.primary} style={styles.header}>{title}</Text>
+                                <Text h4 white bold backgroundColor={'#1f3040'} style={styles.header}>{title}</Text>
                             )}
                         />
+                        <BlueButton text="Close" onPress={handleVisibleModal}/>
                     </View>
-                    <Button style={styles.modalButton} gradient={gradients.secondary} marginHorizontal={sizes.s} onPress={handleVisibleModal}>
-                        <Text white bold transform="uppercase" marginHorizontal={sizes.s}>
-                            Close
-                        </Text>
-                    </Button>
                 </Modal>
 
 
@@ -235,9 +235,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#02000b',
     },
     modal:{
-        backgroundColor : "#ffffff",
+        backgroundColor : "#02000b",
         marginTop: 20,
-        display:"flex",
     },
     modalView:{
         marginTop: 20,
@@ -250,7 +249,7 @@ const styles = StyleSheet.create({
         marginBottom:5,
     },
     spellIconList: {
-
+        flexDirection: 'column',
     },
     listItem:{
     },
@@ -259,7 +258,11 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
     },
     item: {
-
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        height: 1000,
+        borderBottomWidth: 1,
+        borderBottomColor : "white",
     },
     item_character : {
         padding :15,
@@ -282,7 +285,9 @@ const styles = StyleSheet.create({
       width: "auto",
     },
     imageContainer : {
-
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        flex:6,
     },
       header: {
         fontSize: 32,
@@ -290,6 +295,7 @@ const styles = StyleSheet.create({
       },
       title: {
         fontSize: 18,
+        flex: 2,
       },
       item: {
         padding: 5,

@@ -32,29 +32,11 @@ const SummaryScreen = ({route, navigation}) => {
     }
 
     useEffect(() => {
+        console.log(summary)
         if (summary.length == 0) {
             getData();
         }
     }, [isFocused]);
-
-    const DATA = [
-        {
-          title: 'Main dishes',
-          data: ['Pizza', 'Burger', 'Risotto'],
-        },
-        {
-          title: 'Sides',
-          data: ['French Fries', 'Onion Rings', 'Fried Shrimps'],
-        },
-        {
-          title: 'Drinks',
-          data: ['Water', 'Coke', 'Beer'],
-        },
-        {
-          title: 'Desserts',
-          data: ['Cheese Cake', 'Ice Cream'],
-        },
-      ];
 
     if (isLoading) {
       return (
@@ -73,7 +55,15 @@ const SummaryScreen = ({route, navigation}) => {
                 keyExtractor={(item, index) => item + index}
                 renderItem={({item}) => (
                     <View style={styles.item}>
-                    <Text style={styles.title}>{item["item"]["name"]}</Text>
+                        <View style={styles.itemIconContainer}>
+                            <Image style={{width: 50, height: 50}} source={{uri: `${BASE_URL}${item["item"]["image_path"]}`}} />
+                            {item["disenchanted"] ? <Image style={{width: 30, height: 30, marginLeft: 10,}} source={{uri: `${BASE_URL}/spells/inv_enchant_disenchant.jpg`}}/>  : <View style={{width: 30, height: 30, marginLeft: 10,}}/> }
+                        </View>
+
+                        <View style={styles.itemTextContainer}>
+                            <Text style={styles.title}>{item["item"]["name"]}</Text>
+                            <Text style={styles.name}>{item["character_name"]}</Text>
+                        </View>
                     </View>
                 )}
                 renderSectionHeader={({section: {title}}) => (
@@ -95,7 +85,7 @@ const styles = StyleSheet.create({
     },
     container: {
       flex:1,
-
+    backgroundColor: '#02000b',
     },
     nameContainer: {
       color: '#ffffff',
@@ -112,6 +102,36 @@ const styles = StyleSheet.create({
       fontSize: 14,
       fontWeight: 'bold',
       fontFamily: 'OpenSans-Bold',
+    },
+    title: {
+      color: '#ffffff',
+      fontSize: 14,
+      fontWeight: 'bold',
+      fontFamily: 'OpenSans-Bold',
+    },
+    name: {
+      color: '#8a8a8a',
+      fontSize: 14,
+    },
+    item: {
+      flexDirection:"row",
+      backgroundColor: '#324461',
+      padding: 10,
+      marginVertical: 8,
+      marginHorizontal: 16,
+    },
+    itemTextContainer: {
+        flex:6,
+        flexDirection:"column",
+        justifyContent:"center",
+        alignItems:"center",
+        marginLeft:10,
+    },
+    itemIconContainer: {
+        flex:2,
+        flexDirection:"row",
+        justifyContent:"center",
+        alignItems:"center",
     },
     listItem:{
       margin:10,

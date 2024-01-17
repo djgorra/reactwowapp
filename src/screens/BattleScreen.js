@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
       borderRadius:5
     },    
     assignedListItem:{
-        backgroundColor: "#008a3e",
+        backgroundColor: "#324461",
       },
     itemImage: {
         width: 50,

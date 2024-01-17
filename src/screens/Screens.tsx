@@ -10,6 +10,7 @@ import FriendsListScreen from './FriendsListScreen'
 import TeamListScreen from './TeamListScreen'
 import TeamCreateScreen from './TeamCreateScreen'
 import TeamRunsScreen from './TeamRunsScreen'
+import TeamOldRunsScreen from './TeamOldRunsScreen'
 import RunScreen from './RunScreen'
 import BattleScreen from './BattleScreen'
 import DropScreen from './DropScreen'
@@ -31,7 +32,7 @@ function CustomNavigationBar({ navigation, route, options, back = null }) {
   
     return (
         <View style={styles.headerContainer}>
-            {back ? <Appbar.BackAction onPress={navigation.goBack} color="#dff0f8" style={{width:10}}/> : null}
+            {back ? <Appbar.BackAction onPress={navigation.goBack} color="#dff0f8" style={{width:40}}/> : null}
             <View style={styles.logoColumn}>
                 <Text style={styles.headerText}>{italicizeRaidName(title) }</Text>
                 <View style={styles.headerDivider}>
@@ -110,6 +111,11 @@ export default () => {
           options={({ route }) => ({ title: `${route.params.teamName} Runs` })}
       />
       <Stack.Screen
+          name="TeamOldRunsScreen"
+          component={TeamOldRunsScreen}
+          options={({ route }) => ({ title: `Archived ${route.params.teamName} Runs` })}
+      />
+      <Stack.Screen
           name="RunScreen"
           component={RunScreen}
           options={({ route }) => ({ title: `${route.params.raidName} - ${route.params.timestamp}` })}
@@ -127,7 +133,7 @@ export default () => {
       <Stack.Screen
           name="SummaryScreen"
           component={SummaryScreen}
-          options={{headerShown: true, title: 'Run Summary'}}
+          options={({ route }) => ({ title: `${route.params.raidName} - ${route.params.timestamp} Summary` })}
         />
 
 

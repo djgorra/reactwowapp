@@ -1,5 +1,5 @@
 import React, {useContext, useState, useEffect} from "react"; 
-import {StyleSheet, View, FlatList, SafeAreaView, TouchableOpacity } from "react-native";
+import {StyleSheet, View, FlatList,SafeAreaView } from "react-native";
 import { Button, Text } from '../components';
 import BlueButton from "../components/BlueButton";
 import axios from "axios";
@@ -7,7 +7,7 @@ import {BASE_URL} from "../config";
 import {ErrorHandler} from "../components/ErrorHandler.js";
 import { useIsFocused } from '@react-navigation/native';
 
-const TeamRunsScreen = ({route, navigation}) => {
+const TeamOldRunsScreen = ({route, navigation}) => {
     const [runs, setRuns] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const isFocused = useIsFocused();
@@ -20,9 +20,9 @@ const TeamRunsScreen = ({route, navigation}) => {
                 <Text white h6>{item["timestamp"]}</Text>
             </View> 
             <BlueButton
-                text={"Show"}
+                text={"Summary"}
                 onPress={() =>
-                    navigation.navigate('RunScreen', {
+                    navigation.navigate('SummaryScreen', {
                         raidName: item["raid_name"],
                         timestamp: item["timestamp"],
                         teamId: route.params.teamId,
@@ -36,7 +36,7 @@ const TeamRunsScreen = ({route, navigation}) => {
 
     const getRuns = () => {
         axios({
-            url:`${BASE_URL}/api/teams/${route.params.teamId}/runs`,
+            url:`${BASE_URL}/api/teams/${route.params.teamId}/completed`,
             method : "GET",
         }).then((res)=>{
             setRuns(res.data);
@@ -45,26 +45,9 @@ const TeamRunsScreen = ({route, navigation}) => {
             ErrorHandler(error)
         })
     }
-
-    
-    const createRun = (name) => {
-        if(name){
-            axios({
-                url:`${BASE_URL}/api/teams/${route.params.teamId}/runs`,
-                method : "POST",
-            }).then((res)=>{
-                
-            }).catch((error) => {
-                ErrorHandler(error)
-            })
-        }
-    }
     
     useEffect(() => {
-        if(route.params.runs) {
-            setRuns(route.params.runs);
-            setIsLoading(false);
-        }else{
+        if(runs == null){
             getRuns();
         }
     }, [isFocused]);
@@ -79,15 +62,6 @@ const TeamRunsScreen = ({route, navigation}) => {
     } else {
         return (
             <SafeAreaView style={styles.container}>
-                <BlueButton
-                    text="Start New Run"
-                    onPress={() =>
-                        navigation.navigate('RaidListScreen', {
-                            teamId: route.params.teamId,
-                            teamName: route.params.teamName,
-                        })
-                    }
-                />
                 {runs.length == 0 ? <Text white h5 style={styles.runName}>No Runs Found!</Text> : null}
                 <FlatList
                     data={runs}
@@ -95,23 +69,6 @@ const TeamRunsScreen = ({route, navigation}) => {
                     keyExtractor={item => item.id}
                     extraData={runs}
                 />
-                <TouchableOpacity
-                    onPress={() =>
-                        navigation.navigate('TeamOldRunsScreen', {
-                            teamId: route.params.teamId,
-                            teamName: route.params.teamName,
-                        })
-                    }>
-                        <BlueButton 
-                            text="Show Old Runs"
-                            onPress={() =>
-                            navigation.navigate('TeamOldRunsScreen', {
-                                teamId: route.params.teamId,
-                                teamName: route.params.teamName,
-                            })
-                            }
-                        />
-                </TouchableOpacity>
             </SafeAreaView>
         );
     }
@@ -140,9 +97,8 @@ const styles = StyleSheet.create({
     },
     runName: {
         alignSelf:"center",
-        margin: 20,
-        padding:10,
+        paddingTop: 20,
     },
 });
 
-export default TeamRunsScreen;
+export default TeamOldRunsScreen;

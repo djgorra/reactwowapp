@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "reactwowapp",
-    "slug": "reactwowapp",
+    "name": "raidcraft",
+    "slug": "raidcraft",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -29,6 +29,11 @@
     },
     "plugins": [
       "expo-localization"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "35a0ba5b-9140-4a94-b193-839042aa3369"
+      }
+    }
   }
 }
