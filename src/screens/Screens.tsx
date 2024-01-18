@@ -32,7 +32,7 @@ function CustomNavigationBar({ navigation, route, options, back = null }) {
   
     return (
         <View style={styles.headerContainer}>
-            {back ? <Appbar.BackAction onPress={navigation.goBack} color="#dff0f8" style={{width:40}}/> : null}
+            {back ? <Appbar.BackAction onPress={navigation.goBack} color="#dff0f8" style={{width:'10%'}}/> : null}
             <View style={styles.logoColumn}>
                 <Text style={styles.headerText}>{italicizeRaidName(title) }</Text>
                 <View style={styles.headerDivider}>
@@ -42,11 +42,7 @@ function CustomNavigationBar({ navigation, route, options, back = null }) {
                     <View style={{margin:10}}></View>
                 </View>
             </View>
-            <View style={styles.headerSpacer}>
-                <Text>
-                    {/* tip: a dummy element to center the title */}
-                </Text>
-            </View>
+            {back ? <Appbar.BackAction color="#000000" style={{width:'10%'}}/> : null}
         </View>
     );
   }
@@ -145,7 +141,7 @@ export default () => {
 const styles = StyleSheet.create(
     {
         headerDivider: {
-            flexDirection: 'row', alignSelf:"center", transform: [{translateY:0}]
+            flexDirection: 'row', alignSelf:"center", transform: [{translateX:0}]
         },
         headerFont: {
             fontFamily:"LifeCraft",  fontSize:50, fontWeight:"bold", color:"#506986"
@@ -163,7 +159,7 @@ const styles = StyleSheet.create(
             flexDirection: 'column', 
             alignSelf: 'center', 
             justifyContent: "flex-start",
-            width:"88%",
+            width:"80%",
         },
         headerContainer: {
             flexDirection: 'row',
@@ -184,7 +180,7 @@ const styles = StyleSheet.create(
             fontSize: 20,
             letterSpacing: 2,
             textAlign: 'center',
-            transform: [{translateY: 10}]
+            transform: [{translateY: 10}, {translateX: -10}]
         },
     }
 );

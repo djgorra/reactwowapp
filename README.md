@@ -37,7 +37,7 @@ Log in to a test account with:
     
 ## License
 
-[MIT](https://choosealicense.com/licenses/mit/)
+[GPL](https://www.gnu.org/licenses/gpl-3.0.en.html)
 
 
 ## Screenshots
