@@ -67,15 +67,23 @@ const RunScreen = ({route, navigation}) => {
     }
 
     const getData = async () => {
-      axios({
+      if (route.params.run) { //if we are coming from creating a new run on RaidListScreen, set the run to the one we just created
+        setRun(route.params.run);
+        setIsLoading(false);
+        return;
+
+      } else {
+
+        axios({
           url:`${BASE_URL}/api/teams/${teamId}/runs/${runId}`,
           method : "GET",
-      }).then((res)=>{
+        }).then((res)=>{
           setRun(res.data);
           setIsLoading(false);
-      }).catch((error) => {
+        }).catch((error) => {
           ErrorHandler(error)
-      })
+        })
+      }
     }
 
     useEffect(() => {
