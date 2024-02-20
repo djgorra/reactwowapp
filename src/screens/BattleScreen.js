@@ -29,6 +29,7 @@ const BattleScreen = ({route, navigation}) => {
         axios.post(`${BASE_URL}/api/battles?run_id=${runId}&boss_id=${bossId}`
         ).then((res)=>{
             setBattle(res.data);
+            console.log(res.data);
             setDrops(res.data["drops"]);
             setBattleId(res.data["id"]);
             setIsLoading(false);

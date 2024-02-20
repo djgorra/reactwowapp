@@ -12,7 +12,7 @@ import { useTheme} from '../hooks/';
 import CharacterButton from "../components/CharacterButton";
 
 const TeamCreateScreen = ({route, navigation}) => {
-    const {friends, getFriends, userInfo, buffs, getBuffs, setIsLoading} = useContext(AuthContext);
+    const {friends, getFriends, userInfo, buffs, getBuffs, setIsLoading, version} = useContext(AuthContext);
     const { colors, gradients, sizes} = useTheme();
     const { teamId, teamName } = route.params;
     
@@ -60,10 +60,11 @@ const TeamCreateScreen = ({route, navigation}) => {
             setAvailableChars([]); 
 
             //i.e. make tempArray a deep copy of userInfo["characters"]
-            let tempArray = JSON.parse(JSON.stringify(userInfo["characters"]));
+            versionCharacters = userInfo["characters"].filter((c)=>{ return c["version_id"]==version; } )
+            let tempArray = JSON.parse(JSON.stringify(versionCharacters));
             let out = [];
             for (let i = 0; i < friends.length; i++) {
-                let chars = friends[i].characters;
+                let chars = friends[i].characters.filter((c)=>{ return c["version_id"]==version; } );
                 for (let j = 0; j < chars.length; j++) {
                     tempArray.push(chars[j])
                 }

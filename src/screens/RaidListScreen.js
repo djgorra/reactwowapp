@@ -22,7 +22,7 @@ const RaidListScreen = ({route, navigation}) => {
           method : "POST",
       }).then((res)=>{
           navigation.navigate("RunScreen", {
-            run: res.data,
+            run: res.data, //sets the run in the state of the RunScreen
             raidName: res.data["raid_name"],
             timestamp: res.data["timestamp"],
             runId : res.data["id"],

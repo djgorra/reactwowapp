@@ -9,6 +9,7 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
+raidcraft-412018-aeed25422518.json
 
 # macOS
 .DS_Store

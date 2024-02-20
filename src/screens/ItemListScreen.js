@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from "react"; 
-import {Button, StyleSheet, Text, TextInput, View, Image, TouchableOpacity, ScrollView } from "react-native";
+import {StyleSheet, View, ScrollView } from "react-native";
 import BlueButton from "../components/BlueButton";
 import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
@@ -64,7 +64,7 @@ const ItemListScreen = ({route, navigation}) => {
             {Object.keys(items).map((key,index)=>{
                 const boss = bosses.filter((b)=>{ return b["id"]==key; } )[0];
                 return(
-                    <View>
+                    <View key={index}>
                     {(boss != null) ? <Accordion style={styles.listItem} character={character} sendData={getDatafromChild} title={boss["name"]} data ={items[key]}></Accordion> : <Accordion character={character} sendData={getDatafromChild} title={"Common Drops"} data = {items[key]}></Accordion> }
                 </View>
             )

@@ -12,7 +12,7 @@ import { SvgXml } from 'react-native-svg';
 import spanner from '../assets/icons/spanner';
 
 const TeamListScreen = ({route, navigation}) => {
-    const {teams, setTeams, getTeams} = useContext(AuthContext);
+    const {teams, setTeams, getTeams, version} = useContext(AuthContext);
     const [name, setName] = useState(null);
     const {assets, colors, gradients, sizes} = useTheme();
 
@@ -54,15 +54,16 @@ const TeamListScreen = ({route, navigation}) => {
       }
 
     useEffect(() => {
-        if(!teams){
-          getTeams();
-        }
-    }, [teams]);
+        //if(!teams){
+            getTeams();
+        //}
+        console.log('hello!')
+    }, []);
 
     const createTeam = (name) => {
         if(name){
             axios({
-                url:`${BASE_URL}/api/teams?team[name]=${name}`,
+                url:`${BASE_URL}/api/teams?team[name]=${name}&team[version_id]=${version}`,
                 method : "POST",
             }).then((res)=>{
                 setName(null);

@@ -28,7 +28,7 @@ import CharacterButton from "../components/CharacterButton";
 
 const CharacterListScreen = ({navigation}) => {
 
-    const {userInfo, setUserInfo, setIsLoading, logout, updateUser, classes, specs, races, genders, characterList, setCharacterList} = useContext(AuthContext);
+    const {userInfo, setUserInfo, setIsLoading, logout, updateUser, classes, specs, races, genders, characterList, setCharacterList, version} = useContext(AuthContext);
     const {assets, colors, gradients, sizes} = useTheme();
     const [visible,setVisible] = useState(false); //modal popup
 
@@ -61,10 +61,11 @@ const CharacterListScreen = ({navigation}) => {
 
     useEffect(()=>{
         getList()
-    })
+    }, [])
 
     const getList= () => {
-        setCharacterList(userInfo["characters"]);
+        versionCharacters = userInfo["characters"].filter((c)=>{ return c["version_id"]==version; } )
+        setCharacterList(versionCharacters);
     }
 
     const handleClassChange = (e) => {
@@ -136,12 +137,12 @@ const CharacterListScreen = ({navigation}) => {
         setVisible(false);
         setSpecsDisabled(true);
     }
-
+ 
     const handleSave = (item) => {
         setIsLoading(true)
-        if(characterId == null){
+        if(characterId == null){ //new character
             axios({
-                url:`${BASE_URL}/api/characters.json?character[name]=${form.name}&character[user_id]=${userInfo["user"]["id"]}&character[character_class_id]=${form.class}&character[race]=${form.race}&character[gender]=${form.gender}&character[primary_spec_id]=${form.spec1}&character[secondary_spec_id]=${form.spec2}`,
+                url:`${BASE_URL}/api/characters.json?character[name]=${form.name}&character[user_id]=${userInfo["user"]["id"]}&character[character_class_id]=${form.class}&character[race]=${form.race}&character[gender]=${form.gender}&character[primary_spec_id]=${form.spec1}&character[secondary_spec_id]=${form.spec2}&character[version_id]=${version}`,
                 method : "POST",
             }).then((res)=>{
                 clearForm(res);
@@ -149,7 +150,7 @@ const CharacterListScreen = ({navigation}) => {
                 ErrorHandler(error);
                 setIsLoading(false)
             })
-        }else{
+        }else{ //edit character
               axios({
                 url:`${BASE_URL}/api/characters/${characterId}.json?character[name]=${form.name}&character[character_class_id]=${form.class}&character[race]=${form.race}&character[gender]=${form.gender}&character[primary_spec_id]=${form.spec1}&character[secondary_spec_id]=${form.spec2}`,
                 method : "PUT",
@@ -378,7 +379,6 @@ const styles = StyleSheet.create(
             borderColor : "#ffffff",
         },
         dropdownText:{
-            color:"#ffffff",
             fontWeight:"bold",
         },
         item_character : {

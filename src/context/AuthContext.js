@@ -1,5 +1,6 @@
 import axios from "axios";
-import React, {createContext, useState} from "react";
+import React, {createContext} from "react";
+import useState from "react-usestateref";
 import { BASE_URL } from "../config";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import alertBox from "../components/AlertBox.js"
@@ -20,6 +21,7 @@ export const AuthProvider = ({children}) => {
     const [friends, setFriends] = useState(null);
     const [teams, setTeams] = useState(null);
     const [buffs, setBuffs] = useState([]);
+    const [version, setVersion, versionRef] = useState("3");
 
     const getBuffs = async () => {
         setIsLoading(true);
@@ -110,7 +112,7 @@ export const AuthProvider = ({children}) => {
 
     const getData= () => {
         axios({
-            url:`${BASE_URL}/api/datafile`,
+            url:`${BASE_URL}/api/datafile?version_id=${versionRef.current}`,
             method : "GET",
         }).then((res)=>{
             setClasses(res.data["classes"])
@@ -159,7 +161,7 @@ export const AuthProvider = ({children}) => {
     const getTeams = async () => {
         setIsLoading(true);
         axios({
-            url:`${BASE_URL}/api/teams/`,
+            url:`${BASE_URL}/api/teams?team[version_id]=${versionRef.current}`,
             method : "GET",
         }).then((res)=>{
             setTeams(res.data);
@@ -197,7 +199,9 @@ export const AuthProvider = ({children}) => {
             setTeams,
             getTeams,
             buffs,
-            getBuffs
+            getBuffs, 
+            version,
+            setVersion,
         }}>
             {children}
         </AuthContext.Provider>
