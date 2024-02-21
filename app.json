@@ -17,10 +17,12 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "f7614075-d67b-4148-a733-0842150882ac.com.icloud.djgorra93.raidcraft"
+      "bundleIdentifier": "f7614075-d67b-4148-a733-0842150882ac.com.icloud.djgorra93.raidcraft",
+      "buildNumber": "1.0.1"
     },
     "android": {
       "package": "com.raidcraft",
+      "versionCode": 2,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#000"
@@ -32,6 +34,7 @@
     "plugins": [
       "expo-localization"
     ],
+    "owner": "raidcraft",
     "extra": {
       "eas": {
         "projectId": "fb4b5f65-937e-4899-a774-6a0a344be032"
