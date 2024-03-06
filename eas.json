@@ -10,6 +10,14 @@
           "APP_ENV": "development"
         }
       }
+    },
+    "submit": {
+      "production": {
+        "ios": {
+          "appleId": "djgorra93@gmail.com",
+          "ascAppId": "6477624786"
+        }
+      }
     }
   }
   

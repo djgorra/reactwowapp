@@ -17,10 +17,12 @@ return (
               onPress={onPress}
             >
                 <Text
+                    numberOfLines={1}
                     style={{
                     color: "#dff0f8",
                     textAlign: "center",
                     fontSize: 12,
+                    overflow: "visible",
                     fontFamily: "OpenSans-Bold",
                     }}
                 >

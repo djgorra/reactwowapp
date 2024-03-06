@@ -37,7 +37,7 @@ const ConnectButton = ({title}) => {
           getData();
           setIsLoading(false);
       }).catch((error) => {
-          // Error
+          // Error 
           if (error.response) {
               console.log(error.response.data);
           } else if (error.request) {
@@ -67,9 +67,11 @@ const ConnectButton = ({title}) => {
     );
 
     React.useEffect(() => {
+        console.log("begin useEffect")
         if (response?.type === 'success') {
             console.log("Success");
-        } else if (response?.type === 'cancel'){
+        } else if (response?.type === 'cancel' || response?.type === 'dismiss'){
+            console.log("Cancel");
           login_with_uuid();
         }
     }, [response]);
