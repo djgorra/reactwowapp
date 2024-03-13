@@ -55,7 +55,7 @@ export default () => {
   return (
     <Stack.Navigator screenOptions={{
         header: (props) => <CustomNavigationBar {...props} />,
-        headerTitleStyle: { fontFamily: 'LifeCraft' },
+        headerTitleStyle: { fontFamily: 'LifeCraft', fontWeight: null },
         headerStyle: {
           backgroundColor: '#0d1c3a',
         },
@@ -74,7 +74,7 @@ export default () => {
       <Stack.Screen 
           name="Profile" 
           component={ProfileScreen} 
-          options={{headerShown: false}}
+          options={{title: 'Profile Page'}}
       />
       <Stack.Screen 
           name="RaidListScreen" 
@@ -144,7 +144,7 @@ const styles = StyleSheet.create(
             flexDirection: 'row', alignSelf:"center", transform: [{translateX:0}]
         },
         headerFont: {
-            fontFamily:"LifeCraft",  fontSize:50, fontWeight:"bold", color:"#506986"
+            fontFamily:"LifeCraft",  fontSize:50, fontWeight:null, color:"#506986"
         },
         left: {
             transform: [{rotate: '-90deg'}]

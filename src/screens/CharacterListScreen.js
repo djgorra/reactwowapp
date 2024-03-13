@@ -20,6 +20,8 @@ import {
     Image,
     Alert,
     ImageBackground,
+    KeyboardAvoidingView,
+    Keyboard,
 } from "react-native";
 import CharacterButton from "../components/CharacterButton";
 
@@ -198,7 +200,10 @@ const CharacterListScreen = ({navigation}) => {
     return (
 
         <SafeAreaView style={styles.container}>
-            <SafeAreaView>
+            <KeyboardAvoidingView
+                style={styles.container}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+                
                 <Modal
                     animationType="slide"
                     isVisible={visible}
@@ -308,7 +313,7 @@ const CharacterListScreen = ({navigation}) => {
                             }
                         </View>
                 </Modal>
-            </SafeAreaView>
+            </KeyboardAvoidingView>
             <View style={styles.footer_container}>
                 <BlueButton
                     onPress={handleVisibleModal}
@@ -364,6 +369,7 @@ const styles = StyleSheet.create(
         modal:{
             backgroundColor : "#02000b",
             margin:0,
+            flex:1,
         },
         textInput:{
             borderWidth :1,

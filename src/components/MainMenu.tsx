@@ -92,7 +92,8 @@ function DrawerContent(props){
     {name: t('screens.home'), to: 'Home', icon: castle},
     {name: t('screens.friends'), to: 'FriendsListScreen', icon: vikingHelmet},
     {name: t('screens.characters'), to: 'Characters', icon: sword},
-    {name: t('screens.teams'), to: 'TeamListScreen', icon: weaponBook}
+    {name: t('screens.teams'), to: 'TeamListScreen', icon: weaponBook},
+    {name: t('screens.profile'), to: 'Profile', icon: spartaHelmet}
   ];
 
   return (
