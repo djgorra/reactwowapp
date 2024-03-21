@@ -24,6 +24,7 @@ import {
     Keyboard,
 } from "react-native";
 import CharacterButton from "../components/CharacterButton";
+import MenuAccordion from "../components/MenuAccordion";
 
 
 
@@ -50,6 +51,7 @@ const CharacterListScreen = ({navigation}) => {
     
     const [form, setForm] = useState({
         name: "",
+        team_code: "",
         class: "",
         spec1: "",
         spec2: "",
@@ -88,6 +90,9 @@ const CharacterListScreen = ({navigation}) => {
      }
      const handleNameChange = (e) => {
         setForm({...form, ["name"]: e});
+    };
+    const handleTeamCodeChange = (e) => {
+        setForm({...form, ["team_code"]: e});
     };
     
     const confirmDelete = (characterId) =>
@@ -129,6 +134,7 @@ const CharacterListScreen = ({navigation}) => {
         setIsLoading(false);
         setForm({
             name: "",
+            team_code: "",
             class: "",
             spec1: "",
             spec2: "",
@@ -144,7 +150,7 @@ const CharacterListScreen = ({navigation}) => {
         setIsLoading(true)
         if(characterId == null){ //new character
             axios({
-                url:`${BASE_URL}/api/characters.json?character[name]=${form.name}&character[user_id]=${userInfo["user"]["id"]}&character[character_class_id]=${form.class}&character[race]=${form.race}&character[gender]=${form.gender}&character[primary_spec_id]=${form.spec1}&character[secondary_spec_id]=${form.spec2}&character[version_id]=${version}`,
+                url:`${BASE_URL}/api/characters.json?team_code=${form.team_code}&character[name]=${form.name}&character[user_id]=${userInfo["user"]["id"]}&character[character_class_id]=${form.class}&character[race]=${form.race}&character[gender]=${form.gender}&character[primary_spec_id]=${form.spec1}&character[secondary_spec_id]=${form.spec2}&character[version_id]=${version}`,
                 method : "POST",
             }).then((res)=>{
                 clearForm(res);
@@ -154,7 +160,7 @@ const CharacterListScreen = ({navigation}) => {
             })
         }else{ //edit character
               axios({
-                url:`${BASE_URL}/api/characters/${characterId}.json?character[name]=${form.name}&character[character_class_id]=${form.class}&character[race]=${form.race}&character[gender]=${form.gender}&character[primary_spec_id]=${form.spec1}&character[secondary_spec_id]=${form.spec2}`,
+                url:`${BASE_URL}/api/characters/${characterId}.json?team_code=${form.team_code}&character[name]=${form.name}&character[character_class_id]=${form.class}&character[race]=${form.race}&character[gender]=${form.gender}&character[primary_spec_id]=${form.spec1}&character[secondary_spec_id]=${form.spec2}`,
                 method : "PUT",
             }).then((res)=>{
                 clearForm(res);
@@ -174,6 +180,7 @@ const CharacterListScreen = ({navigation}) => {
         setVisible(true)
         setForm({
             name: item["name"],
+            team_code: item["team_code"],
             class: item["character_class_id"],
             spec1: item["primary_spec_id"],
             spec2: item["secondary_spec_id"],
@@ -182,6 +189,10 @@ const CharacterListScreen = ({navigation}) => {
         });
         
     }
+
+    const handleInviteCode = (item) => {
+    }
+
 
     const handleVisibleModal = () => {
         clearForm();
@@ -198,7 +209,6 @@ const CharacterListScreen = ({navigation}) => {
     }
 
     return (
-
         <SafeAreaView style={styles.container}>
             <KeyboardAvoidingView
                 style={styles.container}
@@ -215,12 +225,20 @@ const CharacterListScreen = ({navigation}) => {
                             </Block>
                             <Image style={styles.redDot} source={require('../assets/images/icecrown/red_dot.png')} />
                             <Input
-                            value={form.name}
-                            style={styles.textInput}
-                            placeholder="Character Name"
-                            onChangeText={handleNameChange}
-                            textAlign="center"
+                                value={form.name}
+                                style={styles.textInput}
+                                placeholder="Character Name"
+                                onChangeText={handleNameChange}
+                                textAlign="center"
                             />
+                            <Input
+                                value={form.team_code}
+                                style={styles.textInput}
+                                placeholder="Invite Code"
+                                onChangeText={handleTeamCodeChange}
+                                textAlign="center"
+                            />
+
                             <DropDownPicker
                                 zIndex={10}
                                 placeholder="Choose Class"
@@ -325,26 +343,8 @@ const CharacterListScreen = ({navigation}) => {
                 {characterList.map((item,index)=>{
                     return(
                         <View style={styles.item_character} key={index}>
-                            <View style={styles.iconContainer}>
-                            <CharacterButton item={item}/>
-                            </View>
-                            <View style={styles.buttonContainer}>
-                                <TouchableOpacity
-                                    style={styles.button} 
-                                    onPress={() =>
-                                        navigation.navigate('RaidListScreen', {
-                                        characterId: item.id,
-                                        labelForLink: "Add Item",
-                                        })
-                                    }>
-                                    <Text white bold style={{textAlign:'center'}}>Edit Wishlist ({item.wishlist_items.length})</Text>
-                                </TouchableOpacity>
-                                {/* <View style={styles.buttonDivider}/> */}
-                                <TouchableOpacity style={styles.button} onPress={()=>handleEdit(item)}>
-                                    <Text white bold style={{textAlign:'center'}}>Edit Character</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
+                            <MenuAccordion style={styles.buttonContainer} item={item} handleEdit={handleEdit} handleInviteCode={handleInviteCode}/>
+                        </View>     
                     )
                 })}
             </ScrollView>
@@ -390,6 +390,7 @@ const styles = StyleSheet.create(
         item_character : {
             margin: 5,
             flexDirection : "row",
+            alignSelf: "center",
 
         },
         iconContainer : {
@@ -397,9 +398,7 @@ const styles = StyleSheet.create(
             flex: 2,
         },
         buttonContainer : {
-            flex: 2,
-            alignItems: 'center',
-            justifyContent: 'space-around',
+            
         },
         buttonDivider: {
             width: '100%',
@@ -442,7 +441,7 @@ const styles = StyleSheet.create(
             color: '#424242',
             borderRadius: 0,
         },
+        
     }
-);
-
+    );
 export default CharacterListScreen;

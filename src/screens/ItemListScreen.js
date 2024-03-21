@@ -42,6 +42,18 @@ const ItemListScreen = ({route, navigation}) => {
       }
     }
 
+    function onClick(index){
+      //i.e. make a copy of the item list
+      const temp = items2.map(l => Object.assign({}, l));
+      //i.e. mark the item checked or unchecked
+      temp[index]["checked"] = !temp[index]["checked"]
+      //i.e. set items2 to the new item list
+      setItems2(temp);
+      //i.e. call parent component with the item id and checked status.
+      sendData( temp[index]["id"],  temp[index]["checked"]);
+    }
+  
+
     function addItems(){
         axios({
             url:`${BASE_URL}/api/characters/${route.params.characterId}/items.json`,
@@ -65,9 +77,12 @@ const ItemListScreen = ({route, navigation}) => {
                 const boss = bosses.filter((b)=>{ return b["id"]==key; } )[0];
                 return(
                     <View key={index}>
-                    {(boss != null) ? <Accordion style={styles.listItem} character={character} sendData={getDatafromChild} title={boss["name"]} data ={items[key]}></Accordion> : <Accordion character={character} sendData={getDatafromChild} title={"Common Drops"} data = {items[key]}></Accordion> }
-                </View>
-            )
+                      {(boss != null) ? 
+                        <Accordion style={styles.listItem} character={character} sendData={getDatafromChild} title={boss["name"]} data ={items[key]}></Accordion> 
+                      : <Accordion character={character} sendData={getDatafromChild} title={"Common Drops"} data = {items[key]}></Accordion> 
+                      }
+                    </View>
+                )
             })}
             </ScrollView>
             <View style={styles.footer}>

@@ -12,10 +12,10 @@ import { useTheme} from '../hooks/';
 import CharacterButton from "../components/CharacterButton";
 
 const TeamCreateScreen = ({route, navigation}) => {
-    const {friends, getFriends, userInfo, buffs, getBuffs, setIsLoading, version} = useContext(AuthContext);
+    const {friends, getFriends, userInfo, buffs, getBuffs, setIsLoading, version, teams} = useContext(AuthContext);
     const { colors, gradients, sizes} = useTheme();
-    const { teamId, teamName } = route.params;
-    
+    const { teamId } = route.params;
+    const team=teams.find((t)=>t.id==teamId);
     const [spells, setSpells] = useState([]);
     const [availableChars, setAvailableChars] = useState([]);
     const [activeChars, setActiveChars, activeCharsRef] = useState([]);
@@ -63,6 +63,8 @@ const TeamCreateScreen = ({route, navigation}) => {
             versionCharacters = userInfo["characters"].filter((c)=>{ return c["version_id"]==version; } )
             let tempArray = JSON.parse(JSON.stringify(versionCharacters));
             let out = [];
+            
+            //i.e. for each friend, get their characters for the current version and add them to tempArray
             for (let i = 0; i < friends.length; i++) {
                 let chars = friends[i].characters.filter((c)=>{ return c["version_id"]==version; } );
                 for (let j = 0; j < chars.length; j++) {
@@ -70,10 +72,17 @@ const TeamCreateScreen = ({route, navigation}) => {
                 }
             }
 
+            for (let i = 0; i < team["team_code_characters"].length; i++) {
+                tempArray.push(team["team_code_characters"][i])
+            }
+
             //i.e. make an array of all character id's for characters in activeChars
             let activeCharIds = activeCharsRef.current.map((char) => char.id);
             //i.e. remove characters from tempArray if the id appears in activeCharIds using filter
-            out = tempArray.filter((char) => !activeCharIds.includes(char.id))
+            tempArray = tempArray.filter((char) => !activeCharIds.includes(char.id))
+            //i.e. remove duplicates from tempArray
+            out = tempArray.filter((char, index, self) => self.findIndex((c) => c.id === char.id) === index)
+
             setAvailableChars(out);
         }
     }
@@ -114,7 +123,11 @@ const TeamCreateScreen = ({route, navigation}) => {
     const handleVisibleModal = () => {
         setVisible(!visible)
     }
-    
+
+    const meleeDPS = activeChars.filter((char) => char["primary_spec_role"] == "mDPS").length
+    const rangedDPS = activeChars.filter((char) => char["primary_spec_role"] == "rDPS").length
+    const healers = activeChars.filter((char) => char["primary_spec_role"] == "Heal").length
+    const tanks = activeChars.filter((char) => char["primary_spec_role"] == "Tank").length
 
     function Item({ item }) {
         return (
@@ -196,7 +209,6 @@ const TeamCreateScreen = ({route, navigation}) => {
                     </View>
                 </Modal>
 
-
                 {rosterHeader}
                 <View style={styles.listContainer}>
                     <FlatList
@@ -223,6 +235,17 @@ const TeamCreateScreen = ({route, navigation}) => {
                     />
         
             </ScrollView>
+                    <View style={styles.roleContainer}>
+                        <Text white h5 style={{alignSelf:"center"}}>Roles</Text>
+                        <Text white h6 style={{alignSelf:"center"}}>Melee DPS: {meleeDPS}</Text>
+                        <Text white h6 style={{alignSelf:"center"}}>Ranged DPS: {rangedDPS}</Text>
+                        <Text white h6 style={{alignSelf:"center"}}>Healers: {healers}</Text>
+                        <Text white h6 style={{alignSelf:"center"}}>Tanks: {tanks}</Text>
+                            
+                    </View>
+                    <View style={styles.inviteCodeContainer}>
+                        <Text white h5 style={styles.inviteCode}>Invite Code:</Text><Text selectable={true} white h5 style={styles.inviteCode}>{team["invite_code"]}</Text>
+                    </View>
             <BlueButton
                 text={"Show Buffs"}
                 onPress={handleVisibleModal}/>
@@ -252,23 +275,9 @@ const styles = StyleSheet.create({
     spellIconList: {
         flexDirection: 'column',
     },
-    listItem:{
-    },
     list : {
         flex: 1,
         flexDirection: 'column',
-    },
-    item: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        height: 1000,
-        borderBottomWidth: 1,
-        borderBottomColor : "white",
-    },
-    item_character : {
-        padding :15,
-        borderBottomWidth: 3,
-        borderBottomColor : "darkgray",
     },
     characterIcon : {
         width: 30, 
@@ -276,32 +285,19 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#000',
     },
-    iconContainer : {
-
-    },
-    textContainer : {
-        width: '60%',
-    },
-    txt_name : {
-      width: "auto",
-    },
-    imageContainer : {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        flex:6,
-    },
-      header: {
+    header: {
         fontSize: 32,
         fontWeight: 'bold',
-      },
-      title: {
-        fontSize: 18,
-        flex: 2,
-      },
-      item: {
+    },
+
+    inviteCode: {
         padding: 5,
-        borderBottomWidth: 1,
-      },
+    },
+    inviteCodeContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginBottom: 10,
+    },
 });
 
 export default TeamCreateScreen;
