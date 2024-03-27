@@ -34,6 +34,7 @@ const CharacterListScreen = ({navigation}) => {
     const {userInfo, setUserInfo, setIsLoading, logout, updateUser, classes, specs, races, genders, characterList, setCharacterList, version} = useContext(AuthContext);
     const {assets, colors, gradients, sizes} = useTheme();
     const [visible,setVisible] = useState(false); //modal popup
+    const [modalForm, setModalForm] = useState("Edit");
 
     // const [dropdowns, setDropdowns] = useState({
     //     class: false,
@@ -65,7 +66,7 @@ const CharacterListScreen = ({navigation}) => {
 
     useEffect(()=>{
         getList()
-    }, [])
+    }, [userInfo["characters"]])
 
     const getList= () => {
         versionCharacters = userInfo["characters"].filter((c)=>{ return c["version_id"]==version; } )
@@ -120,6 +121,8 @@ const CharacterListScreen = ({navigation}) => {
             url:`${BASE_URL}/api/characters/${id}.json`,
             method : "DELETE",
         }).then((res)=>{
+            console.log(res.data)
+            userInfo["characters"] = userInfo["characters"].filter((c)=>{ return c["id"]!=id; } )
             getList();
         }).catch((error) => {
             ErrorHandler(error);
@@ -150,7 +153,7 @@ const CharacterListScreen = ({navigation}) => {
         setIsLoading(true)
         if(characterId == null){ //new character
             axios({
-                url:`${BASE_URL}/api/characters.json?team_code=${form.team_code}&character[name]=${form.name}&character[user_id]=${userInfo["user"]["id"]}&character[character_class_id]=${form.class}&character[race]=${form.race}&character[gender]=${form.gender}&character[primary_spec_id]=${form.spec1}&character[secondary_spec_id]=${form.spec2}&character[version_id]=${version}`,
+                url:`${BASE_URL}/api/characters.json?character[name]=${form.name}&character[user_id]=${userInfo["user"]["id"]}&character[character_class_id]=${form.class}&character[race]=${form.race}&character[gender]=${form.gender}&character[primary_spec_id]=${form.spec1}&character[secondary_spec_id]=${form.spec2}&character[version_id]=${version}`,
                 method : "POST",
             }).then((res)=>{
                 clearForm(res);
@@ -160,7 +163,7 @@ const CharacterListScreen = ({navigation}) => {
             })
         }else{ //edit character
               axios({
-                url:`${BASE_URL}/api/characters/${characterId}.json?team_code=${form.team_code}&character[name]=${form.name}&character[character_class_id]=${form.class}&character[race]=${form.race}&character[gender]=${form.gender}&character[primary_spec_id]=${form.spec1}&character[secondary_spec_id]=${form.spec2}`,
+                url:`${BASE_URL}/api/characters/${characterId}.json?character[name]=${form.name}&character[character_class_id]=${form.class}&character[race]=${form.race}&character[gender]=${form.gender}&character[primary_spec_id]=${form.spec1}&character[secondary_spec_id]=${form.spec2}`,
                 method : "PUT",
             }).then((res)=>{
                 clearForm(res);
@@ -174,6 +177,7 @@ const CharacterListScreen = ({navigation}) => {
 
     const handleEdit = (item) => {
         setCharacterId(item["id"])
+        setModalForm("Edit")
         const classSpecs = specs.filter(function(x){ return x["character_class_id"] == item["character_class_id"]})
         setClassSpecs(classSpecs)
         setSpecsDisabled(false)
@@ -191,8 +195,40 @@ const CharacterListScreen = ({navigation}) => {
     }
 
     const handleInviteCode = (item) => {
+        setCharacterId(item["id"])
+        setModalForm("Invite")
+        setVisible(true)
+        setForm({
+            name: item["name"],
+            team_code: item["team_code"],
+            class: item["character_class_id"],
+            spec1: item["primary_spec_id"],
+            spec2: item["secondary_spec_id"],
+            race: item["race"],
+            gender: item["gender"],
+        });
     }
 
+    const handleInviteCodeSubmit = () => {
+        axios({
+            url:`${BASE_URL}/api/characters.json?team_code=${form.team_code}`,
+            method : "POST",
+        }).then((res)=>{
+            clearForm(res);
+        }).catch((error) => {
+            ErrorHandler(error);
+            setIsLoading(false)
+        })
+    }
+
+
+    const handleNewCharacter = () => {
+        setModalForm("Edit")
+        clearForm();
+        setVisible(true)
+        setCharacterId(null)
+    }
+    
 
     const handleVisibleModal = () => {
         clearForm();
@@ -218,8 +254,28 @@ const CharacterListScreen = ({navigation}) => {
                     animationType="slide"
                     isVisible={visible}
                     style={styles.modal}
-                >
-                        <View style={styles.form}>
+                >       
+
+                        <View style={[styles.form, modalForm == "Invite" ? styles.visible : styles.hide]}>
+                            <Text white h5 style={{textAlign:"center", margin: 10}}>Enter Team Invite Code</Text>
+                            <Input
+                                value={form.team_code}
+                                style={styles.textInput}
+                                placeholder="Invite Code"
+                                onChangeText={handleTeamCodeChange}
+                                textAlign="center"
+                            />
+                            <View style={styles.buttonContainer}>
+                                <SubmitButton
+                                    onPress={handleInviteCodeSubmit}
+                                    flex={1}    
+                                    text={"Submit"}
+                                    style={styles.btn_save}/>
+                                <BlueButton flex={1} text="Close" onPress={handleVisibleModal}/>
+                            </View>
+                        </View>
+                        
+                        <View style={[styles.form, modalForm == "Edit" ? styles.visible : styles.hide]}>
                             <Block>
                                 <Text h1>Add a Character</Text>
                             </Block>
@@ -231,13 +287,6 @@ const CharacterListScreen = ({navigation}) => {
                                 onChangeText={handleNameChange}
                                 textAlign="center"
                             />
-                            <Input
-                                value={form.team_code}
-                                style={styles.textInput}
-                                placeholder="Invite Code"
-                                onChangeText={handleTeamCodeChange}
-                                textAlign="center"
-                            />
 
                             <DropDownPicker
                                 zIndex={10}
@@ -246,6 +295,7 @@ const CharacterListScreen = ({navigation}) => {
                                 style={styles.dropdown}
                                 textStyle={styles.dropdownText}
                                 arrowIconStyle={{tintColor: '#ffffff'}}
+                                dropDownContainerStyle={{backgroundColor:"#324461"}}
                                 open={openClass}
                                 value={form.class}
                                 items={classes}
@@ -264,6 +314,7 @@ const CharacterListScreen = ({navigation}) => {
                                 style={styles.dropdown}
                                 textStyle={styles.dropdownText}
                                 arrowIconStyle={{tintColor: '#ffffff'}}
+                                dropDownContainerStyle={{backgroundColor:"#324461"}}
                                 open={openSpec1}
                                 value={form.spec1}
                                 items={classSpecs}
@@ -281,6 +332,7 @@ const CharacterListScreen = ({navigation}) => {
                                 style={styles.dropdown}
                                 textStyle={styles.dropdownText}
                                 arrowIconStyle={{tintColor: '#ffffff'}}
+                                dropDownContainerStyle={{backgroundColor:"#324461"}}
                                 open={openSpec2}
                                 value={form.spec2}
                                 items={classSpecs}
@@ -298,6 +350,7 @@ const CharacterListScreen = ({navigation}) => {
                                 style={styles.dropdown}
                                 textStyle={styles.dropdownText}
                                 arrowIconStyle={{tintColor: '#ffffff'}}
+                                dropDownContainerStyle={{backgroundColor:"#324461"}}
                                 open={openRace}
                                 value={form.race}
                                 items={races}
@@ -311,30 +364,27 @@ const CharacterListScreen = ({navigation}) => {
                                 style={styles.dropdown}
                                 textStyle={styles.dropdownText}
                                 arrowIconStyle={{tintColor: '#ffffff'}}
+                                dropDownContainerStyle={{backgroundColor:"#324461"}}
                                 open={openGender}
                                 value={form.gender}
                                 items={genders}
                                 setOpen={setOpenGender}
                                 setValue={handleGenderChange}
                             />
-                            <SubmitButton
-                                onPress={handleSave}
-                                flex={1}    
-                                text={characterId == null ? "Save" : "Update"}
-                                style={styles.btn_save}/>
-                            <BlueButton flex={1} text="Close" onPress={handleVisibleModal}/>
-                            {characterId == null ? null : 
-                                <TouchableOpacity style={styles.button} onPress={()=>confirmDelete(characterId)}>
-                                    <Text darkblue bold style={{textAlign:'center', margin:20}}>Delete Character</Text>
-                                </TouchableOpacity>
-                         
-                            }
+                            <View style={styles.buttonContainer}>
+                                <SubmitButton
+                                    onPress={handleSave}
+                                    flex={1}    
+                                    text={"Submit"}
+                                    style={styles.btn_save}/>
+                                <BlueButton flex={1} text="Close" onPress={handleVisibleModal}/>
+                            </View>
                         </View>
                 </Modal>
             </KeyboardAvoidingView>
             <View style={styles.footer_container}>
                 <BlueButton
-                    onPress={handleVisibleModal}
+                    onPress={handleNewCharacter}
                     text="New Character">
                 </BlueButton>
                 <Divider/>
@@ -343,7 +393,7 @@ const CharacterListScreen = ({navigation}) => {
                 {characterList.map((item,index)=>{
                     return(
                         <View style={styles.item_character} key={index}>
-                            <MenuAccordion style={styles.buttonContainer} item={item} handleEdit={handleEdit} handleInviteCode={handleInviteCode}/>
+                            <MenuAccordion style={styles.buttonContainer} item={item} handleEdit={handleEdit} handleInviteCode={handleInviteCode} confirmDelete={confirmDelete}/>
                         </View>     
                     )
                 })}
@@ -366,6 +416,13 @@ const styles = StyleSheet.create(
             color:"#ffffff"
         },
 
+        visible:{
+            display:"flex",
+        },
+        hide:{
+            display:"none",
+        },
+
         modal:{
             backgroundColor : "#02000b",
             margin:0,
@@ -386,6 +443,7 @@ const styles = StyleSheet.create(
         },
         dropdownText:{
             fontWeight:"bold",
+            color:"#ffffff",
         },
         item_character : {
             margin: 5,

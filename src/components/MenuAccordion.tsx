@@ -7,7 +7,7 @@ import CharacterButton from "../components/CharacterButton";
 import { useNavigation } from '@react-navigation/native';
 
 
-const MenuAccordion = ({item, handleEdit, handleInviteCode}) => {
+const MenuAccordion = ({item, handleEdit, handleInviteCode, confirmDelete}) => {
   const [ expanded, setExpanded ] = useState(false);
   const navigation = useNavigation();
 
@@ -44,8 +44,12 @@ const MenuAccordion = ({item, handleEdit, handleInviteCode}) => {
                     <Text white bold style={{textAlign:'center'}}>Edit Character</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.dropdownButton} onPress={()=>handleEdit(item)}>
+                <TouchableOpacity style={styles.dropdownButton} onPress={()=>handleInviteCode(item)}>
                     <Text white bold style={{textAlign:'center'}}>Enter Invite Code</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.dropdownButton} onPress={()=>confirmDelete(item["id"])}>
+                    <Text danger bold style={{textAlign:'center'}}>Delete Character</Text>
                 </TouchableOpacity>
              </View>
          }
