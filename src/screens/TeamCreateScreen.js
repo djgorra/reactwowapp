@@ -61,7 +61,8 @@ const TeamCreateScreen = ({route, navigation}) => {
 
             //i.e. make tempArray a deep copy of userInfo["characters"]
             versionCharacters = userInfo["characters"].filter((c)=>{ return c["version_id"]==version; } )
-            let tempArray = JSON.parse(JSON.stringify(versionCharacters));
+            factionCharacters = versionCharacters.filter((c)=>{ return c["faction"]==team["faction"]; } )
+            let tempArray = JSON.parse(JSON.stringify(factionCharacters));
             let out = [];
             
             //i.e. for each friend, get their characters for the current version and add them to tempArray

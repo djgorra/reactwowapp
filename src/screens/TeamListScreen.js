@@ -10,45 +10,19 @@ import {ErrorHandler} from "../components/ErrorHandler.js";
 import { useTheme} from '../hooks/';
 import { SvgXml } from 'react-native-svg';
 import spanner from '../assets/icons/spanner';
+import Icon from "react-native-vector-icons/MaterialIcons";
+import TeamAccordion from "../components/TeamAccordion";
 
 const TeamListScreen = ({route, navigation}) => {
     const {teams, setTeams, getTeams, version} = useContext(AuthContext);
     const [name, setName] = useState(null);
+    const [faction, setFaction] = useState("Alliance");
     const {assets, colors, gradients, sizes} = useTheme();
 
     function Item({ item }) {
         return (
           <View style={styles.listItem}>
-            <TouchableOpacity  style={{alignSelf:"center", paddingRight: 10}}
-                onPress={() =>
-                    navigation.navigate('TeamCreateScreen', {
-                        teamId: item.id,
-                        teamName: item.name,
-                    })
-                }>
-                <View>
-                <SvgXml xml={spanner} width="18" height="18" color="#dff0f8"/>
-                </View>
-                
-            </TouchableOpacity>
-            <View style={styles.buttonContainer}>
-                <Text size={16} white font="OpenSans-Bold" style={styles.itemName}>{item.name}</Text>
-                
-            </View>
-            <View style={styles.nameContainer}>
-                <BlueButton
-                    text="Runs"
-                    padding={6}
-                    onPress={() =>
-                        navigation.navigate('TeamRunsScreen', {
-                            teamId: item.id,
-                            teamName: item.name,
-                        })
-                    }
-                />
-                
-            </View>
-
+            <TeamAccordion item={item} handleDelete={handleDelete}/>
           </View>
         );
       }
@@ -63,7 +37,7 @@ const TeamListScreen = ({route, navigation}) => {
     const createTeam = (name) => {
         if(name){
             axios({
-                url:`${BASE_URL}/api/teams?team[name]=${name}&team[version_id]=${version}`,
+                url:`${BASE_URL}/api/teams?team[name]=${name}&team[version_id]=${version}&team[faction]=${faction}`,
                 method : "POST",
             }).then((res)=>{
                 setName(null);
@@ -72,6 +46,18 @@ const TeamListScreen = ({route, navigation}) => {
                 ErrorHandler(error)
             })
         }
+    }
+
+    const handleDelete = (id) =>{
+        axios({
+            url:`${BASE_URL}/api/teams/${id}?team[version_id]=${version}`,
+            method : "DELETE",
+        }).then((res)=>{
+            setTeams(res.data)
+            console.log(res.data)
+        }).catch((error) => {
+            ErrorHandler(error);
+        })
     }
 
     return (
@@ -87,6 +73,16 @@ const TeamListScreen = ({route, navigation}) => {
             textAlign="center"
             onChangeText={text => setName(text)}
             />
+            <View style={styles.radioButtonContainer}>
+                <TouchableOpacity onPress={() => setFaction("Alliance")} style={styles.radioButton}>
+                    <Icon name={'check-circle'} size={24} color={ faction == "Alliance" ? 'green' :  'lightgray' } />
+                    <Text size={16} white font="OpenSans-Bold" style={styles.itemName}>Alliance</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setFaction("Horde")} style={styles.radioButton}>
+                    <Icon name={'check-circle'} size={24} color={ faction == "Horde" ? 'green' :  'lightgray' } />
+                    <Text size={16} white font="OpenSans-Bold" style={styles.itemName}>Horde</Text>
+                </TouchableOpacity>
+            </View>
             <BlueButton
                 text="Create Team"
                 onPress={() => {createTeam(name)}}/>
@@ -109,12 +105,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#02000b',
     },
     listItem:{
-        margin:10,
-        padding:10,
+        marginTop:10,
         borderWidth: 2,
         borderColor: borderColor,
         width:"90%",
-        flex:1,
         alignSelf:"center",
         flexDirection:"row",
         borderRadius:5,
@@ -131,6 +125,16 @@ const styles = StyleSheet.create({
     buttonContainer:{
         flex:4,
         alignSelf:"center",
+    },
+    radioButtonContainer:{
+        flexDirection:"row",
+        justifyContent:"space-around",
+        marginBottom:20,
+    },
+    radioButton:{
+        flexDirection:"row",
+        justifyContent:"space-around",
+        alignItems:"center",
     },
     redDot: {
         width: 20,

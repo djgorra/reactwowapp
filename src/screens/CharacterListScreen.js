@@ -246,6 +246,22 @@ const CharacterListScreen = ({navigation}) => {
 
     return (
         <SafeAreaView style={styles.container}>
+            <View style={styles.headerContainer}>
+                <BlueButton
+                    onPress={handleNewCharacter}
+                    text="New Character">
+                </BlueButton>
+                <Divider/>
+            </View>
+            <ScrollView contentContainerStyle={{justifyContent:'flex-start'}}>
+                {characterList.map((item,index)=>{
+                    return(
+                        <View style={styles.item_character} key={index}>
+                            <MenuAccordion style={styles.buttonContainer} item={item} handleEdit={handleEdit} handleInviteCode={handleInviteCode} confirmDelete={confirmDelete}/>
+                        </View>     
+                    )
+                })}
+            </ScrollView>
             <KeyboardAvoidingView
                 style={styles.container}
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -382,22 +398,8 @@ const CharacterListScreen = ({navigation}) => {
                         </View>
                 </Modal>
             </KeyboardAvoidingView>
-            <View style={styles.footer_container}>
-                <BlueButton
-                    onPress={handleNewCharacter}
-                    text="New Character">
-                </BlueButton>
-                <Divider/>
-            </View>
-            <ScrollView>
-                {characterList.map((item,index)=>{
-                    return(
-                        <View style={styles.item_character} key={index}>
-                            <MenuAccordion style={styles.buttonContainer} item={item} handleEdit={handleEdit} handleInviteCode={handleInviteCode} confirmDelete={confirmDelete}/>
-                        </View>     
-                    )
-                })}
-            </ScrollView>
+            
+            
         </SafeAreaView>
     );
 };
@@ -433,6 +435,9 @@ const styles = StyleSheet.create(
             borderColor : borderColor,
             borderRadius : 10,
             marginBottom :10
+        },
+        headerContainer: {
+            justifyContent: 'flex-start',
         },
         dropdown:{
             marginBottom :10,
