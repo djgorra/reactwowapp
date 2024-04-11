@@ -4,6 +4,7 @@ import {useScreenOptions, useTranslation} from '../hooks';
 import HomeScreen from './HomeScreen';
 import ProfileScreen from './ProfileScreen';
 import CharacterListScreen from './CharacterListScreen';
+import CharacterDropsScreen from './CharacterDropsScreen';
 import RaidListScreen from './RaidListScreen'
 import ItemListScreen from './ItemListScreen'
 import FriendsListScreen from './FriendsListScreen'
@@ -57,81 +58,85 @@ export default () => {
         header: (props) => <CustomNavigationBar {...props} />,
         headerTitleStyle: { fontFamily: 'LifeCraft', fontWeight: null },
         headerStyle: {
-          backgroundColor: '#0d1c3a',
+            backgroundColor: '#0d1c3a',
         },
         headerTintColor: '#fff',
-      }}>
-      <Stack.Screen
+        }}>
+        <Stack.Screen
         name="Home"
         component={HomeScreen}
         options={{headerShown: false}}
-      />
-      <Stack.Screen 
-          name="Characters" 
-          component={CharacterListScreen} 
-          options={{title: 'Characters'}}
-      />
-      <Stack.Screen 
-          name="Profile" 
-          component={ProfileScreen} 
-          options={{title: 'Profile Page'}}
-      />
-      <Stack.Screen 
-          name="RaidListScreen" 
-          component={RaidListScreen} 
-          options={{title: 'Select Raid'}}
-      />
-      <Stack.Screen 
-          name="ItemListScreen" 
-          component={ItemListScreen} 
-          options={{title: 'Select Items'}}
-      />
-      <Stack.Screen
-          name="FriendsListScreen"
-          component={FriendsListScreen}
-          options={{title: 'Friends'}}
-      />
-      <Stack.Screen
-          name="TeamListScreen"
-          component={TeamListScreen}
-          options={{title: 'Teams'}}
-      />
-      <Stack.Screen
-          name="TeamCreateScreen"
-          component={TeamCreateScreen}
-          options={({ route }) => ({ title: `Edit ${route.params.teamName}` })}
-      />
-      <Stack.Screen
-          name="TeamRunsScreen"
-          component={TeamRunsScreen}
-          options={({ route }) => ({ title: `${route.params.teamName} Runs` })}
-      />
-      <Stack.Screen
-          name="TeamOldRunsScreen"
-          component={TeamOldRunsScreen}
-          options={({ route }) => ({ title: `Archived ${route.params.teamName} Runs` })}
-      />
-      <Stack.Screen
-          name="RunScreen"
-          component={RunScreen}
-          options={({ route }) => ({ title: `${route.params.raidName} - ${route.params.timestamp}` })}
-      />
-      <Stack.Screen
-          name="BattleScreen"
-          component={BattleScreen}
-          options={({ route }) => ({ title: route.params.bossName })}
-      />
-      <Stack.Screen
-          name="DropScreen"
-          component={DropScreen}
-          options={{headerShown: true, title: 'Assign Drop'}}
-      />
-      <Stack.Screen
-          name="SummaryScreen"
-          component={SummaryScreen}
-          options={({ route }) => ({ title: `${route.params.raidName} - ${route.params.timestamp} Summary` })}
         />
-
+        <Stack.Screen 
+            name="Characters" 
+            component={CharacterListScreen} 
+            options={{title: 'Characters'}}
+        />
+        <Stack.Screen 
+            name="Profile" 
+            component={ProfileScreen} 
+            options={{title: 'Profile Page'}}
+        />
+        <Stack.Screen 
+            name="RaidListScreen" 
+            component={RaidListScreen} 
+            options={{title: 'Select Raid'}}
+        />
+        <Stack.Screen 
+            name="ItemListScreen" 
+            component={ItemListScreen} 
+            options={{title: 'Select Items'}}
+        />
+        <Stack.Screen
+            name="FriendsListScreen"
+            component={FriendsListScreen}
+            options={{title: 'Friends'}}
+        />
+        <Stack.Screen
+            name="TeamListScreen"
+            component={TeamListScreen}
+            options={{title: 'Teams'}}
+        />
+        <Stack.Screen
+            name="TeamCreateScreen"
+            component={TeamCreateScreen}
+            options={({ route }) => ({ title: `Edit ${route.params.teamName}` })}
+        />
+        <Stack.Screen
+            name="TeamRunsScreen"
+            component={TeamRunsScreen}
+            options={({ route }) => ({ title: `${route.params.teamName} Runs` })}
+        />
+        <Stack.Screen
+            name="TeamOldRunsScreen"
+            component={TeamOldRunsScreen}
+            options={({ route }) => ({ title: `Archived ${route.params.teamName} Runs` })}
+        />
+        <Stack.Screen
+            name="RunScreen"
+            component={RunScreen}
+            options={({ route }) => ({ title: `${route.params.raidName} - ${route.params.timestamp}` })}
+        />
+        <Stack.Screen
+            name="BattleScreen"
+            component={BattleScreen}
+            options={({ route }) => ({ title: route.params.bossName })}
+        />
+        <Stack.Screen
+            name="DropScreen"
+            component={DropScreen}
+            options={{headerShown: true, title: 'Assign Drop'}}
+        />
+        <Stack.Screen
+            name="SummaryScreen"
+            component={SummaryScreen}
+            options={({ route }) => ({ title: `${route.params.raidName} - ${route.params.timestamp} Summary` })}
+        />
+        <Stack.Screen
+            name="CharacterDropsScreen"
+            component={CharacterDropsScreen}
+            options={({ route }) => ({ title: `${route.params.characterName}'s Drops` })}
+        />
 
     </Stack.Navigator>
   );

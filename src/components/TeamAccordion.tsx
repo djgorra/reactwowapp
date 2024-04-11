@@ -38,12 +38,17 @@ const MenuAccordion = ({item, handleDelete}) => {
         },
     );
 
-
+    const factionIcon = () => 
+    item.faction === 'Alliance' ? 
+    <Text h1 style={styles.factionIcon} size={40} secondary font="LifeCraft">{"]"}</Text> : 
+    <Text h1 style={styles.factionIcon} size={40} danger font="LifeCraft">{"["}</Text>
+    
   return (
-    <View>
+    <View style={{width:'100%'}}>
          <TouchableOpacity style={styles.row} onPress={()=>toggleExpand()}>
             <View style={styles.buttonContainer}>
-                <Text size={16} white font="OpenSans-Bold" style={styles.itemName}>{item.name}</Text>
+                {factionIcon()}
+                <Text size={18} white font="LifeCraft" style={styles.itemName}>{item.name}</Text>
             </View>
             
 
@@ -76,8 +81,8 @@ const MenuAccordion = ({item, handleDelete}) => {
                     <Icon name="directions-run" size={20} color={'white'} style={styles.dropdownIcon} />
                 </TouchableOpacity>
 
-                <TouchableOpacity  style={styles.dropdownButton} onPress={()=>Clipboard.setString(`${item.invite_code}`)}>
-                    <Text white bold style={{textAlign:'center'}}>Invite Code: {item.invite_code}</Text>
+                <TouchableOpacity  style={styles.dropdownButton}>
+                    <Text white bold style={{textAlign:'center'}}>Invite Code:</Text><Text white bold selectable={true}> {item.invite_code}</Text>
                     <Icon name="content-copy" size={20} color={'white'} style={styles.dropdownIcon} />
                 </TouchableOpacity>
 
@@ -98,86 +103,96 @@ const MenuAccordion = ({item, handleDelete}) => {
 
 
 const styles = StyleSheet.create({
-  container:{
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  dropdownButton:{
-    width:'100%',
-    flexDirection: 'row',
-    borderColor: '#34455e',
-    borderTopWidth: 2,
-    height:54,
-    alignItems:'center',
-    justifyContent:'center',
-
-    fontSize: 12,
-  },
+    container:{
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    dropdownButton:{
+        width:'100%',
+        flexDirection: 'row',
+        borderColor: '#34455e',
+        borderTopWidth: 2,
+        height:54,
+        alignItems:'center',
+        justifyContent:'center',
+        fontSize: 12,
+    },
     dropdownIcon:{
         position: 'absolute',
         right: 10,
     },
     dropdown: {
-      borderColor: '#34455e',
-      borderWidth: 2,
-      width: '100%',
-      alignSelf: 'center',
-      justifyContent: 'center',
+        borderColor: '#34455e',
+        borderWidth: 2,
+        width: '100%',
+        alignSelf: 'center',
+        justifyContent: 'center',
     },
-  title:{
-      fontSize: 18,
-      fontWeight:'bold',
-      color: 'white',
-  },
-  itemActive:{
-      fontSize: 14,
-      color: 'green',
-  },
-  itemInActive:{
-      fontSize: 14,
-      color: 'white',
-  },
-  btnActive:{
-      borderColor: 'green',
-  },
-  btnInActive:{
-      borderColor: 'darkgray',
-  },
-  row:{
-      borderBottomWidth: 1,
-      borderColor: '#000',
-      flexDirection: 'row',
-      justifyContent:'space-between',
-      height:75,
-      width:300,
-      paddingLeft:25,
-      paddingRight:25,
-      margin: 10,
-      alignItems:'center',
-      backgroundColor: '#02000b',
-  },
-  childRow:{
-      flexDirection: 'row',
-      justifyContent:'space-between',
-      backgroundColor: '#02000b',
-      width:'100%',
-  },
-  parentHr:{
-      height:1,
-      color: 'white',
-      width:'100%'
-  },
-  childHr:{
-      height:1,
-      backgroundColor: 'lightgray',
-      width:'100%',
-  },
-  colorActive:{
-      borderColor: 'green',
-  },
-  colorInActive:{
-      borderColor: 'darkgray',
-  }
+    buttonContainer:{
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    factionIcon:{
+        alignSelf: 'center',
+        paddingRight: 10,
+    },
+    title:{
+        fontSize: 18,
+        fontWeight:'bold',
+        color: 'white',
+    },
+    itemActive:{
+        fontSize: 14,
+        color: 'green',
+    },
+    itemInActive:{
+        fontSize: 14,
+        color: 'white',
+    },
+    btnActive:{
+        borderColor: 'green',
+    },
+    btnInActive:{
+        borderColor: 'darkgray',
+    },
+    row:{
+        borderBottomWidth: 1,
+        borderColor: '#000',
+        flexDirection: 'row',
+        justifyContent:'space-between',
+        height:75,
+        width:300,
+        paddingLeft:25,
+        paddingRight:25,
+        margin: 10,
+        alignItems:'center',
+        backgroundColor: '#02000b',
+    },
+    childRow:{
+        flexDirection: 'row',
+        justifyContent:'space-between',
+        backgroundColor: '#02000b',
+        width:'100%',
+    },
+    parentHr:{
+        height:1,
+        justifyContent:'center',
+        alignSelf:'center',
+        color: 'white',
+        width:'100%'
+    },
+    childHr:{
+        height:1,
+        backgroundColor: 'lightgray',
+        width:'100%',
+    },
+    colorActive:{
+        borderColor: 'green',
+    },
+    colorInActive:{
+        borderColor: 'darkgray',
+    }
   
 });
 export default MenuAccordion;

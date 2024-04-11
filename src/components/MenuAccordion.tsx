@@ -40,6 +40,17 @@ const MenuAccordion = ({item, handleEdit, handleInviteCode, confirmDelete}) => {
                     <Text white bold style={{textAlign:'center'}}>Edit Wishlist ({item.wishlist_items.length})</Text>
                 </TouchableOpacity>
 
+                <TouchableOpacity
+                    style={styles.dropdownButton} 
+                    onPress={() =>
+                        navigation.navigate('CharacterDropsScreen', {
+                        characterId: item.id,
+                        characterName: item.name,
+                        })
+                    }>
+                    <Text white bold style={{textAlign:'center'}}>View Drops</Text>
+                </TouchableOpacity>
+
                 <TouchableOpacity style={styles.dropdownButton} onPress={()=>handleEdit(item)}>
                     <Text white bold style={{textAlign:'center'}}>Edit Character</Text>
                 </TouchableOpacity>
